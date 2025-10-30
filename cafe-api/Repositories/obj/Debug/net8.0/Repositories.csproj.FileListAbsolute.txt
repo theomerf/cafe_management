@@ -1,0 +1,15 @@
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\bin\Debug\net8.0\Repositories.deps.json
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\bin\Debug\net8.0\Repositories.dll
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\bin\Debug\net8.0\Repositories.pdb
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\bin\Debug\net8.0\Entities.dll
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\bin\Debug\net8.0\Entities.pdb
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\obj\Debug\net8.0\Repositories.csproj.AssemblyReference.cache
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\obj\Debug\net8.0\Repositories.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\obj\Debug\net8.0\Repositories.AssemblyInfoInputs.cache
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\obj\Debug\net8.0\Repositories.AssemblyInfo.cs
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\obj\Debug\net8.0\Repositories.csproj.CoreCompileInputs.cache
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\obj\Debug\net8.0\Reposito.787EC4B2.Up2Date
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\obj\Debug\net8.0\Repositories.dll
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\obj\Debug\net8.0\refint\Repositories.dll
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\obj\Debug\net8.0\Repositories.pdb
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Repositories\obj\Debug\net8.0\ref\Repositories.dll

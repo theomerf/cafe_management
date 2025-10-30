@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+  @apply bg-[#F7FAFC] text-[#495057]
+}
+
+@layer base {
+  body {
+    @apply font-dm;
+  }
+}
