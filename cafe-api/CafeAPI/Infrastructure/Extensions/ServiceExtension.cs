@@ -27,7 +27,7 @@ namespace CafeAPI.Infrastructure.Extensions
 
 
                 options.UseSqlServer(connectionString,
-                    b => b.MigrationsAssembly("KutuphaneAPI"));
+                    b => b.MigrationsAssembly("CafeAPI"));
 
                 options.EnableSensitiveDataLogging(true);
             });
@@ -73,6 +73,7 @@ namespace CafeAPI.Infrastructure.Extensions
         public static void ConfigureLoggerService(this IServiceCollection services)
         {
             services.AddSingleton<ILoggerService, LoggerManager>();
+            services.AddSingleton<IAccountService, AccountManager>();
         }
 
         public static void ConfigureActionFilters(this IServiceCollection services)

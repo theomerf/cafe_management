@@ -2,6 +2,6 @@
 {
     public interface IServiceManager
     {
-
+        IAccountService AccountService { get; }
     }
 }

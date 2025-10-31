@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{2267E1E8-1DFC-4875-A357-ED064E3D7D4B}|Services\\Services.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\services\\productmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2267E1E8-1DFC-4875-A357-ED064E3D7D4B}|Services\\Services.csproj|solutionrelative:services\\productmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2267E1E8-1DFC-4875-A357-ED064E3D7D4B}|Services\\Services.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\services\\contracts\\iproductservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2267E1E8-1DFC-4875-A357-ED064E3D7D4B}|Services\\Services.csproj|solutionrelative:services\\contracts\\iproductservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{53CBB947-5F75-4A22-B616-695099397F1C}|CafeAPI\\CafeAPI.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\cafeapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{53CBB947-5F75-4A22-B616-695099397F1C}|CafeAPI\\CafeAPI.csproj|solutionrelative:cafeapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -31,15 +39,40 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "ProductManager.cs",
+              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Services\\ProductManager.cs",
+              "RelativeDocumentMoniker": "Services\\ProductManager.cs",
+              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Services\\ProductManager.cs",
+              "RelativeToolTip": "Services\\ProductManager.cs",
+              "ViewState": "AgIAADEAAAAAAAAAAAAowEsAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-31T18:48:07.081Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IProductService.cs",
+              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Services\\Contracts\\IProductService.cs",
+              "RelativeDocumentMoniker": "Services\\Contracts\\IProductService.cs",
+              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Services\\Contracts\\IProductService.cs",
+              "RelativeToolTip": "Services\\Contracts\\IProductService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-31T18:47:59.504Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\CafeAPI\\Program.cs",
               "RelativeDocumentMoniker": "CafeAPI\\Program.cs",
               "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\CafeAPI\\Program.cs",
               "RelativeToolTip": "CafeAPI\\Program.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAQwCcAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAACwAAAAAAAAAAAAAACwAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-21T12:50:56.072Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-21T12:50:56.072Z"
             },
             {
               "$type": "Bookmark",

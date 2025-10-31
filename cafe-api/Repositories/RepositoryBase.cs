@@ -1,16 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Repositories.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repositories
 {
-    public class RepositoryBase<T> : IRepositoryBase<T>
+    public abstract class RepositoryBase<T> : IRepositoryBase<T>
         where T : class
     {
         protected readonly RepositoryContext _context;
