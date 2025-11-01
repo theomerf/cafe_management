@@ -1,7 +1,5 @@
 ﻿using Entities.Dtos;
-using Entities.Models;
 using Entities.RequestFeatures;
-using Entities.RequestParameters;
 
 namespace Services.Contracts
 {

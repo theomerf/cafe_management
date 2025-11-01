@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Entities.Dtos;
+using Entities.RequestFeatures;
 
 namespace Services.Contracts
 {
-    internal interface ITableService
+    public interface ITableService
     {
+        Task<(PagedList<TableDto> tables, MetaData metaData)> GetAllTablesAsync(RequestParameters p, bool trackChanges);
+        Task<IEnumerable<TableDto>> GetAllTablesStatusesAsync(bool trackChanges);
+        Task<int> GetAllTablesCountAsync();
+        Task<TableDto> GetOneTableByIdAsync(int tableId, bool trackChanges);
+        Task CreateTableAsync(TableDtoForCreation tableDto);
+        Task UpdateTableAsync(TableDtoForUpdate tableDto);
+        Task DeleteTableAsync(int tableId);
     }
 }

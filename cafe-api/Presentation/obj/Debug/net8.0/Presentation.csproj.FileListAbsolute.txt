@@ -17,3 +17,4 @@ C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Presen
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Presentation\obj\Debug\net8.0\refint\Presentation.dll
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Presentation\obj\Debug\net8.0\Presentation.pdb
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Presentation\obj\Debug\net8.0\ref\Presentation.dll
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Presentation\obj\Debug\net8.0\Presentation.sourcelink.json

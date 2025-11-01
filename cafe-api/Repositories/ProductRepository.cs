@@ -1,5 +1,5 @@
 ﻿using Entities.Models;
-using Entities.RequestParameters;
+using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Contracts;
 using Repositories.Extensions;

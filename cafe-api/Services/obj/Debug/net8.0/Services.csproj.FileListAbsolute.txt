@@ -15,3 +15,4 @@ C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Servic
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Services\obj\Debug\net8.0\refint\Services.dll
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Services\obj\Debug\net8.0\Services.pdb
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Services\obj\Debug\net8.0\ref\Services.dll
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Services\obj\Debug\net8.0\Services.sourcelink.json

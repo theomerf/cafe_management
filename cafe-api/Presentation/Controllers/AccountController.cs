@@ -15,6 +15,7 @@ namespace Presentation.Controllers
             _manager = manager;
         }
 
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] AccountDtoForLogin accountDto)
         {
             var result = await _manager.AccountService.LoginUserAsync(accountDto);
@@ -27,6 +28,7 @@ namespace Presentation.Controllers
             return Unauthorized();
         }
 
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] AccountDtoForRegistration accountDto)
         {
             var result = await _manager.AccountService.RegisterUserAsync(accountDto);
@@ -38,6 +40,7 @@ namespace Presentation.Controllers
             return BadRequest(result.Errors);
         }
 
+        [HttpPost("refreshtoken")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenDto tokenDto)
         {
             var newTokenDto = await _manager.AccountService.RefreshTokenAsync(tokenDto);

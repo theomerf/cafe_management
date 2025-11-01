@@ -10,3 +10,4 @@ C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Entiti
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Entities\obj\Debug\net8.0\refint\Entities.dll
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Entities\obj\Debug\net8.0\Entities.pdb
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Entities\obj\Debug\net8.0\ref\Entities.dll
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\Entities\obj\Debug\net8.0\Entities.sourcelink.json

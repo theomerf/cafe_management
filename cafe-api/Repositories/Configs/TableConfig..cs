@@ -18,7 +18,7 @@ namespace Repositories.Configs
             builder.HasMany(t => t.Orders)
                 .WithOne(o => o.Table)
                 .HasForeignKey(o => o.TableId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

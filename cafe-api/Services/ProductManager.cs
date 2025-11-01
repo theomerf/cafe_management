@@ -3,7 +3,6 @@ using Entities.Dtos;
 using Entities.Exceptions;
 using Entities.Models;
 using Entities.RequestFeatures;
-using Entities.RequestParameters;
 using Repositories.Contracts;
 using Services.Contracts;
 

@@ -56,7 +56,6 @@ namespace CafeAPI.Infrastructure.Extensions
                 {
                     FirstName = "Admin",
                     LastName = "Root",
-                    BirthDate = DateOnly.FromDateTime(DateTime.UtcNow),
                     Email = "omerfarukyalcin08@gmail.com",
                     PhoneNumber = "05425946284",
                     UserName = adminUser

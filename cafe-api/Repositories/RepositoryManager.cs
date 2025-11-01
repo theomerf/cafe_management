@@ -1,20 +1,23 @@
-﻿using Repositories.Contracts;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Repositories.Contracts;
 
 namespace Repositories
 {
     public class RepositoryManager : IRepositoryManager
     {
         private readonly RepositoryContext _context;
+        private readonly IServiceProvider _provider;
         private readonly Lazy<IProductRepository> _productRepository;
         private readonly Lazy<IOrderRepository> _orderRepository;
         private readonly Lazy<ITableRepository> _tableRepository;
 
-        public RepositoryManager(RepositoryContext context, Lazy<IProductRepository> productRepository, Lazy<IOrderRepository> orderRepository, Lazy<ITableRepository> tableRepository)
+        public RepositoryManager(RepositoryContext context, IServiceProvider provider)
         {
             _context = context;
-            _productRepository = productRepository;
-            _orderRepository = orderRepository;
-            _tableRepository = tableRepository;
+            _provider = provider;
+            _productRepository = new Lazy<IProductRepository>(() => _provider.GetRequiredService<IProductRepository>());
+            _orderRepository = new Lazy<IOrderRepository>(() => _provider.GetRequiredService<IOrderRepository>());
+            _tableRepository = new Lazy<ITableRepository>(() => _provider.GetRequiredService<ITableRepository>());
         }
 
         public IProductRepository Product => _productRepository.Value;

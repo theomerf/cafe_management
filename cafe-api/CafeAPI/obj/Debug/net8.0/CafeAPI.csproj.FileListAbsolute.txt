@@ -187,10 +187,11 @@ C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\CafeAP
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\CafeAPI\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\CafeAPI\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\CafeAPI\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\CafeAPI\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\CafeAPI\obj\Debug\net8.0\CafeAPI.csproj.Up2Date
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\CafeAPI\obj\Debug\net8.0\CafeAPI.dll
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\CafeAPI\obj\Debug\net8.0\refint\CafeAPI.dll
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\CafeAPI\obj\Debug\net8.0\CafeAPI.pdb
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\CafeAPI\obj\Debug\net8.0\CafeAPI.genruntimeconfig.cache
 C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\CafeAPI\obj\Debug\net8.0\ref\CafeAPI.dll
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\CafeAPI\obj\Debug\net8.0\CafeAPI.sourcelink.json
+C:\Users\omerf\OneDrive\Masaüstü\Projeler\.net\Cafe_Management\cafe-api\CafeAPI\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

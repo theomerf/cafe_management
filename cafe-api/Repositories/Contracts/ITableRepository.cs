@@ -1,5 +1,5 @@
 ﻿using Entities.Models;
-using Entities.RequestParameters;
+using Entities.RequestFeatures;
 
 namespace Repositories.Contracts
 {

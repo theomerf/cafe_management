@@ -1,6 +1,6 @@
-﻿namespace Entities.RequestParameters
+﻿namespace Entities.RequestFeatures
 {
-    public abstract class RequestParameters
+    public class RequestParameters
     {
         public String? SearchTerm { get; set; }
         const int maxPageSize = 50;
