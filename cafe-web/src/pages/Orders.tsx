@@ -1,24 +1,58 @@
-import { useState } from "react";
-import { OrdersScene } from "../components/table/OrdersScene";
+import { useEffect, useReducer, useState } from "react";
 import TitleCard from "../components/ui/TitleCard";
-import { useTableStore } from "../store/tableStore";
 import { OrdersPanel } from "../components/table/OrdersPanel";
 import { Sparkles } from "lucide-react";
+import type { TableItem } from "../types/table";
+import OrdersScene from "../components/table/OrdersScene";
+import requests from "../services/api";
+import BackendDataListReducer from "../types/backendDataList";
 
-export const Orders: React.FC = () => {
-    const { selectedTable, setSelectedTable } = useTableStore();
+export default function Orders() {
+    const [tables, dispatch] = useReducer(BackendDataListReducer<TableItem>, {
+        data: null,
+        isLoading: false,
+        error: null,
+    })
     const [showPanel, setShowPanel] = useState(false);
+    const [selectedTable, setSelectedTable] = useState<TableItem | null>(null);
 
     const handleTableSelect = (tableId: number) => {
         setShowPanel(true);
     };
+
+    async function fetchSeats(signal: AbortSignal) {
+        dispatch({ type: "FETCH_START" });
+        try {
+            const response = await requests.table.getAllTables(signal);
+            console.log(response);
+            dispatch({ type: "FETCH_SUCCESS", payload: response as TableItem[] });
+        }
+        catch (error: any) {
+            if (error.name === 'CanceledError' || error.name === "AbortError") {
+                return;
+            }
+            else {
+                dispatch({ type: "FETCH_ERROR", payload: error.message || "Masalar çekilirken hata oluştu." });
+            }
+        }
+    };
+
+    useEffect(() => {
+        const controller = new AbortController();
+
+        fetchSeats(controller.signal);
+
+        return () => {
+            controller.abort();
+        }
+    }, []);
 
     return (
         <div className="flex flex-col gap-y-4">
             <TitleCard title="Siparişler" />
             <div className="w-full h-screen flex bg-gray-800">
                 <div className="flex-1 relative">
-                    <OrdersScene onTableSelect={handleTableSelect} />
+                    <OrdersScene tables={tables} onTableSelect={handleTableSelect} selectedTable={selectedTable} setSelectedTable={setSelectedTable} />
 
                     <div className="absolute top-6 left-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 backdrop-blur-md border border-gray-700 rounded-xl shadow-2xl p-6">
                         <div className="flex items-center gap-3 mb-2">
@@ -55,7 +89,7 @@ export const Orders: React.FC = () => {
                     <div className="absolute bottom-6 right-6 bg-gradient-to-r from-gray-900 to-gray-800 backdrop-blur-md border border-gray-700 rounded-xl shadow-2xl p-4">
                         <p className="text-xs text-gray-400 mb-2">AKTIF MASALAR</p>
                         <p className="text-2xl font-bold text-blue-400">
-                            {useTableStore.getState().tables.filter(t => t.status === 'occupied').length}
+                            {tables.data?.length || 0}
                         </p>
                     </div>
                 </div>
@@ -73,5 +107,3 @@ export const Orders: React.FC = () => {
         </div>
     );
 };
-
-export default Orders;

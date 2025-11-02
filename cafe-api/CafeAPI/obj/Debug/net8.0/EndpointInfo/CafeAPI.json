@@ -67,7 +67,7 @@
         }
       }
     },
-    "/api/account/refreshtoken": {
+    "/api/account/refresh": {
       "post": {
         "tags": [
           "Account"
@@ -213,6 +213,37 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/OrderDtoForCreation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/order/change-status": {
+      "patch": {
+        "tags": [
+          "Order"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderDtoForStatus"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderDtoForStatus"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderDtoForStatus"
               }
             }
           }
@@ -573,6 +604,37 @@
         }
       }
     },
+    "/api/table/change-status": {
+      "patch": {
+        "tags": [
+          "Table"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TableDtoForStatus"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TableDtoForStatus"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TableDtoForStatus"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/table/update": {
       "put": {
         "tags": [
@@ -696,6 +758,19 @@
           "tableId": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrderDtoForStatus": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "$ref": "#/components/schemas/OrderStatus"
           }
         },
         "additionalProperties": false
@@ -825,6 +900,9 @@
       },
       "TableDtoForCreation": {
         "required": [
+          "capacity",
+          "locationX",
+          "locationZ",
           "name"
         ],
         "type": "object",
@@ -833,12 +911,40 @@
             "maxLength": 50,
             "minLength": 1,
             "type": "string"
+          },
+          "capacity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "locationX": {
+            "type": "number",
+            "format": "double"
+          },
+          "locationZ": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableDtoForStatus": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TableStatus"
           }
         },
         "additionalProperties": false
       },
       "TableDtoForUpdate": {
         "required": [
+          "capacity",
+          "locationX",
+          "locationZ",
           "name",
           "status"
         ],
@@ -848,6 +954,18 @@
             "maxLength": 50,
             "minLength": 1,
             "type": "string"
+          },
+          "capacity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "locationX": {
+            "type": "number",
+            "format": "double"
+          },
+          "locationZ": {
+            "type": "number",
+            "format": "double"
           },
           "id": {
             "type": "integer",
@@ -862,7 +980,7 @@
       "TableStatus": {
         "enum": [
           "Occupied",
-          "Free",
+          "Available",
           "OutOfOrder"
         ],
         "type": "string"

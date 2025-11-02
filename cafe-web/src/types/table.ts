@@ -1,9 +1,11 @@
 export interface TableItem {
   id: number;
-  tableNumber: number;
+  createdAt: Date;
+  name: string;
   capacity: number;
-  position: { x: number; z: number };
-  status: 'available' | 'occupied' | 'reserved';
+  locationX: number;
+  locationZ: number;
+  status: 'Available' | 'Occupied' | 'OutOfOrder';
   orders?: Order[];
 }
 

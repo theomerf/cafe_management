@@ -10,6 +10,7 @@ namespace Services.Contracts
         Task<int> GetAllOrdersCountAsync();
         Task<OrderDto> GetOneOrderByIdAsync(int orderId, bool trackChanges);
         Task CreateOrderAsync(OrderDtoForCreation orderDto);
+        Task ChangeOrderStatusAsync(OrderDtoForStatus orderDto);
         Task UpdateOrderAsync(OrderDtoForUpdate orderDto);
         Task DeleteOrderAsync(int orderId);
     }

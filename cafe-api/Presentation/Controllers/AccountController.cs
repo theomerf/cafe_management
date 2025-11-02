@@ -40,7 +40,7 @@ namespace Presentation.Controllers
             return BadRequest(result.Errors);
         }
 
-        [HttpPost("refreshtoken")]
+        [HttpPost("refresh")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenDto tokenDto)
         {
             var newTokenDto = await _manager.AccountService.RefreshTokenAsync(tokenDto);

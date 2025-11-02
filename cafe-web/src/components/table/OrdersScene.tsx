@@ -1,20 +1,17 @@
-import React, { useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Grid } from '@react-three/drei';
 import { Table3D } from './Table3D';
-import { useTableStore } from '../../store/tableStore';
+import { type TableItem } from '../../types/table';
+import type { BackendDataList } from '../../types/backendDataList';
 
 interface OrdersSceneProps {
+  tables: BackendDataList<TableItem>;
   onTableSelect: (tableId: number) => void;
+  selectedTable: TableItem | null;
+  setSelectedTable: (table: TableItem | null) => void;
 }
 
-export const OrdersScene: React.FC<OrdersSceneProps> = ({ onTableSelect }) => {
-  const { tables, getTables, selectedTable, setSelectedTable } = useTableStore();
-
-  useEffect(() => {
-    getTables();
-  }, [getTables]);
-
+export default function OrdersScene({ tables, onTableSelect, selectedTable, setSelectedTable }: OrdersSceneProps) {
   return (
     <Canvas
       style={{ width: '100%', height: '100%' }}
@@ -51,7 +48,7 @@ export const OrdersScene: React.FC<OrdersSceneProps> = ({ onTableSelect }) => {
         fadeDistance={25}
       />
 
-      {tables.map((table) => (
+      {tables.data?.map((table) => (
         <Table3D
           key={table.id}
           table={table}

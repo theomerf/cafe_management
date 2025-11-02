@@ -33,11 +33,11 @@ export const Table3D: React.FC<Table3DProps> = ({
   const getTableColor = () => {
     if (isSelected) return '#3b82f6';
     switch (table.status) {
-      case 'occupied':
+      case 'Occupied':
         return '#ef4444';
-      case 'reserved':
+      case 'OutOfOrder':
         return '#f59e0b';
-      case 'available':
+      case 'Available':
         return '#10b981';
       default:
         return '#6b7280';
@@ -45,7 +45,7 @@ export const Table3D: React.FC<Table3DProps> = ({
   };
 
   return (
-    <group ref={groupRef} position={[table.position.x, 0, table.position.z]}>
+    <group ref={groupRef} position={[table.locationX, 0, table.locationZ]}>
       <mesh position={[-0.8, -0.5, -0.8]}>
         <boxGeometry args={[0.15, 1.2, 0.15]} />
         <meshStandardMaterial color="#8b7355" />
@@ -90,7 +90,7 @@ export const Table3D: React.FC<Table3DProps> = ({
       anchorX="center"
       anchorY="middle"
     >
-      {`T${table.tableNumber}`}
+      {`${table.name}`}
     </Text>
     </group>
   );

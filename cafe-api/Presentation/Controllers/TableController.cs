@@ -65,6 +65,14 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
+        [HttpPatch("change-status")]
+        public async Task<IActionResult> ChangeTableStatus([FromBody] TableDtoForStatus tableDto)
+        {
+            await _manager.TableService.ChangeTableStatusAsync(tableDto);
+
+            return Ok();
+        }
+
         [HttpPut("update")]
         public async Task<IActionResult> UpdateTable([FromBody] TableDtoForUpdate tableDto)
         {

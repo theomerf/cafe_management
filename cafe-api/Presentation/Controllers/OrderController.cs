@@ -59,6 +59,14 @@ namespace Presentation.Controllers
             return StatusCode(201);
         }
 
+        [HttpPatch("change-status")]
+        public async Task<IActionResult> ChangeOrderStatusAsync(OrderDtoForStatus orderDto)
+        {
+            await _manager.OrderService.ChangeOrderStatusAsync(orderDto);
+
+            return Ok();
+        }
+
         [HttpPut("update")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateOrder([FromBody] OrderDtoForUpdate orderDto)

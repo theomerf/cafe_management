@@ -74,6 +74,14 @@ namespace Services
             await _manager.SaveAsync();
         }
 
+        public async Task ChangeTableStatusAsync(TableDtoForStatus tableDto)
+        {
+            var table = await GetOneTableByIdForServiceAsync(tableDto.Id, true);
+
+            table.Status = tableDto.Status;
+            await _manager.SaveAsync();
+        }
+
         public async Task UpdateTableAsync(TableDtoForUpdate tableDto)
         {
             var table = await GetOneTableByIdForServiceAsync(tableDto.Id, true);

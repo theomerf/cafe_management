@@ -10,6 +10,7 @@ namespace Services.Contracts
         Task<int> GetAllTablesCountAsync();
         Task<TableDto> GetOneTableByIdAsync(int tableId, bool trackChanges);
         Task CreateTableAsync(TableDtoForCreation tableDto);
+        Task ChangeTableStatusAsync(TableDtoForStatus tableDto);
         Task UpdateTableAsync(TableDtoForUpdate tableDto);
         Task DeleteTableAsync(int tableId);
     }

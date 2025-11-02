@@ -73,6 +73,14 @@ namespace Services
             await _manager.SaveAsync();
         }
 
+        public async Task ChangeOrderStatusAsync(OrderDtoForStatus orderDto) 
+        { 
+            var order = await GetOneOrderByIdForServiceAsync(orderDto.Id, true);
+
+            order.Status = orderDto.Status;
+            await _manager.SaveAsync();
+        }
+
         public async Task UpdateOrderAsync(OrderDtoForUpdate orderDto)
         {
             var order = await GetOneOrderByIdForServiceAsync(orderDto.Id, true);

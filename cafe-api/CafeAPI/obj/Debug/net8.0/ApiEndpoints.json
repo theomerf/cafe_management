@@ -18,7 +18,7 @@
   {
     "ContainingType": "Presentation.Controllers.AccountController",
     "Method": "RefreshToken",
-    "RelativePath": "api/account/refreshtoken",
+    "RelativePath": "api/account/refresh",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -84,6 +84,22 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Presentation.Controllers.OrderController",
+    "Method": "ChangeOrderStatusAsync",
+    "RelativePath": "api/order/change-status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderDto",
+        "Type": "Entities.Dtos.OrderDtoForStatus",
         "IsRequired": true
       }
     ],
@@ -300,6 +316,22 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Presentation.Controllers.TableController",
+    "Method": "ChangeTableStatus",
+    "RelativePath": "api/table/change-status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tableDto",
+        "Type": "Entities.Dtos.TableDtoForStatus",
         "IsRequired": true
       }
     ],

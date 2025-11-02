@@ -12,6 +12,12 @@ namespace Repositories.Configs
             builder.Property(t => t.Name)
                 .IsRequired()
                 .HasMaxLength(50);
+            builder.Property(t => t.Capacity)
+                .IsRequired();
+            builder.Property(t => t.LocationX)
+                .IsRequired();
+            builder.Property(t => t.LocationZ)
+                .IsRequired();
             builder.Property(t => t.Status)
                 .IsRequired();
 

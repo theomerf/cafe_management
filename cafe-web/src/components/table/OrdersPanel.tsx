@@ -27,11 +27,11 @@ export const OrdersPanel: React.FC<OrdersPanelProps> = ({ table, onClose }) => {
 
   const getTableStatusBadgeColor = (status: TableItem['status']) => {
     switch (status) {
-      case 'occupied':
+      case 'Occupied':
         return 'bg-red-100 text-red-800';
-      case 'reserved':
+      case 'OutOfOrder':
         return 'bg-amber-100 text-amber-800';
-      case 'available':
+      case 'Available':
         return 'bg-green-100 text-green-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -43,13 +43,13 @@ export const OrdersPanel: React.FC<OrdersPanelProps> = ({ table, onClose }) => {
       <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6">
         <div className="flex justify-between items-start">
           <div>
-            <h2 className="text-3xl font-bold">Masa {table.tableNumber}</h2>
+            <h2 className="text-3xl font-bold">Masa {table.name}</h2>
             <span
               className={`inline-block mt-2 px-3 py-1 rounded-full text-sm font-semibold ${getTableStatusBadgeColor(table.status)}`}
             >
-              {table.status === 'occupied'
+              {table.status === 'Occupied'
                 ? 'Dolu'
-                : table.status === 'reserved'
+                : table.status === 'OutOfOrder'
                   ? 'Rezerve'
                   : 'Boş'}
             </span>
