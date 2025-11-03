@@ -1,5 +1,8 @@
 import { ResponsivePie } from "@nivo/pie";
 import { useBreakpoint } from "../../hooks/useBreakpoint";
+import { useEffect, useReducer, useState } from "react";
+import BackendDataObjectReducer from "../../types/backendDataObject";
+import requests from "../../services/api";
 
 interface PieData {
     id: string;
@@ -8,15 +11,60 @@ interface PieData {
     color?: string;
 }
 
+interface TableStats {
+    occupiedCount: number;
+    availableCount: number;
+}
+
 export default function DashboardTableGraph() {
+    const [tableStats, dispatch] = useReducer(BackendDataObjectReducer<TableStats>, {
+        data: null,
+        isLoading: false,
+        error: null,
+    });
     const { up } = useBreakpoint();
     const isMobile = !up.md;
     const isTablet = up.md && !up.lg;
 
-    const orderStatuses: PieData[] = [
+    const [tableStatuses, setTableStatuses] = useState<PieData[]>([
         { id: "Dolu", label: "Dolu", value: 12, color: "#f55742" },
         { id: "Boş", label: "Boş", value: 8, color: "#48bb78" },
-    ];
+    ]);
+
+    useEffect(() => {
+        if (tableStats.data) {
+            setTableStatuses([
+                { id: "Dolu", label: "Dolu", value: tableStats.data.occupiedCount, color: "#f55742" },
+                { id: "Boş", label: "Boş", value: tableStats.data.availableCount, color: "#48bb78" },
+            ])
+        }
+    }, [tableStats.data]);
+
+    async function fetchTableStatuses(signal?: AbortSignal) {
+        dispatch({ type: 'FETCH_START' });
+        try {
+            const response = await requests.table.statusesStats(signal);
+            dispatch({ type: 'FETCH_SUCCESS', payload: response });
+        }
+        catch (error: any) {
+            if (error.name === 'CanceledError' || error.name === "AbortError") {
+                return;
+            }
+            else {
+                dispatch({ type: "FETCH_ERROR", payload: error.message || "Masa istatistikleri çekilirken hata oluştu." });
+            }
+        }
+    };
+
+    useEffect(() => {
+        const controller = new AbortController();
+
+        fetchTableStatuses(controller.signal);
+
+        return () => {
+            controller.abort();
+        };
+    }, []);
 
     const getPieMargins = () => {
         if (isMobile) return { top: 20, right: 20, bottom: 60, left: 20 };
@@ -26,7 +74,7 @@ export default function DashboardTableGraph() {
     return (
         <div style={{ height: isMobile ? '350px' : isTablet ? '450px' : '300px' }}>
             <ResponsivePie
-                data={orderStatuses}
+                data={tableStatuses}
                 margin={getPieMargins()}
                 innerRadius={isMobile ? 0.4 : 0.5}
                 padAngle={0.7}

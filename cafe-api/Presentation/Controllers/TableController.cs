@@ -33,6 +33,20 @@ namespace Presentation.Controllers
             return Ok(tablesStatuses);
         }
 
+        [HttpGet("statuses-stats")]
+        public async Task<IActionResult> GetTableStatusesStats()
+        {
+            var (occupiedCount, availableCount) = await _manager.TableService.GetTableStatusStatsAsync();
+
+            var stats = new
+            {
+                OccupiedCount = occupiedCount,
+                AvailableCount = availableCount
+            };
+
+            return Ok(stats);
+        }
+
         [HttpGet("count")]
         public async Task<IActionResult> GetAllTablesCount()
         {

@@ -29,6 +29,43 @@ namespace Repositories
 
         public async Task<int> GetAllOrdersCountAsync() => await CountAsync(false);
 
+        public async Task<decimal> GetTotalIncomeOfDayAsync()
+        {
+            var today = DateTime.UtcNow.Day;
+
+            var totalIncome = await FindByCondition(o => o.CreatedAt.Day == today, false)
+                .SumAsync(o => o.TotalAmount);
+
+            return totalIncome;
+        }
+
+        public async Task<int> GetOrdersCountOfDayAsync()
+        {
+            var today = DateTime.UtcNow.Day;
+
+            var totalOrders = await FindByCondition(o => o.CreatedAt.Day == today, false)
+                .CountAsync();
+
+            return totalOrders;
+        }
+
+        public async Task<(int processingCount, int deliveredCount)> GetOrdersStatusStatsAsync()
+        {
+            var stats = await FindByCondition(o => o.Status != OrderStatus.Old && o.Status != OrderStatus.Cancelled, false)
+                .GroupBy(o => o.Status)
+                .Select(g => new
+                {
+                    Status = g.Key,
+                    Count = g.Count()
+                })
+                .ToListAsync();
+
+            int processingCount = stats.FirstOrDefault(s => s.Status == OrderStatus.Processing)?.Count ?? 0;
+            int deliveredCount = stats.FirstOrDefault(s => s.Status == OrderStatus.Delivered)?.Count ?? 0;
+
+            return (processingCount, deliveredCount);
+        } 
+
         public async Task<Order?> GetOneOrderByIdAsync(int orderId, bool trackChanges)
         {
             var order = await FindByCondition(o => o.Id == orderId, trackChanges)

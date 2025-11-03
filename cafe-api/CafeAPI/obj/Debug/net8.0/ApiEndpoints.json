@@ -133,6 +133,26 @@
   },
   {
     "ContainingType": "Presentation.Controllers.OrderController",
+    "Method": "GetDailyOrdersCount",
+    "RelativePath": "api/order/daily-count",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Presentation.Controllers.OrderController",
+    "Method": "GetDailyIncome",
+    "RelativePath": "api/order/daily-income",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Presentation.Controllers.OrderController",
     "Method": "DeleteOrder",
     "RelativePath": "api/order/delete/{id}",
     "HttpMethod": "DELETE",
@@ -145,6 +165,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Presentation.Controllers.OrderController",
+    "Method": "GetOrderStatusesStats",
+    "RelativePath": "api/order/statuses-stats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -383,6 +413,16 @@
     "ContainingType": "Presentation.Controllers.TableController",
     "Method": "GetAllTablesStatuses",
     "RelativePath": "api/table/statuses",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Presentation.Controllers.TableController",
+    "Method": "GetTableStatusesStats",
+    "RelativePath": "api/table/statuses-stats",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

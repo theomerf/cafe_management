@@ -3,6 +3,7 @@ using Entities.Dtos;
 using Entities.Exceptions;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.Extensions.Caching.Memory;
 using Repositories.Contracts;
 using Services.Contracts;
 
@@ -12,11 +13,13 @@ namespace Services
     {
         private readonly IRepositoryManager _manager;
         private readonly IMapper _mapper;
+        private readonly IMemoryCache _cache;
 
-        public OrderManager(IRepositoryManager manager, IMapper mapper)
+        public OrderManager(IRepositoryManager manager, IMapper mapper, IMemoryCache cache)
         {
             _manager = manager;
             _mapper = mapper;
+            _cache = cache;
         }
 
         public async Task<(PagedList<OrderDto> orders, MetaData metaData)> GetAllOrdersAsync(RequestParameters p, bool trackChanges)
@@ -29,7 +32,82 @@ namespace Services
             return (orderProducts, orderProducts.MetaData);
         }
 
-        public async Task<int> GetAllOrdersCountAsync() => await _manager.Order.GetAllOrdersCountAsync();
+        public async Task<int> GetAllOrdersCountAsync()
+        {
+            var cacheKey = "AllOrdersCount";
+            
+            if (_cache.TryGetValue(cacheKey, out int cachedStat))
+            {
+                return cachedStat;
+            }
+
+            var count = await _manager.Order.GetAllOrdersCountAsync();
+            var cacheOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
+            };
+            _cache.Set(cacheKey, count, cacheOptions);
+
+            return count;
+        }
+
+        public async Task<decimal> GetTotalIncomeOfDayAsync()
+        {
+            var cacheKey = "TotalIncomeOfDay";
+
+            if (_cache.TryGetValue(cacheKey, out decimal cachedStat))
+            {
+                return cachedStat;
+            }
+
+            var stat = await _manager.Order.GetTotalIncomeOfDayAsync();
+            var cacheOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+            };
+            _cache.Set(cacheKey, stat, cacheOptions);
+
+            return stat;
+        }
+
+        public async Task<int> GetOrdersCountOfDayAsync()
+        {
+            var cacheKey = "OrdersCountOfDay";
+
+            if (_cache.TryGetValue(cacheKey, out int cachedStat))
+            {
+                return cachedStat;
+            }
+
+            var stat = await _manager.Order.GetOrdersCountOfDayAsync();
+            var cacheOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
+            };
+            _cache.Set(cacheKey, stat, cacheOptions);
+
+            return stat;
+        }
+
+        public async Task<(int processingCount, int deliveredCount)> GetOrdersStatusStatsAsync()
+        {
+            var cacheKey = "OrdersStatusStats";
+            
+            if(_cache.TryGetValue(cacheKey, out (int processingCount, int deliveredCount) cachedStat))
+            {
+                return cachedStat;
+            }
+
+            var stat = await _manager.Order.GetOrdersStatusStatsAsync();
+            var cacheOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            };
+            _cache.Set(cacheKey, stat, cacheOptions);
+
+            return stat;
+        }
+
         public async Task<OrderDto> GetOneOrderByIdAsync(int orderId, bool trackChanges)
         {
             var order = await GetOneOrderByIdForServiceAsync(orderId, trackChanges);
@@ -60,6 +138,10 @@ namespace Services
         public async Task CreateOrderAsync(OrderDtoForCreation orderDto)
         {
             var order = _mapper.Map<Order>(orderDto);
+            _cache.Remove("AllOrdersCount");
+            _cache.Remove("OrdersCountOfDay");
+            _cache.Remove("TotalIncomeOfDay");
+            _cache.Remove("OrdersStatusStats");
 
             _manager.Order.CreateOrder(order);
             await _manager.SaveAsync();
@@ -68,6 +150,10 @@ namespace Services
         public async Task DeleteOrderAsync(int orderId)
         {
             var order = await GetOneOrderByIdForServiceAsync(orderId, true);
+            _cache.Remove("AllOrdersCount");
+            _cache.Remove("OrdersCountOfDay");
+            _cache.Remove("TotalIncomeOfDay");
+            _cache.Remove("OrdersStatusStats");
 
             _manager.Order.DeleteOrder(order);
             await _manager.SaveAsync();
@@ -85,6 +171,8 @@ namespace Services
         {
             var order = await GetOneOrderByIdForServiceAsync(orderDto.Id, true);
             _mapper.Map(orderDto, order);
+            _cache.Remove("TotalIncomeOfDay");
+            _cache.Remove("OrdersStatusStats");
 
             await _manager.SaveAsync();
         }

@@ -8,6 +8,7 @@ namespace Services.Contracts
         Task<(PagedList<TableDto> tables, MetaData metaData)> GetAllTablesAsync(RequestParameters p, bool trackChanges);
         Task<IEnumerable<TableDto>> GetAllTablesStatusesAsync(bool trackChanges);
         Task<int> GetAllTablesCountAsync();
+        Task<(int occupiedCount, int availableCount)> GetTableStatusStatsAsync();
         Task<TableDto> GetOneTableByIdAsync(int tableId, bool trackChanges);
         Task CreateTableAsync(TableDtoForCreation tableDto);
         Task ChangeTableStatusAsync(TableDtoForStatus tableDto);

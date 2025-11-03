@@ -1,5 +1,8 @@
+import { useEffect, useReducer, useState } from "react";
 import { useBreakpoint } from "../../hooks/useBreakpoint";
 import { ResponsivePie } from "@nivo/pie";
+import BackendDataObjectReducer from "../../types/backendDataObject";
+import requests from "../../services/api";
 
 interface PieData {
     id: string;
@@ -8,15 +11,60 @@ interface PieData {
     color?: string;
 }
 
+interface OrderStats {
+    processingCount: number;
+    deliveredCount: number;
+}
+
 export default function DashboardOrderGraph() {
+    const [orderStats, dispatch] = useReducer(BackendDataObjectReducer<OrderStats>, {
+        data: null,
+        isLoading: false,
+        error: null,
+    });
     const { up } = useBreakpoint();
     const isMobile = !up.md;
     const isTablet = up.md && !up.lg;
 
-    const orderStatuses: PieData[] = [
-        { id: "Hazırlanıyor", label: "Hazırlanıyor", value: 5, color: "#f6ad55" },
-        { id: "Teslim Edildi", label: "Teslim Edildi", value: 2, color: "#48bb78" },
-    ];
+    const [orderStatuses, setOrderStatuses] = useState<PieData[]>([
+        { id: "Hazırl..", label: "Hazırlanıyor", value: 0, color: "#f6ad55" },
+        { id: "T. Edildi", label: "Teslim Edildi", value: 0, color: "#48bb78" },
+    ]);
+
+    useEffect(() => {
+        if (orderStats.data) {
+            setOrderStatuses([
+                { id: "Hazırl..", label: "Hazırlanıyor", value: orderStats.data.processingCount, color: "#f6ad55" },
+                { id: "T. Edildi", label: "Teslim Edildi", value: orderStats.data.deliveredCount, color: "#48bb78" },
+            ])
+        }
+    }, [orderStats.data]);
+
+    async function fetchOrderStatuses(signal?: AbortSignal) {
+        dispatch({ type: 'FETCH_START' });
+        try {
+            const response = await requests.order.statusesStats(signal);
+            dispatch({ type: 'FETCH_SUCCESS', payload: response });
+        }
+        catch (error: any) {
+            if (error.name === 'CanceledError' || error.name === "AbortError") {
+                return;
+            }
+            else {
+                dispatch({ type: "FETCH_ERROR", payload: error.message || "Sipariş istatistikleri çekilirken hata oluştu." });
+            }
+        }
+    };
+
+    useEffect(() => {
+        const controller = new AbortController();
+
+        fetchOrderStatuses(controller.signal);
+
+        return () => {
+            controller.abort();
+        };
+    }, []);
 
     const getPieMargins = () => {
         if (isMobile) return { top: 20, right: 20, bottom: 60, left: 20 };
@@ -45,7 +93,7 @@ export default function DashboardOrderGraph() {
                 borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
                 arcLinkLabelsSkipAngle={isMobile ? 15 : 10}
                 arcLinkLabelsTextColor="#333333"
-                arcLinkLabelsThickness={2}
+                arcLinkLabelsThickness={1}
                 arcLinkLabelsColor={{ from: 'color' }}
                 arcLabelsSkipAngle={isMobile ? 15 : 10}
                 arcLabelsTextColor={{ from: 'color', modifiers: [['darker', 2]] }}

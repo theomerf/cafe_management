@@ -3,6 +3,7 @@ using Entities.Dtos;
 using Entities.Exceptions;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.Extensions.Caching.Memory;
 using Repositories.Contracts;
 using Services.Contracts;
 
@@ -12,11 +13,13 @@ namespace Services
     {
         private readonly IRepositoryManager _manager;
         private readonly IMapper _mapper;
+        private readonly IMemoryCache _cache;
 
-        public TableManager(IRepositoryManager manager, IMapper mapper)
+        public TableManager(IRepositoryManager manager, IMapper mapper, IMemoryCache cache)
         {
             _manager = manager;
             _mapper = mapper;
+            _cache = cache;
         }
 
         public async Task<(PagedList<TableDto> tables, MetaData metaData)> GetAllTablesAsync(RequestParameters p, bool trackChanges)
@@ -37,6 +40,25 @@ namespace Services
             var statusesDto = _mapper.Map<IEnumerable<TableDto>>(statuses);
 
             return statusesDto;
+        }
+
+        public async Task<(int occupiedCount, int availableCount)> GetTableStatusStatsAsync()
+        {
+            var cacheKey = "TableStatusStats";
+            if (_cache.TryGetValue(cacheKey, out (int occupiedCount, int availableCount) stats))
+            {
+                return stats;
+            }
+
+            var stat = await _manager.Table.GetTableStatusStatsAsync();
+
+            var cacheOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+            };
+            _cache.Set(cacheKey, stat, cacheOptions);
+
+            return stat;
         }
 
         private async Task<Table> GetOneTableByIdForServiceAsync(int tableId, bool trackChanges)

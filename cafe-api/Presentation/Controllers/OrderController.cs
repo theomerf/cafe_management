@@ -42,6 +42,36 @@ namespace Presentation.Controllers
             return Ok(count);
         }
 
+        [HttpGet("daily-income")]
+        public async Task<IActionResult> GetDailyIncome()
+        {
+            var dailyIncome = await _manager.OrderService.GetTotalIncomeOfDayAsync();
+
+            return Ok(dailyIncome);
+        }
+
+        [HttpGet("daily-count")]
+        public async Task<IActionResult> GetDailyOrdersCount()
+        {
+            var dailyCount = await _manager.OrderService.GetOrdersCountOfDayAsync();
+
+            return Ok(dailyCount);
+        }
+
+        [HttpGet("statuses-stats")]
+        public async Task<IActionResult> GetOrderStatusesStats()
+        {
+            var (processingCount, deliveredCount) = await _manager.OrderService.GetOrdersStatusStatsAsync();
+
+            var stats = new
+            {
+                ProcessingCount = processingCount,
+                DeliveredCount = deliveredCount
+            };
+
+            return Ok(stats);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOneOrder([FromRoute] int id)
         {

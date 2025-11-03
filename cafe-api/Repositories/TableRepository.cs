@@ -36,6 +36,23 @@ namespace Repositories
             return tables;
         }
 
+        public async Task<(int occupiedCount, int availableCount)> GetTableStatusStatsAsync()
+        {
+            var stats = await FindByCondition(t => t.Status != TableStatus.OutOfOrder, false)
+                .GroupBy(t => t.Status)
+                .Select(g => new
+                {
+                    Status = g.Key,
+                    Count = g.Count()
+                })
+                .ToListAsync();
+
+            var occupiedCount = stats.FirstOrDefault(s => s.Status == TableStatus.Occupied)?.Count ?? 0;
+            var freeCount = stats.FirstOrDefault(s => s.Status == TableStatus.Available)?.Count ?? 0;
+
+            return (occupiedCount, freeCount);
+        }
+
         public async Task<Table?> GetOneTableByIdAsync(int tableId, bool trackChanges)
         {
             var table = await FindByCondition(t => t.Id == tableId, trackChanges)
