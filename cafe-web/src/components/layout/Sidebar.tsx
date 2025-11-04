@@ -1,4 +1,4 @@
-import { faBuilding, faChartSimple, faGears, faHome, faMagnifyingGlassChart, faMugHot } from "@fortawesome/free-solid-svg-icons";
+import { faBuilding, faChartSimple, faGears, faHome, faLayerGroup, faMagnifyingGlassChart, faMugHot, faPizzaSlice, faTable, faUserGear } from "@fortawesome/free-solid-svg-icons";
 import SidebarButton from "../ui/SidebarButton";
 
 export default function Sidebar() {
@@ -8,7 +8,12 @@ export default function Sidebar() {
                 <div className="flex flex-col overflow-y-auto gap-y-4 px-2 py-6 scrollbar-thin scrollbar-thumb-cyan-400 scrollbar-track-blue-200 hover:scrollbar-thumb-cyan-500">
                     <SidebarButton label="Dashboard" icon={faHome} to="/" />
                     <SidebarButton label="Siparişler" icon={faMugHot} to="/orders" />
-                    <SidebarButton label="Kafe Yönetimi" icon={faBuilding} to="/management" />
+                    <SidebarButton label="Kafe Yönetimi" icon={faBuilding} to="/management" hasDropdown={true}>
+                        <SidebarButton label="Kullanıcılar" icon={faUserGear} to="/management/accounts" />
+                        <SidebarButton label="Ürünler" icon={faPizzaSlice} to="/management/products" />
+                        <SidebarButton label="Kategoriler" icon={faLayerGroup} to="/management/categories" />
+                        <SidebarButton label="Masalar" icon={faTable} to="/management/tables" />
+                    </SidebarButton>
                     <SidebarButton label="İstatistikler" icon={faChartSimple} to="/statistics" />
                     <SidebarButton label="Analizler" icon={faMagnifyingGlassChart} to="/analytics" />
                     <SidebarButton label="Ayarlar" icon={faGears} to="/settings" />

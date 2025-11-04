@@ -1,13 +1,13 @@
 import { faBuilding, faCalendarDay, faChartSimple, faDollar, faGears, faMugHot, faTable } from "@fortawesome/free-solid-svg-icons";
-import DashboardStatCard from "../components/ui/DashboardStatCard";
-import DashboardButtonCard from "../components/ui/DashboardButtonCard";
-import TitleCard from "../components/ui/TitleCard";
+import DashboardStatCard from "../../components/ui/DashboardStatCard";
+import DashboardButtonCard from "../../components/ui/DashboardButtonCard";
+import TitleCard from "../../components/ui/TitleCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import DashboardOrderGraph from "../components/dashboard/DashboardOrderGraph";
-import DashboardTableGraph from "../components/dashboard/DashboardTableGraph";
+import DashboardOrderGraph from "../../components/dashboard/DashboardOrderGraph";
+import DashboardTableGraph from "../../components/dashboard/DashboardTableGraph";
 import { useEffect, useReducer } from "react";
-import BackendDataObjectReducer from "../types/backendDataObject";
-import requests from "../services/api";
+import BackendDataObjectReducer from "../../types/backendDataObject";
+import requests from "../../services/api";
 
 interface DashboardStats {
     totalOrders: number;

@@ -95,8 +95,8 @@ const product = {
     getAllProducts: (params: URLSearchParams, signal?: AbortSignal) => methods.get("product", { params }, signal),
     productsCount: (signal?: AbortSignal) => methods.getWithoutHeaders("product/count", {}, signal),
     getOneProduct: (id: string, signal?: AbortSignal) => methods.getWithoutHeaders(`product/${id}`, {}, signal),
-    createProduct: (formData: FormData) => methods.post("product/create", formData),
-    updateProduct: (formData: FormData) => methods.put(`product/update`, formData),
+    createProduct: (formData: any) => methods.post("product/create", formData),
+    updateProduct: (formData: any) => methods.put(`product/update`, formData),
     deleteProduct: (id: string) => methods.delete(`product/delete/${id}`),
 };
 
@@ -108,9 +108,9 @@ const order = {
     dailyOrdersCount: (signal?: AbortSignal) => methods.getWithoutHeaders("order/daily-count", {}, signal),
     statusesStats: (signal?: AbortSignal) => methods.getWithoutHeaders("order/statuses-stats", {}, signal),
     getOneOrder: (id: string, signal?: AbortSignal) => methods.getWithoutHeaders(`order/${id}`, {}, signal),
-    createOrder: (formData: FormData) => methods.post("order/create", formData),
-    changeOrderStatus: (formData: FormData) => methods.patch("order/change-status", formData),
-    updateOrder: (formData: FormData) => methods.put(`order/update`, formData),
+    createOrder: (formData: any) => methods.post("order/create", formData),
+    changeOrderStatus: (formData: any) => methods.patch("order/change-status", formData),
+    updateOrder: (formData: any) => methods.put(`order/update`, formData),
     deleteOrder: (id: string) => methods.delete(`order/delete/${id}`),
 };
 
@@ -120,9 +120,9 @@ const table = {
     statusesStats: (signal?: AbortSignal) => methods.getWithoutHeaders("table/statuses-stats", {}, signal),
     tablesCount: (signal?: AbortSignal) => methods.getWithoutHeaders("table/count", {}, signal),
     getOneTable: (id: string, signal?: AbortSignal) => methods.getWithoutHeaders(`table/${id}`, {}, signal),
-    createTable: (formData: RequestParameters) => methods.post("table/create", formData),
-    changeTableStatus: (formData: FormData) => methods.patch("table/change-status", formData),
-    updateTable: (formData: RequestParameters) => methods.put("table/update", formData),
+    createTable: (formData: any) => methods.post("table/create", formData),
+    changeTableStatus: (formData: any) => methods.patch("table/change-status", formData),
+    updateTable: (formData: any) => methods.put("table/update", formData),
     deleteTable: (id: string) => methods.delete(`table/delete/${id}`),
 };
 

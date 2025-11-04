@@ -1,11 +1,11 @@
 import { useEffect, useReducer, useState } from "react";
-import TitleCard from "../components/ui/TitleCard";
-import { OrdersPanel } from "../components/table/OrdersPanel";
+import TitleCard from "../../components/ui/TitleCard";
+import { OrdersPanel } from "../../components/table/OrdersPanel";
 import { Sparkles } from "lucide-react";
-import type { TableItem } from "../types/table";
-import OrdersScene from "../components/table/OrdersScene";
-import requests from "../services/api";
-import BackendDataListReducer from "../types/backendDataList";
+import type { TableItem } from "../../types/table";
+import OrdersScene from "../../components/table/OrdersScene";
+import requests from "../../services/api";
+import BackendDataListReducer from "../../types/backendDataList";
 
 export default function Orders() {
     const [tables, dispatch] = useReducer(BackendDataListReducer<TableItem>, {

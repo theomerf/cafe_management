@@ -990,20 +990,12 @@
       },
       "TableDtoForUpdate": {
         "required": [
-          "capacity",
           "locationX",
-          "locationZ",
-          "name",
-          "status"
+          "locationZ"
         ],
         "type": "object",
         "properties": {
-          "name": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string"
-          },
-          "capacity": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },
@@ -1014,13 +1006,6 @@
           "locationZ": {
             "type": "number",
             "format": "double"
-          },
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "status": {
-            "$ref": "#/components/schemas/TableStatus"
           }
         },
         "additionalProperties": false

@@ -3,10 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Entities.Dtos
 {
-    public record TableDtoForUpdate : TableDtoForCreation
+    public record TableDtoForUpdate
     {
         public int Id { get; init; }
-        [Required(ErrorMessage = "Durum alanı boş geçilemez.")]
-        public TableStatus Status { get; init; }
+        [Required(ErrorMessage = "Masa konumu X koordinatı gereklidir.")]
+        public decimal LocationX { get; set; }
+        [Required(ErrorMessage = "Masa konumu Z koordinatı gereklidir.")]
+        public decimal LocationZ { get; set; }
     }
 }
