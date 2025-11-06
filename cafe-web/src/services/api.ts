@@ -4,7 +4,6 @@ import { history } from '../utils/history';
 import { store } from '../store/store';
 import { logout, setUser } from '../pages/Account/accountSlice';
 import type { LoginResponse } from '../types/loginResponse';
-import type RequestParameters from '../types/requestParameters';
 
 const apiBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/+$/, '') || 'https://localhost:7214';
 
@@ -100,6 +99,15 @@ const product = {
     deleteProduct: (id: string) => methods.delete(`product/delete/${id}`),
 };
 
+const category = {
+    getAllCategories: (params: any, signal?: AbortSignal) => methods.get("category", { params }, signal),
+    categoriesCount: (signal?: AbortSignal) => methods.getWithoutHeaders("category/count", {}, signal),
+    getOneCategory: (id: string, signal?: AbortSignal) => methods.getWithoutHeaders(`category/${id}`, {}, signal),
+    createCategory: (formData: any) => methods.post("category/create", formData),
+    updateCategory: (formData: any) => methods.put(`category/update`, formData),
+    deleteCategory: (id: string) => methods.delete(`category/delete/${id}`),
+}
+
 const order = {
     getAllOrders: (params: URLSearchParams, signal?: AbortSignal) => methods.get("order", { params }, signal),
     getOrdersOfOneTable: (tableId: string, signal?: AbortSignal) => methods.getWithoutHeaders(`order/${tableId}`, {}, signal),
@@ -137,6 +145,7 @@ const errors = {
 const requests = {
     account,
     product,
+    category,
     order,
     table,
     errors,

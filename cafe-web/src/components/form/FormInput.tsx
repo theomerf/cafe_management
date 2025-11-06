@@ -1,5 +1,7 @@
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { FieldError } from "react-hook-form";
 
 type InputProps = {
     register: any;
@@ -8,9 +10,10 @@ type InputProps = {
     id?: string;
     icon?: IconProp;
     label: string;
+    error?: FieldError;
 }
 
-export default function FormInput({ register, type, name, id, icon, label }: InputProps) {
+export default function FormInput({ register, type, name, id, icon, label, error }: InputProps) {
     return (
         <div className="flex flex-col gap-y-1">
             <label htmlFor={name} className="font-bold text-gray-500">
@@ -22,6 +25,12 @@ export default function FormInput({ register, type, name, id, icon, label }: Inp
                 name={name}
                 id={id ? id : name}
                 className="border-gray-200 border-2 rounded-lg px-3 py-2 bg-white/90 transition-all duration-300 focus:border-cyan-200 focus:outline-none focus:shadow-gray-200 focus:shadow-md focus:scale-[102%] focus:bg-white" />
+            {error && (
+                <p className="text-red-500 text-sm font-semibold">
+                    <FontAwesomeIcon icon={faTriangleExclamation} className="mr-1"/>
+                    {error.message}
+                </p>
+            )}
         </div>
     );
 }

@@ -20,6 +20,11 @@ namespace Repositories.Configs
             builder.Property(p => p.ImageUrl)
                 .IsRequired()
                 .HasMaxLength(200);
+
+            builder.HasOne(p => p.Category)
+                .WithMany(c => c.Products)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -5,7 +5,7 @@ namespace Repositories.Contracts
 {
     public interface ITableRepository : IRepositoryBase<Table>
     {
-        Task<(IEnumerable<Table> tables, int count)> GetAllTablesAsync(RequestParameters p, bool trackChanges);
+        Task<IEnumerable<Table>> GetAllTablesAsync(bool trackChanges);
         Task<IEnumerable<Table>> GetAllTablesStatusesAsync(bool trackChanges);
         Task<(int occupiedCount, int availableCount)> GetTableStatusStatsAsync();
         Task<int> GetAllTablesCountAsync();

@@ -17,12 +17,11 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTables([FromQuery] RequestParameters p)
+        public async Task<IActionResult> GetAllTables()
         {
-            var pagedTables = await _manager.TableService.GetAllTablesAsync(p, false);
-            Response.Headers.Add("X-Pagination", System.Text.Json.JsonSerializer.Serialize(pagedTables.metaData));
+            var tables = await _manager.TableService.GetAllTablesAsync(false);
 
-            return Ok(pagedTables.tables);
+            return Ok(tables);
         }
 
         [HttpGet("statuses")]
@@ -71,7 +70,7 @@ namespace Presentation.Controllers
             return StatusCode(201);
         }
 
-        [HttpPost("delete/{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteTable([FromRoute] int id)
         {
             await _manager.TableService.DeleteTableAsync(id);

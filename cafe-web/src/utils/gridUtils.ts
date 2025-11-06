@@ -8,12 +8,9 @@ export const GRID_CONFIG = {
   MIN_Z: -10,
   MAX_Z: 10,
   PADDING: 0.5,           // Sınırdan uzaklık
-  ROW_COL_THRESHOLD: 0.3, // Satır/sütün alignment eşiği (birim cinsinden)
+  ROW_COL_THRESHOLD: 1.0, // Satır/sütün alignment eşiği (0.3'den 1.0'a çıkart)
 };
 
-/**
- * Verilen değeri grid hizasına snap'ler
- */
 export const snapToGrid = (value: number, gridSize: number = GRID_CONFIG.GRID_SNAP): number => {
   return Math.round(value / gridSize) * gridSize;
 };
@@ -214,7 +211,7 @@ export const alignToNearestRowColumn = (
   const nearestColumnZ = findNearestColumn([snappedX, snappedZ], tablePositions);
   const columnDistance = Math.abs(snappedZ - nearestColumnZ);
 
-  // Eşik değerine göre hizala
+  // Eşik değerine göre hizala (daha gevşek threshold)
   const alignedX = rowDistance < threshold ? nearestRowX : snappedX;
   const alignedZ = columnDistance < threshold ? nearestColumnZ : snappedZ;
 
@@ -272,7 +269,7 @@ export const findEmptyGridPosition = (
   tablePositions: [number, number][],
   layout = analyzeGridLayout(tablePositions)
 ): [number, number] => {
-  const { rows, columns, rowSpacing, columnSpacing } = layout;
+  const { rows, columns, rowSpacing } = layout;
 
   // Eğer hiç masa yoksa start pozisyonunu döndür
   if (rows.length === 0) {

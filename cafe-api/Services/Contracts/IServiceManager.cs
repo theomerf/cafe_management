@@ -6,5 +6,6 @@
         IProductService ProductService { get; }
         IOrderService OrderService { get; }
         ITableService TableService { get; }
+        ICategoryService CategoryService { get; }
     }
 }

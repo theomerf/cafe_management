@@ -5,7 +5,7 @@ namespace Services.Contracts
 {
     public interface ITableService
     {
-        Task<(PagedList<TableDto> tables, MetaData metaData)> GetAllTablesAsync(RequestParameters p, bool trackChanges);
+        Task<IEnumerable<TableDto>> GetAllTablesAsync(bool trackChanges);
         Task<IEnumerable<TableDto>> GetAllTablesStatusesAsync(bool trackChanges);
         Task<int> GetAllTablesCountAsync();
         Task<(int occupiedCount, int availableCount)> GetTableStatusStatsAsync();

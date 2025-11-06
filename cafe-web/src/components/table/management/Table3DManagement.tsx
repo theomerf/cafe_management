@@ -9,20 +9,20 @@ interface Table3DProps {
     table: TableItem;
     onClick: () => void;
     isSelected: boolean;
-    isDragging: boolean;
     onDragStart: (tableId: number) => void;
     onDragEnd: (tableId: number, newX: number, newZ: number) => void;
     allTables?: TableItem[];
+    pendingUpdates?: Map<number, { x: number; z: number }>;
 }
 
 export function Table3DManagement({
     table,
     onClick,
     isSelected,
-    isDragging,
     onDragStart,
     onDragEnd,
     allTables = [],
+    pendingUpdates = new Map(),
 }: Table3DProps) {
     const groupRef = useRef<Group>(null);
     const tableTopRef = useRef<Mesh>(null);
@@ -33,43 +33,45 @@ export function Table3DManagement({
     const planeRef = useRef(new Plane(new Vector3(0, 1, 0), -0.1));
     const intersectionPointRef = useRef(new Vector3());
     
-    // Drag başladığı masa pozisyonunu sakla
     const dragStartTablePosRef = useRef<{ x: number; z: number }>({
         x: table.locationX,
         z: table.locationZ,
     });
 
-    // Drag başladığı mouse pozisyonunu sakla
     const dragStartMouseRef = useRef<{ x: number; y: number }>({
         x: 0,
         y: 0,
     });
 
-    // Drag başladığı world pozisyonunu sakla (raycaster kesişim noktası)
     const dragStartWorldPosRef = useRef<{ x: number; z: number }>({
         x: 0,
         z: 0,
     });
 
-    // Table güncellenince pozisyonları güncelle
+    const getDisplayPosition = useCallback(() => {
+        const pending = pendingUpdates.get(table.id);
+        if (pending) {
+            return { x: pending.x, z: pending.z };
+        }
+        return { x: table.locationX, z: table.locationZ };
+    }, [table.id, table.locationX, table.locationZ, pendingUpdates]);
+
     useEffect(() => {
         if (groupRef.current && !isLocalDragging) {
-            groupRef.current.position.x = table.locationX;
-            groupRef.current.position.z = table.locationZ;
+            const displayPos = getDisplayPosition();
+            groupRef.current.position.x = displayPos.x;
+            groupRef.current.position.z = displayPos.z;
         }
-    }, [table.locationX, table.locationZ, isLocalDragging]);
+    }, [table.locationX, table.locationZ, isLocalDragging, pendingUpdates, getDisplayPosition]);
 
-    // Animasyon frame'i güncelle
     useFrame(() => {
         if (groupRef.current) {
-            // Seçili masa dönsün ancak sadece sürüklenmediyse
             if (isSelected && !isLocalDragging) {
                 groupRef.current.rotation.y += 0.01;
             } else if (!isSelected && !isLocalDragging) {
                 groupRef.current.rotation.y = 0;
             }
 
-            // Sürükleme sırasında masa şeffaf olsun
             if (tableTopRef.current && tableTopRef.current.material) {
                 const material = tableTopRef.current.material as any;
                 if (isLocalDragging) {
@@ -98,9 +100,6 @@ export function Table3DManagement({
         }
     }, [table.status, isSelected, isLocalDragging]);
 
-    /**
-     * Mouse pozisyonundan world koordinatları hesapla (raycaster kullanarak)
-     */
     const getWorldPositionFromMouse = useCallback((clientX: number, clientY: number): [number, number] => {
         const rect = (document.querySelector('canvas') as HTMLCanvasElement)?.getBoundingClientRect?.();
         const viewportWidth = rect?.width || window.innerWidth;
@@ -108,18 +107,14 @@ export function Table3DManagement({
         const canvasLeft = rect?.left || 0;
         const canvasTop = rect?.top || 0;
 
-        // Canvas'a göre relative koordinatlar
         const relativeX = clientX - canvasLeft;
         const relativeY = clientY - canvasTop;
 
-        // NDC (Normalized Device Coordinates) hesapla
         mouseRef.current.x = (relativeX / viewportWidth) * 2 - 1;
         mouseRef.current.y = -(relativeY / viewportHeight) * 2 + 1;
 
-        // Raycaster'ı ayarla
         raycasterRef.current.setFromCamera(mouseRef.current, camera);
 
-        // Y = 0 düzleminde kesişimi bul
         raycasterRef.current.ray.intersectPlane(planeRef.current, intersectionPointRef.current);
 
         return [intersectionPointRef.current.x, intersectionPointRef.current.z];
@@ -129,19 +124,16 @@ export function Table3DManagement({
         e.stopPropagation();
         if (!isSelected) return;
 
-        // Mouse down sırasında masa pozisyonunu sakla
         dragStartTablePosRef.current = {
             x: groupRef.current?.position.x || table.locationX,
             z: groupRef.current?.position.z || table.locationZ,
         };
 
-        // İlk mouse pozisyonunu sakla
         dragStartMouseRef.current = {
             x: e.clientX,
             y: e.clientY,
         };
 
-        // İlk world pozisyonunu hesapla (raycaster ile)
         const [worldX, worldZ] = getWorldPositionFromMouse(e.clientX, e.clientY);
         dragStartWorldPosRef.current = {
             x: worldX,
@@ -158,18 +150,14 @@ export function Table3DManagement({
 
         e.stopPropagation();
 
-        // Şu anki world pozisyonunu hesapla
         const [currentWorldX, currentWorldZ] = getWorldPositionFromMouse(e.clientX, e.clientY);
 
-        // Başlangıç world pozisyonundan delta hesapla
         const worldDeltaX = currentWorldX - dragStartWorldPosRef.current.x;
         const worldDeltaZ = currentWorldZ - dragStartWorldPosRef.current.z;
 
-        // Başlangıç masa pozisyonuna delta ekle
         let newX = dragStartTablePosRef.current.x + worldDeltaX;
         let newZ = dragStartTablePosRef.current.z + worldDeltaZ;
 
-        // Pozisyonu doğrula ve snap et
         const [validX, validZ] = validateAndSnapPosition(newX, newZ);
 
         groupRef.current.position.x = validX;
@@ -186,27 +174,26 @@ export function Table3DManagement({
             const currentX = groupRef.current.position.x;
             const currentZ = groupRef.current.position.z;
 
-            // Sürükleme sırasında sürüklenen masa hariç diğer masaların pozisyonlarını al
             const otherTablePositions: [number, number][] = allTables
                 .filter(t => t.id !== table.id)
-                .map(t => [t.locationX, t.locationZ] as [number, number]);
+                .map(t => {
+                    const pending = pendingUpdates.get(t.id);
+                    return [pending?.x ?? t.locationX, pending?.z ?? t.locationZ] as [number, number];
+                });
 
-            // Alignment uygula - en yakın satır/sütüne hizala
             const [alignedX, alignedZ] = alignToNearestRowColumn(
                 [currentX, currentZ],
                 otherTablePositions
             );
 
-            // Final pozisyonu set et
             groupRef.current.position.x = alignedX;
             groupRef.current.position.z = alignedZ;
 
-            // Backend'e gönder
             onDragEnd(table.id, alignedX, alignedZ);
         }
 
         document.body.style.cursor = 'default';
-    }, [isLocalDragging, table.id, onDragEnd, allTables]);
+    }, [isLocalDragging, table.id, onDragEnd, allTables, pendingUpdates]);
 
     useEffect(() => {
         if (isLocalDragging) {
@@ -258,7 +245,6 @@ export function Table3DManagement({
                 <meshStandardMaterial color="#8b7355" metalness={0.4} roughness={0.6} />
             </mesh>
 
-            {/* Masa üstü */}
             <mesh 
                 ref={tableTopRef} 
                 position={[0, 0.1, 0]} 
@@ -277,10 +263,9 @@ export function Table3DManagement({
                 />
             </mesh>
 
-            {/* Masa adı */}
             <Text
-                position={[0, 0.5, 0.01]}
-                fontSize={0.3}
+                position={[0, 0.7, 0.01]}
+                fontSize={0.35}
                 color="#ffffff"
                 anchorX="center"
                 anchorY="middle"
@@ -289,18 +274,16 @@ export function Table3DManagement({
                 {`${table.name}`}
             </Text>
 
-            {/* Kapasite bilgisi */}
             <Text
-                position={[0, 0.15, 0.01]}
-                fontSize={0.18}
+                position={[0, 0.4, 0.01]}
+                fontSize={0.3}
                 color="#ffffff"
                 anchorX="center"
                 anchorY="middle"
             >
-                {`👥 ${table.capacity}`}
+                {`👥${table.capacity}`}
             </Text>
 
-            {/* Status göstergesi */}
             {isSelected && (
                 <mesh position={[0, 1.2, 0]}>
                     <sphereGeometry args={[0.15, 16, 16]} />

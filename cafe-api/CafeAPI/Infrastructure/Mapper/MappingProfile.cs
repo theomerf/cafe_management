@@ -17,6 +17,9 @@ namespace CafeAPI.Infrastructure.Mapper
             CreateMap<Order, OrderDto>();
             CreateMap<OrderDtoForCreation, Order>();
             CreateMap<OrderDtoForUpdate, Order>();
+            CreateMap<Category, CategoryDto>();
+            CreateMap<CategoryDtoForCreation, Category>();
+            CreateMap<CategoryDtoForUpdate, Category>();
         }
     }
 }

@@ -84,8 +84,8 @@ export const Table3D: React.FC<Table3DProps> = ({
       </mesh>
 
     <Text
-      position={[0, 0.50, 0.01]}
-      fontSize={0.25}
+      position={[0, 0.60, 0.01]}
+      fontSize={0.4}
       color="#ffffff"
       anchorX="center"
       anchorY="middle"

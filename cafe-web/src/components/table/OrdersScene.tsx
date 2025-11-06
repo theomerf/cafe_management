@@ -2,11 +2,10 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Grid } from '@react-three/drei';
 import { Table3D } from './Table3D';
 import { type TableItem } from '../../types/table';
-import type { BackendDataList } from '../../types/backendDataList';
 
 interface OrdersSceneProps {
-  tables: BackendDataList<TableItem>;
-  onTableSelect: (tableId: number) => void;
+  tables: TableItem[];
+  onTableSelect: () => void;
   selectedTable: TableItem | null;
   setSelectedTable: (table: TableItem | null) => void;
 }
@@ -19,7 +18,7 @@ export default function OrdersScene({ tables, onTableSelect, selectedTable, setS
     >
       <PerspectiveCamera
         makeDefault
-        position={[0, 12, 15]}
+        position={[0, 15, 18]}
         fov={50}
       />
       <OrbitControls
@@ -48,14 +47,14 @@ export default function OrdersScene({ tables, onTableSelect, selectedTable, setS
         fadeDistance={25}
       />
 
-      {tables.data?.map((table) => (
+      {tables.map((table) => (
         <Table3D
           key={table.id}
           table={table}
           isSelected={selectedTable?.id === table.id}
           onClick={() => {
             setSelectedTable(table);
-            onTableSelect(table.id);
+            onTableSelect();
           }}
         />
       ))}

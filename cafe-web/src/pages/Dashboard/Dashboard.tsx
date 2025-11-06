@@ -8,6 +8,7 @@ import DashboardTableGraph from "../../components/dashboard/DashboardTableGraph"
 import { useEffect, useReducer } from "react";
 import BackendDataObjectReducer from "../../types/backendDataObject";
 import requests from "../../services/api";
+import { toast } from "react-toastify";
 
 interface DashboardStats {
     totalOrders: number;
@@ -48,6 +49,7 @@ export default function Dashboard() {
             }
             else {
                 dispatch({ type: "FETCH_ERROR", payload: error.message || "Dashboard istatistikleri çekilirken hata oluştu." });
+                toast.error(dashboardStats.error || "Dashboard istatistikleri çekilirken hata oluştu.");
             }
         }
     }

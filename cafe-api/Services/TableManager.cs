@@ -22,14 +22,12 @@ namespace Services
             _cache = cache;
         }
 
-        public async Task<(PagedList<TableDto> tables, MetaData metaData)> GetAllTablesAsync(RequestParameters p, bool trackChanges)
+        public async Task<IEnumerable<TableDto>> GetAllTablesAsync(bool trackChanges)
         {
-            var tables = await _manager.Table.GetAllTablesAsync(p, trackChanges);
-            var tablesDto = _mapper.Map<IEnumerable<TableDto>>(tables.tables);
-          
-            var pagedTables = PagedList<TableDto>.ToPagedList(tablesDto, p.PageNumber, p.PageSize, tables.count);
+            var tables = await _manager.Table.GetAllTablesAsync(trackChanges);
+            var tablesDto = _mapper.Map<IEnumerable<TableDto>>(tables);
 
-            return (pagedTables, pagedTables.MetaData);
+            return tablesDto;
         }
 
         public async Task<int> GetAllTablesCountAsync() => await _manager.Table.GetAllTablesCountAsync();

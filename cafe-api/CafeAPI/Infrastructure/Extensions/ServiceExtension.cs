@@ -39,6 +39,7 @@ namespace CafeAPI.Infrastructure.Extensions
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ITableRepository, TableRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
         }
 
         public static void ConfigureServiceRegistration(this IServiceCollection services)
@@ -48,6 +49,7 @@ namespace CafeAPI.Infrastructure.Extensions
             services.AddScoped<IProductService, ProductManager>();
             services.AddScoped<IOrderService, OrderManager>();
             services.AddScoped<ITableService, TableManager>();
+            services.AddScoped<ICategoryService, CategoryManager>();
         }
 
         public static void ConfigureIdentity(this IServiceCollection services)

@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useBreakpoint } from "../../hooks/useBreakpoint";
-import { faBarsProgress, faBell, faChevronDown, faGears, faMugHot, faRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faChevronDown, faGears, faMugHot, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";

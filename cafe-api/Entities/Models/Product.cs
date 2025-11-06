@@ -8,5 +8,7 @@
         public String? Description { get; set; }
         public decimal Price { get; set; }
         public String ImageUrl { get; set; } = null!;  
+        public int CategoryId { get; set; }
+        public Category? Category { get; set; }
     }
 }

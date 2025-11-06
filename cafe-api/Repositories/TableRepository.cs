@@ -12,17 +12,13 @@ namespace Repositories
         {
         }
 
-        public async Task<(IEnumerable<Table> tables, int count)> GetAllTablesAsync(RequestParameters p, bool trackChanges)
+        public async Task<IEnumerable<Table>> GetAllTablesAsync(bool trackChanges)
         {
-            var tablesQuery = FindAll(trackChanges);
-
-            var count = await tablesQuery.CountAsync();
-
-            var tables = await tablesQuery
+            var tables = await FindAll(trackChanges)
                 .OrderBy(t => t.Id)
-                .ToPaginate(p.PageSize, p.PageNumber)
                 .ToListAsync();
-            return (tables, count);
+
+            return tables;
         }
 
         public async Task<int> GetAllTablesCountAsync() => await CountAsync(false);
