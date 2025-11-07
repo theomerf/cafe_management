@@ -135,8 +135,8 @@ export const Pagination = ({
             key={page}
             onClick={() => onPageChange(page as number)}
             className={`
-              rounded-lg w-8 h-8 bg-cyan-50/80 backdrop-blur-lg border-2 border-gray-200 shadow-lg hover:scale-105 transition-all duration-300
-              ${currentPage === page ? 'pagination-active' : ''}
+              rounded-lg w-8 h-8  backdrop-blur-lg border-2 border-gray-200 shadow-lg hover:scale-105 transition-all duration-300
+              ${currentPage === page ? 'bg-blue-300/80' : 'bg-cyan-50/80'}
             `}
           >
             {page}

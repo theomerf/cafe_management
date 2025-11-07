@@ -91,7 +91,7 @@ const account = {
 };
 
 const product = {
-    getAllProducts: (params: URLSearchParams, signal?: AbortSignal) => methods.get("product", { params }, signal),
+    getAllProducts: (params: any, signal?: AbortSignal) => methods.get("product", { params }, signal),
     productsCount: (signal?: AbortSignal) => methods.getWithoutHeaders("product/count", {}, signal),
     getOneProduct: (id: string, signal?: AbortSignal) => methods.getWithoutHeaders(`product/${id}`, {}, signal),
     createProduct: (formData: any) => methods.post("product/create", formData),

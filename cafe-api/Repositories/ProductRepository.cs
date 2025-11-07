@@ -20,6 +20,7 @@ namespace Repositories
             var count = await productQuery.CountAsync();
 
             var products = await productQuery
+                .Include(p => p.Category)
                 .OrderBy(p => p.Id)
                 .ToPaginate(p.PageSize, p.PageNumber)
                 .ToListAsync();

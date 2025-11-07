@@ -13,5 +13,7 @@ namespace Entities.Dtos
         public decimal Price { get; init; }
         [Required(ErrorMessage = "Resim URL'si gereklidir.")]
         public String ImageUrl { get; init; } = null!;
+        [Required(ErrorMessage = "Kategori seçimi gereklidir.")]
+        public int CategoryId { get; init; }
     }
 }

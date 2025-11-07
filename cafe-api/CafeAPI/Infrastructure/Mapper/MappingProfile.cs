@@ -8,7 +8,8 @@ namespace CafeAPI.Infrastructure.Mapper
     {
         public MappingProfile()
         {
-            CreateMap<Product, ProductDto>();
+            CreateMap<Product, ProductDto>()
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : string.Empty));
             CreateMap<ProductDtoForCreation, Product>();
             CreateMap<ProductDtoForUpdate, Product>();
             CreateMap<Table, TableDto>();
@@ -17,7 +18,8 @@ namespace CafeAPI.Infrastructure.Mapper
             CreateMap<Order, OrderDto>();
             CreateMap<OrderDtoForCreation, Order>();
             CreateMap<OrderDtoForUpdate, Order>();
-            CreateMap<Category, CategoryDto>();
+            CreateMap<Category, CategoryDto>()
+                .ForMember(dest => dest.ProductCount, opt => opt.MapFrom(src => src.Products != null ? src.Products.Count : 0));
             CreateMap<CategoryDtoForCreation, Category>();
             CreateMap<CategoryDtoForUpdate, Category>();
         }

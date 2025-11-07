@@ -1051,6 +1051,7 @@
       },
       "ProductDtoForCreation": {
         "required": [
+          "categoryId",
           "imageUrl",
           "name",
           "price"
@@ -1074,12 +1075,17 @@
           "imageUrl": {
             "minLength": 1,
             "type": "string"
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
       },
       "ProductDtoForUpdate": {
         "required": [
+          "categoryId",
           "imageUrl",
           "name",
           "price"
@@ -1103,6 +1109,10 @@
           "imageUrl": {
             "minLength": 1,
             "type": "string"
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
           },
           "id": {
             "type": "integer",

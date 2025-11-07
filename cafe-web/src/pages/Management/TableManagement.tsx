@@ -11,6 +11,7 @@ import requests from "../../services/api";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
+import FormModal from "../../components/ui/FormModal";
 
 export default function TableManagement() {
     const queryClient = useQueryClient();
@@ -316,70 +317,34 @@ export default function TableManagement() {
             </div>
 
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
-                    <div className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden shadow-2xl max-w-md w-full mx-4">
-                        <div className="flex flex-col">
-                            <div className="flex flex-row justify-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 w-full px-8 py-6 text-white">
-                                <FontAwesomeIcon icon={isModalUpdate ? faEdit : faPlus} className="mr-3 self-center text-xl" />
-                                <h2 className="text-2xl font-bold">{isModalUpdate ? "Masa Bilgilerini Düzenle" : "Yeni Masa Oluştur"}</h2>
-                            </div>
+                <FormModal isModalUpdate={isModalUpdate} label="Masa" createFunc={handleSubmit((data) => createTable.mutate(data))} updateFunc={handleSubmit((data) => updateTable.mutate(data))} setIsModalOpen={setIsModalOpen} setIsModalUpdate={setIsModalUpdate} reset={reset}>
+                    <FormInput
+                        name="name"
+                        label="Masa Adı"
+                        error={errors.name}
+                        register={{
+                            ...register("name", {
+                                required: "Masa adı gereklidir.",
+                                minLength: { value: 2, message: "Masa adı en az 2 karakter olmalıdır." },
+                                maxLength: { value: 50, message: "Masa adı en fazla 50 karakter olabilir." },
+                            }),
+                        }}
+                    />
 
-                            <form
-                                className="flex flex-col gap-y-4 px-8 py-6"
-                                onSubmit={isModalUpdate ? handleSubmit((data) => updateTable.mutate(data)) : handleSubmit((data) => createTable.mutate(data))}
-                            >
-                                <FormInput
-                                    name="name"
-                                    label="Masa Adı"
-                                    error={errors.name}
-                                    register={{
-                                        ...register("name", {
-                                            required: "Masa adı gereklidir.",
-                                            minLength: { value: 2, message: "Masa adı en az 2 karakter olmalıdır." },
-                                            maxLength: { value: 50, message: "Masa adı en fazla 50 karakter olabilir." },
-                                        }),
-                                    }}
-                                />
-
-                                <FormInput
-                                    name="capacity"
-                                    type="number"
-                                    label="Kapasite (1-20)"
-                                    error={errors.capacity}
-                                    register={{
-                                        ...register("capacity", {
-                                            required: "Masa kapasitesi gereklidir.",
-                                            min: { value: 1, message: "Masa kapasitesi en az 1 olmalıdır." },
-                                            max: { value: 20, message: "Masa kapasitesi en fazla 20 olabilir." },
-                                        }),
-                                    }}
-                                />
-
-                                <div className="flex flex-row gap-x-3 mt-6 justify-center">
-                                    <button
-                                        type="submit"
-                                        className="bg-gradient-to-r from-green-500/90 to-green-600/90 hover:from-green-500 hover:to-green-600 shadow-lg flex items-center gap-2 px-6 py-3 font-semibold rounded-lg shadow-green-300 backdrop-blur-md transition-all duration-500 hover:scale-[103%] disabled:opacity-50 disabled:cursor-not-allowed text-white"
-                                    >
-                                        <FontAwesomeIcon icon={faCheckCircle} />
-                                        Onayla
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setIsModalUpdate(false);
-                                            setIsModalOpen(false);
-                                            reset();
-                                        }}
-                                        className="bg-gradient-to-r from-red-500/90 to-red-600/90 hover:from-red-600 hover:to-red-700 shadow-lg flex items-center gap-2 px-6 py-3 font-semibold rounded-lg shadow-red-300 backdrop-blur-md transition-all duration-500 hover:scale-[103%] text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                        <FontAwesomeIcon icon={faXmarkCircle} />
-                                        İptal
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                    <FormInput
+                        name="capacity"
+                        type="number"
+                        label="Kapasite (1-20)"
+                        error={errors.capacity}
+                        register={{
+                            ...register("capacity", {
+                                required: "Masa kapasitesi gereklidir.",
+                                min: { value: 1, message: "Masa kapasitesi en az 1 olmalıdır." },
+                                max: { value: 20, message: "Masa kapasitesi en fazla 20 olabilir." },
+                            }),
+                        }}
+                    />
+                </FormModal>
             )}
         </>
     );

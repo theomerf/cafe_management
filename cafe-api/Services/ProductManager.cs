@@ -69,7 +69,7 @@ namespace Services
 
         public async Task UpdateProductAsync(ProductDtoForUpdate productDto)
         {
-            var product = await GetOneProductByIdAsync(productDto.Id, true);
+            var product = await GetOneProductForServiceAsync(productDto.Id, true);
             _mapper.Map(productDto, product);
 
             await _manager.SaveAsync();

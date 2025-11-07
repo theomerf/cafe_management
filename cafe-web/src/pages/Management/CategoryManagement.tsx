@@ -2,19 +2,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TitleCard from "../../components/ui/TitleCard";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import requests from "../../services/api";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type RequestParameters from "../../types/requestParameters";
 import type Category from "../../types/category";
-import { faCheckCircle, faEdit, faPlus, faPlusCircle, faTrash, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faPlusCircle, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useSearchParams } from "react-router-dom";
 import type PaginationHeader from "../../types/paginationHeader";
 import { useDebounce } from "../../hooks/useDebounce";
-import { ClipLoader } from "react-spinners";
 import FormInput from "../../components/form/FormInput";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import PaginationComponent from "../../components/ui/PaginationComponent";
 import { useBreakpoint } from "../../hooks/useBreakpoint";
+import FormModal from "../../components/ui/FormModal";
+import DataTable from "../../components/ui/DataTable";
 
 export default function CategoryManagement() {
     const queryClient = useQueryClient();
@@ -131,114 +132,40 @@ export default function CategoryManagement() {
                         Yeni Kategori Ekle
                     </button>
                 </TitleCard>
-                <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="table-fixed w-full divide-y-2 divide-gray-200">
-                            <thead className="bg-blue-400/90 backdrop-blur-md">
-                                <tr>
-                                    <th className="w-1/5 px-4 py-5 text-left text-xs md:text-sm font-medium text-white uppercase tracking-wider">Id</th>
-                                    <th className="w-2/5 px-4 py-5 text-left text-xs md:text-sm font-medium text-white uppercase tracking-wider">Kategori Adı</th>
-                                    <th className="w-1/5 px-4 py-5 text-left text-xs md:text-sm font-medium text-white uppercase tracking-wider">Ürün Sayısı</th>
-                                    <th className="w-1/5 px-4 py-5 text-left text-xs md:text-sm font-medium text-white uppercase tracking-wider">İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {isLoading ? (
-                                    <div className="flex flex-col gap-y-2 self-center justify-center items-center pt-4">
-                                        <ClipLoader size={40} color="#06b6d4" />
-                                        <p className="text-white">Kategoriler yükleniyor...</p>
-                                    </div>
-                                ) : (
-                                    isError ? (
-                                        <div className="flex flex-col gap-y-2 self-center justify-center items-center pt-4">
-                                            <p className="text-white">Kategoriler yüklenirken bir hata oluştu. <br /> Hata: {error.message} </p>
-                                        </div>
-                                    ) : (
-                                        data?.categories.map((category) => (
-                                            <tr key={category.id} className="hover:bg-gray-100 transition-all duration-300">
-                                                <td className="p-4 text-sm md:text-base font-medium text-gray-900">
-                                                    {category.id}
-                                                </td>
-                                                <td className="p-4 text-sm md:text-base font-medium text-gray-900">
-                                                    {category.name}
+                <DataTable colNames={
+                    new Map<string, string>([["Id", "w-1/5"], ["Kategori Adı", "w-2/5"], ["Ürün Sayısı", "w-1/5"], ["İşlemler", "w-1/5"]])}
+                    rows={["id", "name", "productCount"]}
+                    isLoading={isLoading} isError={isError} data={data?.categories} error={error} renderActions={(category: Category) => (
+                        <>
+                            <button onClick={() => { setSelectedCategory(category); setIsModalUpdate(true); setIsModalOpen(true); }} className="w-10 h-10 rounded-lg text-white backdrop-blur-lg group shadow-md shadow-yellow-300 bg-gradient-to-br from-yellow-300 via-yellow-500 to-yellow-600 transition-all duration-500 hover:from-yellow-400/80 hover:via-yellow-600/80 hover:to-yellow-700/80 hover:shadow-lg hover:shadow-yellow-400 hover:scale-105">
+                                <FontAwesomeIcon icon={faEdit} className="text-lg group-hover:scale-110 transition-all duration-500 group-hover:rotate-6" />
+                            </button>
 
-                                                </td>
-                                                <td className="p-4 text-sm md:text-base font-medium text-gray-900">
-                                                    0
-                                                </td>
-                                                <td className="p-4 text-sm font-medium">
-                                                    <div className="flex gap-2">
-                                                        <button onClick={() => { setSelectedCategory(category); setIsModalUpdate(true); setIsModalOpen(true); }} className="w-10 h-10 rounded-lg text-white backdrop-blur-lg group shadow-md shadow-yellow-300 bg-gradient-to-br from-yellow-300 via-yellow-500 to-yellow-600 transition-all duration-500 hover:from-yellow-400/80 hover:via-yellow-600/80 hover:to-yellow-700/80 hover:shadow-lg hover:shadow-yellow-400 hover:scale-105">
-                                                            <FontAwesomeIcon icon={faEdit} className="text-lg group-hover:scale-110 transition-all duration-500 group-hover:rotate-6" />
-                                                        </button>
-                                                        <button onClick={() => deleteCategory.mutate(category.id)} className="w-10 h-10 rounded-lg text-white backdrop-blur-lg group shadow-md shadow-red-300 bg-gradient-to-br from-red-500 via-red-600 to-red-700 transition-all duration-500 hover:from-red-600 hover:via-red-700 hover:to-red-800 hover:shadow-lg hover:shadow-red-400 hover:scale-105">
-                                                            <FontAwesomeIcon icon={faTrash} className="text-lg group-hover:scale-110 transition-all duration-500 group-hover:rotate-6" />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    )
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                            <button onClick={() => deleteCategory.mutate(category.id)} className="w-10 h-10 rounded-lg text-white backdrop-blur-lg group shadow-md shadow-red-300 bg-gradient-to-br from-red-500 via-red-600 to-red-700 transition-all duration-500 hover:from-red-600 hover:via-red-700 hover:to-red-800 hover:shadow-lg hover:shadow-red-400 hover:scale-105">
+                                <FontAwesomeIcon icon={faTrash} className="text-lg group-hover:scale-110 transition-all duration-500 group-hover:rotate-6" />
+                            </button>
+                        </>
+                    )}>
+                </DataTable>
                 {data?.pagination && !isLoading && (
                     <PaginationComponent data={data?.categories ?? []} pagination={data?.pagination!} isLoading={isLoading} error={error?.message ?? null} up={up} />
                 )}
-            </div>
+            </div >
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
-                    <div className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden shadow-2xl max-w-md w-full mx-4">
-                        <div className="flex flex-col">
-                            <div className="flex flex-row justify-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 w-full px-8 py-6 text-white">
-                                <FontAwesomeIcon icon={isModalUpdate ? faEdit : faPlus} className="mr-3 self-center text-xl" />
-                                <h2 className="text-2xl font-bold">{isModalUpdate ? "Kategori Bilgilerini Düzenle" : "Yeni Kategori Oluştur"}</h2>
-                            </div>
-
-                            <form
-                                className="flex flex-col gap-y-4 px-8 py-6"
-                                onSubmit={isModalUpdate ? handleSubmit((data) => updateCategory.mutate(data)) : handleSubmit((data) => createCategory.mutate(data))}
-                            >
-                                <FormInput
-                                    name="name"
-                                    label="Kategori Adı"
-                                    error={errors.name}
-                                    register={{
-                                        ...register("name", {
-                                            required: "Kategori adı gereklidir.",
-                                            minLength: { value: 2, message: "Masa adı en az 2 karakter olmalıdır." },
-                                            maxLength: { value: 100, message: "Kategori adı en fazla 100 karakter olabilir." },
-                                        }),
-                                    }}
-                                />
-
-                                <div className="flex flex-row gap-x-3 mt-6 justify-center">
-                                    <button
-                                        type="submit"
-                                        className="bg-gradient-to-r from-green-500/90 to-green-600/90 hover:from-green-500 hover:to-green-600 shadow-lg flex items-center gap-2 px-6 py-3 font-semibold rounded-lg shadow-green-300 backdrop-blur-md transition-all duration-500 hover:scale-[103%] disabled:opacity-50 disabled:cursor-not-allowed text-white"
-                                    >
-                                        <FontAwesomeIcon icon={faCheckCircle} />
-                                        Onayla
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setIsModalUpdate(false);
-                                            setIsModalOpen(false);
-                                            reset();
-                                        }}
-                                        className="bg-gradient-to-r from-red-500/90 to-red-600/90 hover:from-red-600 hover:to-red-700 shadow-lg flex items-center gap-2 px-6 py-3 font-semibold rounded-lg shadow-red-300 backdrop-blur-md transition-all duration-500 hover:scale-[103%] text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                        <FontAwesomeIcon icon={faXmarkCircle} />
-                                        İptal
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                <FormModal isModalUpdate={isModalUpdate} label="Kategori" createFunc={handleSubmit((data) => createCategory.mutate(data))} updateFunc={handleSubmit((data) => updateCategory.mutate(data))} setIsModalOpen={setIsModalOpen} setIsModalUpdate={setIsModalUpdate} reset={reset}>
+                    <FormInput
+                        name="name"
+                        label="Kategori Adı"
+                        error={errors.name}
+                        register={{
+                            ...register("name", {
+                                required: "Kategori adı gereklidir.",
+                                minLength: { value: 2, message: "Masa adı en az 2 karakter olmalıdır." },
+                                maxLength: { value: 100, message: "Kategori adı en fazla 100 karakter olabilir." },
+                            }),
+                        }}
+                    />
+                </FormModal>
             )}
         </>
     );
