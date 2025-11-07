@@ -7,6 +7,7 @@ namespace Services.Contracts
     public interface ICategoryService
     {
         Task<(PagedList<CategoryDto> categories, MetaData metaData)> GetAllCategoriesAsync(RequestParameters p, bool trackChanges);
+        Task<IEnumerable<CategoryDto>> GetAllCategoriesListAsync();
         Task<int> GetCategoriesCountAsync();
         Task<CategoryDto> GetOneCategoryByIdAsync(int id, bool trackChanges);
         Task CreateCategoryAsync(CategoryDtoForCreation categoryDto);

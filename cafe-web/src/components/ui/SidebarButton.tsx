@@ -20,7 +20,7 @@ export default function SidebarButton({ label, icon, to, hasDropdown, children }
 
         return (
             <>
-                <NavLink to={to} className={({ isActive }) => `${isActive ? 'from-blue-600/90 to-cyan-600/90 hover:from-blue-700 hover:to-cyan-800 shadow-xl scale-[102%]' : 'from-blue-400/90 to-cyan-500/90 hover:from-blue-500 hover:to-cyan-600 shadow-lg'} flex group px-4 py-3 font-semibold rounded-xl bg-gradient-to-r  shadow-blue-300 backdrop-blur-md transition-all duration-500 hover:scale-[103%] hover:bg-gradient-to-r `}>
+                <NavLink to={to} onClick={() => setIsDropdownOpen(true)} className={({ isActive }) => `${isActive ? 'from-blue-600/90 to-cyan-600/90 hover:from-blue-700 hover:to-cyan-800 shadow-xl scale-[102%]' : 'from-blue-400/90 to-cyan-500/90 hover:from-blue-500 hover:to-cyan-600 shadow-lg'} flex group px-4 py-3 font-semibold rounded-xl bg-gradient-to-r  shadow-blue-300 backdrop-blur-md transition-all duration-500 hover:scale-[103%] hover:bg-gradient-to-r `}>
                     <FontAwesomeIcon icon={icon} className="mr-2 group-hover:scale-125 duration-500 self-center" />
                     {label}
                     {hasDropdown && (

@@ -29,6 +29,14 @@ namespace Services
             return (pagedCategories, pagedCategories.MetaData);
         }
 
+        public async Task<IEnumerable<CategoryDto>> GetAllCategoriesListAsync()
+        {
+            var categories = await _manager.Category.GetAllCategoriesListAsync();
+            var categoriesDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
+
+            return categoriesDto;
+        }
+
         public async Task<int> GetCategoriesCountAsync() => await _manager.Category.GetCategoriesCountAsync();
 
         public async Task<CategoryDto> GetOneCategoryByIdAsync(int id, bool trackChanges)

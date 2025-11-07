@@ -26,6 +26,15 @@ namespace Repositories
             return (categories, count);
         }
 
+        public async Task<IEnumerable<Category>> GetAllCategoriesListAsync()
+        {
+            var categories = await FindAll(false)
+                .OrderBy(c => c.Id)
+                .ToListAsync();
+
+            return categories;
+        }
+
         public async Task<int> GetCategoriesCountAsync() => await CountAsync(false);
 
         public async Task<Category?> GetOneCategoryByIdAsync(int id, bool trackChanges)

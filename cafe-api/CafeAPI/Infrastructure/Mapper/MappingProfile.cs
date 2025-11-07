@@ -10,7 +10,8 @@ namespace CafeAPI.Infrastructure.Mapper
         {
             CreateMap<Product, ProductDto>()
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : string.Empty));
-            CreateMap<ProductDtoForCreation, Product>();
+            CreateMap<ProductDtoForCreation, Product>()
+                .ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
             CreateMap<ProductDtoForUpdate, Product>();
             CreateMap<Table, TableDto>();
             CreateMap<TableDtoForCreation, Table>();

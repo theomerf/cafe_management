@@ -94,13 +94,18 @@ const product = {
     getAllProducts: (params: any, signal?: AbortSignal) => methods.get("product", { params }, signal),
     productsCount: (signal?: AbortSignal) => methods.getWithoutHeaders("product/count", {}, signal),
     getOneProduct: (id: string, signal?: AbortSignal) => methods.getWithoutHeaders(`product/${id}`, {}, signal),
-    createProduct: (formData: any) => methods.post("product/create", formData),
-    updateProduct: (formData: any) => methods.put(`product/update`, formData),
+    createProduct: (formData: FormData) => methods.post("product/create", formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+    updateProduct: (formData: FormData) => methods.put(`product/update`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }),
     deleteProduct: (id: string) => methods.delete(`product/delete/${id}`),
 };
 
 const category = {
     getAllCategories: (params: any, signal?: AbortSignal) => methods.get("category", { params }, signal),
+    getCategoriesList: (signal?: AbortSignal) => methods.getWithoutHeaders("category/list", {}, signal),
     categoriesCount: (signal?: AbortSignal) => methods.getWithoutHeaders("category/count", {}, signal),
     getOneCategory: (id: string, signal?: AbortSignal) => methods.getWithoutHeaders(`category/${id}`, {}, signal),
     createCategory: (formData: any) => methods.post("category/create", formData),

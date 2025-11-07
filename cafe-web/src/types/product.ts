@@ -3,7 +3,8 @@ export default interface Product {
     name: string;
     description?: string;
     price: number;
-    imageUrl: string;
+    imageUrl?: string;
     categoryId: number;
     categoryName: string;
+    image?: File;
 }

@@ -1,0 +1,52 @@
+# Build output
+bin/
+obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# Visual Studio Code settings
+.vscode/
+
+# Rider IDE
+.idea/
+
+# Sensitive configuration files
+appsettings.json
+appsettings.Development.json
+secrets.json
+.env
+
+# Database files
+*.mdf
+*.ldf
+*.sqlite
+*.db
+
+# Publish output
+/out/
+/publish/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+
+# Node
+node_modules/
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test

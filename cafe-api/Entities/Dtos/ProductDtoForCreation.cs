@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace Entities.Dtos
 {
@@ -11,8 +12,8 @@ namespace Entities.Dtos
         public String? Description { get; init; }
         [Required(ErrorMessage = "Fiyat gereklidir.")]
         public decimal Price { get; init; }
-        [Required(ErrorMessage = "Resim URL'si gereklidir.")]
-        public String ImageUrl { get; init; } = null!;
+        [Required(ErrorMessage = "Ürün görseli gereklidir.")]
+        public IFormFile Image { get; init; } = null!;
         [Required(ErrorMessage = "Kategori seçimi gereklidir.")]
         public int CategoryId { get; init; }
     }

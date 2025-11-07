@@ -10,24 +10,26 @@ import requests from "../../services/api";
 import type PaginationHeader from "../../types/paginationHeader";
 import TitleCard from "../../components/ui/TitleCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faPlusCircle, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faPlusCircle, faTrash, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import DataTable from "../../components/ui/DataTable";
 import { toast } from "react-toastify";
 import PaginationComponent from "../../components/ui/PaginationComponent";
 import FormModal from "../../components/ui/FormModal";
 import FormInput from "../../components/form/FormInput";
+import type Category from "../../types/category";
 
 export default function ProductManagement() {
     const queryClient = useQueryClient();
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [isPhotoUpdate, setIsPhotoUpdate] = useState(false);
     const debouncedSearch = useDebounce(searchParams.get("searchTerm") || "", 500);
     const { register, handleSubmit, reset, formState: { errors } } = useForm<{
         id: number | undefined;
         name: string;
         description: string | undefined;
         price: number;
-        imageUrl: string;
+        image?: File;
         categoryId: number;
     }>();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -62,6 +64,16 @@ export default function ProductManagement() {
         gcTime: 1000 * 60 * 10,
     });
 
+    const { data: categoriesList, isLoading: categoriesIsLoading } = useQuery({
+        queryKey: ['categories'],
+        queryFn: async ({ signal }) => {
+            return await requests.category.getCategoriesList(signal);
+        },
+        enabled: isModalOpen,
+        staleTime: 1000 * 60 * 10,
+        gcTime: 1000 * 60 * 20,
+    });
+
     useEffect(() => {
         const params = new URLSearchParams();
         Object.entries(finalQuery).forEach(([key, value]) => {
@@ -71,7 +83,7 @@ export default function ProductManagement() {
     }, [finalQuery]);
 
     const createProduct = useMutation({
-        mutationFn: async (data: any) => await requests.product.createProduct(data),
+        mutationFn: async (data: any) => await handleCreateProduct(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
             toast.success("Kategori başarıyla oluşturuldu.");
@@ -84,14 +96,26 @@ export default function ProductManagement() {
         }
     });
 
+    const handleCreateProduct = async (data: any) => {
+        const formData = new FormData();
+        formData.append("name", data.name);
+        formData.append("description", data.description || "");
+        formData.append("price", data.price.toString());
+        formData.append("categoryId", data.categoryId.toString());
+        if (data.image && data.image.length > 0) {
+            formData.append("image", data.image[0]);
+        }
+
+        await requests.product.createProduct(formData);
+    }
+
     useEffect(() => {
-        if (isModalOpen && isModalUpdate && selectedProduct) {
+        if (isModalOpen && isModalUpdate && selectedProduct && !categoriesIsLoading) {
             reset({
                 id: selectedProduct?.id,
                 name: selectedProduct?.name,
                 description: selectedProduct?.description ?? undefined,
                 price: selectedProduct?.price,
-                imageUrl: selectedProduct?.imageUrl,
                 categoryId: selectedProduct?.categoryId,
             });
         }
@@ -101,14 +125,15 @@ export default function ProductManagement() {
                 name: "",
             });
         }
-    }, [isModalOpen, isModalUpdate, selectedProduct, reset]);
+    }, [isModalOpen, categoriesIsLoading, isModalUpdate, selectedProduct, reset]);
 
     const updateProduct = useMutation({
-        mutationFn: (data: any) => requests.product.updateProduct(data),
+        mutationFn: async (data: any) => await handleUpdateProduct(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
             toast.success("Ürün başarıyla güncellendi.");
             setIsModalUpdate(false);
+            setIsPhotoUpdate(false);
             setIsModalOpen(false);
             reset();
         },
@@ -118,8 +143,22 @@ export default function ProductManagement() {
         }
     });
 
+    const handleUpdateProduct = async (data: any) => {
+        const formData = new FormData();
+        formData.append("id", data.id.toString());
+        formData.append("name", data.name);
+        formData.append("description", data.description || "");
+        formData.append("price", data.price.toString());
+        formData.append("categoryId", data.categoryId.toString());
+        if (isPhotoUpdate && data.image && data.image.length > 0) {
+            formData.append("image", data.image[0]);
+        }
+
+        await requests.product.updateProduct(formData);
+    }
+
     const deleteProduct = useMutation({
-        mutationFn: (id: number) => requests.product.deleteProduct(id.toString()),
+        mutationFn: async (id: number) => await requests.product.deleteProduct(id.toString()),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
             toast.success("Ürün başarıyla silindi.");
@@ -140,7 +179,7 @@ export default function ProductManagement() {
                 </TitleCard>
                 <DataTable colNames={new Map<string, string>([["Görsel", "w-1/6"], ["Ürün Adı", "w-2/6"], ["Kategori Adı", "w-1/6"], ["Fiyat", "w-1/6"], ["İşlemler", "w-1/6"]])}
                     rows={["imageUrl", "name", "categoryName", "price"]}
-                    isLoading={isLoading} isError={isError} data={data?.products} error={error} renderActions={(product: Product) => (
+                    isFirstImage={true} isLoading={isLoading} isError={isError} data={data?.products} error={error} renderActions={(product: Product) => (
                         <>
                             <button onClick={() => { setSelectedProduct(product); setIsModalUpdate(true); setIsModalOpen(true); }} className="w-10 h-10 rounded-lg text-white backdrop-blur-lg group shadow-md shadow-yellow-300 bg-gradient-to-br from-yellow-300 via-yellow-500 to-yellow-600 transition-all duration-500 hover:from-yellow-400/80 hover:via-yellow-600/80 hover:to-yellow-700/80 hover:shadow-lg hover:shadow-yellow-400 hover:scale-105">
                                 <FontAwesomeIcon icon={faEdit} className="text-lg group-hover:scale-110 transition-all duration-500 group-hover:rotate-6" />
@@ -157,7 +196,7 @@ export default function ProductManagement() {
                 )}
             </div>
             {isModalOpen && (
-                <FormModal isModalUpdate={isModalUpdate} label="Ürün" createFunc={handleSubmit((data) => createProduct.mutate(data))} updateFunc={handleSubmit((data) => updateProduct.mutate(data))} setIsModalOpen={setIsModalOpen} setIsModalUpdate={setIsModalUpdate} reset={reset}>
+                <FormModal isModalUpdate={isModalUpdate} label="Ürün" createFunc={handleSubmit((data) => createProduct.mutate(data))} updateFunc={handleSubmit((data) => updateProduct.mutate(data))} setIsModalOpen={setIsModalOpen} setIsModalUpdate={setIsModalUpdate} setIsPhotoUpdate={setIsPhotoUpdate} reset={reset}>
                     <div className="flex flex-row gap-x-2">
                         <div className="w-1/2">
                             <FormInput
@@ -176,7 +215,7 @@ export default function ProductManagement() {
                         <div className="w-1/2">
                             <FormInput
                                 name="description"
-                                label="Açıklama"
+                                label="Açıklama (isteğe bağlı)"
                                 error={errors.description}
                                 register={{
                                     ...register("description", {
@@ -202,32 +241,57 @@ export default function ProductManagement() {
                             />
                         </div>
                         <div className="w-1/2">
-                            <FormInput
-                                type="number"
-                                name="categoryId"
-                                label="Kategori ID"
-                                error={errors.categoryId}
-                                register={{
-                                    ...register("categoryId", {
-                                        required: "Kategori ID gereklidir.",
-                                        min: { value: 1, message: "Kategori ID 1'den küçük olamaz." },
-                                    }),
-                                }}
-                            />
+                            <div className="flex flex-col gap-y-1">
+                                <label htmlFor="categoryId" className="font-bold text-gray-500">Kategori</label>
+                                <select id="categoryId" {...register("categoryId", {
+                                    required: "Kategori ID gereklidir.",
+                                    min: { value: 1, message: "Geçersiz kategori ID." },
+                                })} className="border-gray-200 border-2 rounded-lg w-full px-3 py-[9px] bg-white/90 transition-all duration-300 focus:border-cyan-200 focus:outline-none focus:shadow-gray-200 focus:shadow-md focus:scale-[102%] focus:bg-white">
+                                    {categoriesIsLoading && <option>Yükleniyor...</option>}
+                                    {!categoriesIsLoading &&
+                                        <>
+                                            <option value="">Kategori Seçin</option>
+                                            {categoriesList.map((category: Category) => (
+                                                <option key={category.id} value={category.id}>
+                                                    {category.name}
+                                                </option>
+                                            ))}
+                                        </>
+                                    }
+
+                                </select>
+                                {errors.categoryId &&
+                                    <p className="text-red-500 text-sm font-semibold">
+                                        <FontAwesomeIcon icon={faTriangleExclamation} className="mr-1" />
+                                        {errors.categoryId?.message}
+                                    </p>
+                                }
+                            </div>
                         </div>
                     </div>
+                    {isModalUpdate && (
+                        <div className="flex flex-row gap-x-2">
+                            <label htmlFor="checkbox" className="font-bold text-gray-500 cursor-pointer">
+                                Ürün görselini güncelle
+                            </label>
+                            <input id="checkbox" type="checkbox" className="self-center" onChange={() => setIsPhotoUpdate(!isPhotoUpdate)} />
+                        </div>
+                    )}
 
-                    <FormInput
-                        name="imageUrl"
-                        label="Görsel URL"
-                        error={errors.imageUrl}
-                        register={{
-                            ...register("imageUrl", {
-                                required: "Görsel URL gereklidir.",
-                                maxLength: { value: 200, message: "Görsel URL en fazla 200 karakter olabilir." },
-                            }),
-                        }}
-                    />
+                    {((!isModalUpdate) || (isModalUpdate && isPhotoUpdate)) && (
+                        <FormInput
+                            type="file"
+                            name="image"
+                            accept="image/*"
+                            label="Ürün Görseli"
+                            error={errors.image}
+                            register={{
+                                ...register("image", {
+                                    required: "Ürün görseli gereklidir.",
+                                }),
+                            }}
+                        />
+                    )}
                 </FormModal>
             )}
         </>

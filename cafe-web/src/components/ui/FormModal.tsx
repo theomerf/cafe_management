@@ -9,10 +9,11 @@ type FormModalProps = {
     children: React.ReactNode;
     setIsModalOpen: (isOpen: boolean) => void;
     setIsModalUpdate: (isUpdate: boolean) => void;
+    setIsPhotoUpdate?: (isPhotoUpdate: boolean) => void;
     reset: () => void;
 }
 
-export default function FormModal({ isModalUpdate, label, createFunc, updateFunc, children, setIsModalOpen, setIsModalUpdate, reset }: FormModalProps) {
+export default function FormModal({ isModalUpdate, label, createFunc, updateFunc, children, setIsModalOpen, setIsModalUpdate, setIsPhotoUpdate, reset }: FormModalProps) {
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
             <div className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden shadow-2xl max-w-md w-full mx-4">
@@ -41,6 +42,9 @@ export default function FormModal({ isModalUpdate, label, createFunc, updateFunc
                                 onClick={() => {
                                     setIsModalUpdate(false);
                                     setIsModalOpen(false);
+                                    if (setIsPhotoUpdate) {
+                                        setIsPhotoUpdate(false);
+                                    }
                                     reset();
                                 }}
                                 className="bg-gradient-to-r from-red-500/90 to-red-600/90 hover:from-red-600 hover:to-red-700 shadow-lg flex items-center gap-2 px-6 py-3 font-semibold rounded-lg shadow-red-300 backdrop-blur-md transition-all duration-500 hover:scale-[103%] text-white disabled:opacity-50 disabled:cursor-not-allowed"

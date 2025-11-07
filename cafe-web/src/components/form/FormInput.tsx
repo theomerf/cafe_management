@@ -10,10 +10,11 @@ type InputProps = {
     id?: string;
     icon?: IconProp;
     label: string;
+    accept?: string;
     error?: FieldError;
 }
 
-export default function FormInput({ register, type, name, id, icon, label, error }: InputProps) {
+export default function FormInput({ register, type, name, id, icon, label, error, accept }: InputProps) {
     return (
         <div className="flex flex-col gap-y-1">
             <label htmlFor={name} className="font-bold text-gray-500">
@@ -23,6 +24,7 @@ export default function FormInput({ register, type, name, id, icon, label, error
             <input type={type ?? "text"}
                 {...register}
                 name={name}
+                accept={accept}
                 id={id ? id : name}
                 className="border-gray-200 border-2 rounded-lg px-3 py-2 bg-white/90 transition-all duration-300 focus:border-cyan-200 focus:outline-none focus:shadow-gray-200 focus:shadow-md focus:scale-[102%] focus:bg-white" />
             {error && (

@@ -27,6 +27,14 @@ namespace Presentation.Controllers
             return Ok(pagedCategories.categories);
         }
 
+        [HttpGet("list")]
+        public async Task<IActionResult> GetCategoriesList()
+        {
+            var categories = await _manager.CategoryService.GetAllCategoriesListAsync();
+
+            return Ok(categories);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOneCategory([FromRoute] int id)
         {

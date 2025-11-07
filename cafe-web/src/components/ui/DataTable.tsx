@@ -7,10 +7,11 @@ type DataTableProps = {
     isError: boolean;
     data: any;
     error: any;
+    isFirstImage?: boolean;
     renderActions?: (item: any) => React.ReactNode;
 }
 
-export default function DataTable({ colNames, rows, isLoading, isError, data, error, renderActions }: DataTableProps) {
+export default function DataTable({ colNames, rows, isLoading, isError, data, error, isFirstImage, renderActions }: DataTableProps) {
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="overflow-x-auto">
@@ -36,10 +37,16 @@ export default function DataTable({ colNames, rows, isLoading, isError, data, er
                         ) : (
                             data?.map((data: any) => (
                                 <tr key={data.id} className="hover:bg-gray-100 transition-all duration-300">
-                                    {rows.map((row) => (
+                                    {rows.map((row, i) => (
+                                        isFirstImage && i === 0 ? (
+                                        <td key={row} className="p-4">
+                                            <img src={data[row]} alt={`img-${data.id}`} className="w-16 h-16 border-2 bg-white/10 backdrop-blur-lg rounded-lg border-gray-200 object-cover hover:scale-105 transition-all duration-500"/>
+                                        </td>
+                                        ) : (
                                         <td className="p-4 text-sm md:text-base font-medium text-gray-900">
                                             {data[row] ?? 0}
                                         </td>
+                                        )
                                     ))}
                                     <td className="p-4 text-sm font-medium">
                                         <div className="flex gap-2">

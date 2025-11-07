@@ -45,7 +45,7 @@ namespace Presentation.Controllers
 
         [HttpPost("create")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> CreateProduct([FromBody] ProductDtoForCreation productDto)
+        public async Task<IActionResult> CreateProduct([FromForm] ProductDtoForCreation productDto)
         {
             await _manager.ProductService.CreateProductAsync(productDto);
 
@@ -54,7 +54,7 @@ namespace Presentation.Controllers
 
         [HttpPut("update")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> UpdateProduct([FromBody] ProductDtoForUpdate productDto)
+        public async Task<IActionResult> UpdateProduct([FromForm] ProductDtoForUpdate productDto)
         {
             await _manager.ProductService.UpdateProductAsync(productDto);
 
