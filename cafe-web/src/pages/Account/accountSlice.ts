@@ -67,7 +67,7 @@ export const logout = createAsyncThunk(
     async (_) => {
         localStorage.removeItem("user");
         toast.success("Başarıyla çıkış yaptınız.");
-        history.push("/");
+        history.push("/login");
     }
 );
 
@@ -138,7 +138,12 @@ export const accountSlice = createSlice({
             state.error = action.payload as FormError;
         });
 
+        builder.addCase(logout.pending, (state) => {
+            state.status = "pending";
+        })
+
         builder.addCase(logout.fulfilled, (state) => {
+            state.status = "idle";
             state.user = null;
         });
 

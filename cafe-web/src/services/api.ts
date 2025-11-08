@@ -8,6 +8,11 @@ import type { LoginResponse } from '../types/loginResponse';
 const apiBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/+$/, '') || 'https://localhost:7214';
 
 axios.defaults.baseURL = `${apiBase}/api/`;
+axios.interceptors.request.use((request) => {
+    const token = store.getState().account.user?.accessToken;
+    if (token) request.headers["Authorization"] = `Bearer ${token}`;
+    return request;
+})
 
 axios.interceptors.response.use(
     (response) => {
