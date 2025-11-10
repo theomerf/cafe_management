@@ -6,6 +6,7 @@
         IOrderRepository Order { get; }
         ITableRepository Table { get; }
         ICategoryRepository Category { get; }
+        IAccountRepository Account { get; }
 
         void Save();
         Task SaveAsync();

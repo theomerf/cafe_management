@@ -6,6 +6,7 @@ namespace Services.Contracts
     public interface IProductService
     {
         Task<(PagedList<ProductDto> products, MetaData metaData)> GetAllProductsAsync(RequestParameters p, bool trackChanges);
+        Task<IEnumerable<ProductDto>> GetProductsForOrderAsync(ProductFilterParameters p, bool trackChanges);
         Task<int> GetAllProductsCountAsync();
         Task<ProductDto> GetOneProductByIdAsync(int productId, bool trackChanges);
         Task CreateProductAsync(ProductDtoForCreation productDto);

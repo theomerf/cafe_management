@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TitleCard from "../../components/ui/TitleCard";
-import { faPlus, faPlusCircle, faXmarkCircle, faSave, faTimes, faLightbulb, faEdit, faTrash, faCheckCircle, } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faPlusCircle, faXmarkCircle, faSave, faTimes, faLightbulb, faEdit, faTrash, faCheckCircle, faArrowLeft, } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import FormInput from "../../components/form/FormInput";
@@ -12,12 +12,15 @@ import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import FormModal from "../../components/ui/FormModal";
+import TitleButton from "../../components/ui/TitleButton";
+import { useNavigate } from "react-router-dom";
 
 export default function TableManagement() {
     const queryClient = useQueryClient();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalUpdate, setIsModalUpdate] = useState(false);
     const [selectedTable, setSelectedTable] = useState<TableItem | null>(null);
+    const navigate = useNavigate();
     const [pendingUpdates, setPendingUpdates] = useState<Map<number, { x: number; z: number }>>(
         new Map()
     );
@@ -196,20 +199,11 @@ export default function TableManagement() {
         <>
             <div className="flex flex-col gap-y-6 h-screen">
                 <TitleCard title="Masa Yönetimi">
-                    <button
-                        onClick={() => {
-                            setIsModalOpen(true);
-                            reset();
-                        }}
-                        disabled={isLoading}
-                        className="bg-gradient-to-r from-green-400/90 to-green-500/90 hover:from-green-500 hover:to-green-600 shadow-lg flex group px-4 py-3 font-semibold rounded-xl shadow-green-300 backdrop-blur-md transition-all duration-500 hover:scale-[103%] disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <FontAwesomeIcon
-                            icon={faPlusCircle}
-                            className="mr-2 self-center group-hover:scale-110 duration-500 transition-all"
-                        />
-                        Yeni Masa Ekle
-                    </button>
+                    <TitleButton isLoading={isLoading} onClick={() => navigate("/management")} label ="Geri" icon={faArrowLeft} color={"gray"}/>
+                    <TitleButton isLoading={isLoading} onClick={() => {
+                        setIsModalOpen(true);
+                        reset();
+                    }} label="Yeni Masa Ekle" />
                 </TitleCard>
 
                 <div className="flex-1 w-full bg-gray-800 rounded-lg overflow-hidden border justify-center flex border-gray-300 shadow-lg" style={{ minHeight: '600px' }}>

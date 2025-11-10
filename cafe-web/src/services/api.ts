@@ -93,10 +93,16 @@ const account = {
     login: (formData: any) => methods.post("account/login", formData),
     register: (formData: any) => methods.post("account/register", formData),
     refresh: (user: LoginResponse) => methods.post("account/refresh", user),
+    getAllAccounts: (params: any, signal?: AbortSignal) => methods.get("account", { params }, signal),
+    accountsCount: (signal?: AbortSignal) => methods.getWithoutHeaders("account/count", {}, signal),
+    createAccount: (formData: any) => methods.post("account/create", formData),
+    updateAccount: (formData: any) => methods.put("account/update", formData),
+    deleteAccount: (id: string) => methods.delete(`account/delete/${id}`),
 };
 
 const product = {
     getAllProducts: (params: any, signal?: AbortSignal) => methods.get("product", { params }, signal),
+    getProductsForOrder: (params: any, signal?: AbortSignal) => methods.getWithoutHeaders("product/list", { params }, signal),
     productsCount: (signal?: AbortSignal) => methods.getWithoutHeaders("product/count", {}, signal),
     getOneProduct: (id: string, signal?: AbortSignal) => methods.getWithoutHeaders(`product/${id}`, {}, signal),
     createProduct: (formData: FormData) => methods.post("product/create", formData, {

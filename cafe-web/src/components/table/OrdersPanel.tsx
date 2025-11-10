@@ -4,10 +4,11 @@ import { type TableItem, type Order } from '../../types/table';
 
 interface OrdersPanelProps {
   table: TableItem | null;
+  setShowOrderPanel: () => void;
   onClose: () => void;
 }
 
-export const OrdersPanel: React.FC<OrdersPanelProps> = ({ table, onClose }) => {
+export const OrdersPanel: React.FC<OrdersPanelProps> = ({ table, setShowOrderPanel, onClose }) => {
   if (!table) return null;
 
   const getStatusBadgeColor = (status: Order['status']) => {
@@ -153,7 +154,7 @@ export const OrdersPanel: React.FC<OrdersPanelProps> = ({ table, onClose }) => {
         ) : (
           <div className="text-center py-12">
             <p className="text-gray-400 mb-2">Henüz sipariş yok</p>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+            <button onClick={setShowOrderPanel} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
               Yeni Sipariş Ekle
             </button>
           </div>

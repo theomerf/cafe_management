@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import type Product from "../../types/product";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
@@ -10,17 +10,19 @@ import requests from "../../services/api";
 import type PaginationHeader from "../../types/paginationHeader";
 import TitleCard from "../../components/ui/TitleCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faPlusCircle, faTrash, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faEdit, faPlusCircle, faTrash, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import DataTable from "../../components/ui/DataTable";
 import { toast } from "react-toastify";
 import PaginationComponent from "../../components/ui/PaginationComponent";
 import FormModal from "../../components/ui/FormModal";
 import FormInput from "../../components/form/FormInput";
 import type Category from "../../types/category";
+import TitleButton from "../../components/ui/TitleButton";
 
 export default function ProductManagement() {
     const queryClient = useQueryClient();
     const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isPhotoUpdate, setIsPhotoUpdate] = useState(false);
     const debouncedSearch = useDebounce(searchParams.get("searchTerm") || "", 500);
@@ -65,7 +67,7 @@ export default function ProductManagement() {
     });
 
     const { data: categoriesList, isLoading: categoriesIsLoading } = useQuery({
-        queryKey: ['categories'],
+        queryKey: ['categoriesList'],
         queryFn: async ({ signal }) => {
             return await requests.category.getCategoriesList(signal);
         },
@@ -172,10 +174,8 @@ export default function ProductManagement() {
         <>
             <div className="flex flex-col gap-y-6">
                 <TitleCard title="Ürün Yönetimi">
-                    <button onClick={() => { setIsModalOpen(true) }} disabled={isLoading} className="bg-gradient-to-r from-green-400/90 to-green-500/90 hover:from-green-500 hover:to-green-600 shadow-lg flex group px-4 py-3 font-semibold rounded-xl shadow-green-300 backdrop-blur-md transition-all duration-500 hover:scale-[103%] disabled:opacity-50 disabled:cursor-not-allowed">
-                        <FontAwesomeIcon icon={faPlusCircle} className="mr-2 self-center group-hover:scale-110 duration-500 transition-all" />
-                        Yeni Ürün Ekle
-                    </button>
+                    <TitleButton isLoading={isLoading} onClick={() => navigate("/management")} label ="Geri" icon={faArrowLeft} color={"gray"}/>
+                    <TitleButton isLoading={isLoading} onClick={() => { setIsModalOpen(true) }} label="Yeni Ürün Ekle" />
                 </TitleCard>
                 <DataTable colNames={new Map<string, string>([["Görsel", "w-1/6"], ["Ürün Adı", "w-2/6"], ["Kategori Adı", "w-1/6"], ["Fiyat", "w-1/6"], ["İşlemler", "w-1/6"]])}
                     rows={["imageUrl", "name", "categoryName", "price"]}
@@ -246,7 +246,7 @@ export default function ProductManagement() {
                                 <select id="categoryId" {...register("categoryId", {
                                     required: "Kategori ID gereklidir.",
                                     min: { value: 1, message: "Geçersiz kategori ID." },
-                                })} className="border-gray-200 border-2 rounded-lg w-full px-3 py-[9px] bg-white/90 transition-all duration-300 focus:border-cyan-200 focus:outline-none focus:shadow-gray-200 focus:shadow-md focus:scale-[102%] focus:bg-white">
+                                })} className="border-gray-200 border-2 rounded-lg w-full p-3 bg-white/90 transition-all duration-300 focus:border-cyan-200 focus:outline-none focus:shadow-gray-200 focus:shadow-md focus:scale-[102%] focus:bg-white">
                                     {categoriesIsLoading && <option>Yükleniyor...</option>}
                                     {!categoriesIsLoading &&
                                         <>

@@ -23,6 +23,9 @@ namespace CafeAPI.Infrastructure.Mapper
                 .ForMember(dest => dest.ProductCount, opt => opt.MapFrom(src => src.Products != null ? src.Products.Count : 0));
             CreateMap<CategoryDtoForCreation, Category>();
             CreateMap<CategoryDtoForUpdate, Category>();
+            CreateMap<Account, AccountDto>();
+            CreateMap<AccountDtoForCreation, Account>();
+            CreateMap<AccountDtoForUpdate, Account>();
         }
     }
 }

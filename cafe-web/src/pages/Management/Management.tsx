@@ -25,7 +25,7 @@ export default function Management() {
         dispatch({ type: 'FETCH_START' });
         try {
             const [totalAccountsRes, totalProductsRes, totalCategoriesRes, totalTablesRes] = await Promise.all([
-                1,
+                requests.account.accountsCount(signal),
                 requests.product.productsCount(signal),
                 requests.category.categoriesCount(signal),
                 requests.table.tablesCount(signal),

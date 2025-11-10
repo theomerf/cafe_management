@@ -2,9 +2,11 @@
 using Entities.Dtos;
 using Entities.Exceptions;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Repositories.Contracts;
 using Services.Contracts;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -17,15 +19,17 @@ namespace Services
     {
         private readonly IMapper _mapper;
         private readonly UserManager<Account> _userManager;
+        private readonly IRepositoryManager _manager;
         private readonly IConfiguration _configuration;
 
         private Account? _account;
 
-        public AccountManager(IMapper mapper, UserManager<Account> userManager, IConfiguration configuration)
+        public AccountManager(IMapper mapper, UserManager<Account> userManager, IConfiguration configuration, IRepositoryManager manager)
         {
             _mapper = mapper;
             _userManager = userManager;
             _configuration = configuration;
+            _manager = manager;
         }
 
         public async Task<IdentityResult> RegisterUserAsync(AccountDtoForRegistration accountDto)
@@ -197,6 +201,51 @@ namespace Services
 
             _account = account;
             return await CreateTokenAsync(populateExp: false, rememberMe: false);
+        }
+
+        public async Task<(PagedList<AccountDto> accounts, MetaData metaData)> GetAllAccountsAsync(RequestParameters p, bool trackChanges)
+        {
+            var account = await _manager.Account.GetAllAccountsAsync(p, trackChanges);
+            var accountDto = _mapper.Map<IEnumerable<AccountDto>>(account.accounts);
+
+            var pagedAccounts = PagedList<AccountDto>.ToPagedList(accountDto, p.PageNumber, p.PageSize, account.count);
+
+            return (pagedAccounts, pagedAccounts.MetaData);
+        }
+
+        public async Task<int> GetAccountsCountAsync() => await _manager.Account.GetAccountsCountAsync();
+
+        public async Task<IdentityResult> CreateAccountAsync(AccountDtoForCreation accountDto)
+        {
+            var user = _mapper.Map<Account>(accountDto);
+            var result = await _userManager.CreateAsync(user, accountDto.Password);
+
+            return result;
+        }
+
+        public async Task<IdentityResult> UpdateAccountAsync(AccountDtoForUpdate accountDto)
+        {
+            var user = await _userManager.FindByIdAsync(accountDto.Id.ToString());
+            if (user == null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "Kullanıcı bulunamadı." });
+            }
+            _mapper.Map(accountDto, user);
+            var result = await _userManager.UpdateAsync(user);
+
+            return result;
+        }
+
+        public async Task<IdentityResult> DeleteAccountAsync(String accountId)
+        {
+            var user = await _userManager.FindByIdAsync(accountId);
+            if (user == null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "Kullanıcı bulunamadı." });
+            }
+            var result = await _userManager.DeleteAsync(user);
+
+            return result;
         }
     }
 }

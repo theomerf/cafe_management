@@ -12,10 +12,11 @@ type InputProps = {
     label: string;
     accept?: string;
     placeholder?: string;
+    disabled?: boolean;
     error?: FieldError;
 }
 
-export default function FormInput({ register, type, name, id, icon, label, placeholder, error, accept }: InputProps) {
+export default function FormInput({ register, type, name, id, icon, label, placeholder, error, disabled, accept }: InputProps) {
     return (
         <div className="flex flex-col gap-y-1">
             <label htmlFor={name} className="font-bold text-gray-500">
@@ -25,6 +26,7 @@ export default function FormInput({ register, type, name, id, icon, label, place
             <input type={type ?? "text"}
                 {...register}
                 name={name}
+                disabled={disabled}
                 accept={accept}
                 id={id ? id : name}
                 placeholder={placeholder}

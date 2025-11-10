@@ -3,3 +3,8 @@ export default interface RequestParameters {
     pageNumber?: number;
     pageSize?: number;
 }
+
+export interface ProductFilters {
+    searchTerm?: string;
+    categoryId?: number;
+}

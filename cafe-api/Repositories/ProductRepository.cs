@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Dtos;
+using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Contracts;
@@ -15,7 +16,7 @@ namespace Repositories
         public async Task<(IEnumerable<Product> products, int count)> GetAllProductsAsync(RequestParameters p, bool trackChanges)
         {
             var productQuery = FindAll(trackChanges)
-                .FilterBySearch(p.SearchTerm ?? "");
+                .FilterBy(p.SearchTerm, p => p.Name, FilterOperator.Contains);
 
             var count = await productQuery.CountAsync();
 
@@ -26,6 +27,17 @@ namespace Repositories
                 .ToListAsync();
 
             return (products, count);
+        }
+
+        public async Task<IEnumerable<Product>> GetProductsForOrderAsync(ProductFilterParameters p, bool trackChanges)
+        {
+            var products = await FindAll(trackChanges)
+                .FilterBy(p.SearchTerm, p => p.Name, FilterOperator.Contains)
+                .FilterByCategory(p.CategoryId)
+                .OrderBy(p => p.Id)
+                .ToListAsync();
+
+            return products;
         }
 
         public async Task<int> GetAllProductsCountAsync() => await CountAsync(false);

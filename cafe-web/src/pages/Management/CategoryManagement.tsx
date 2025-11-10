@@ -5,8 +5,8 @@ import requests from "../../services/api";
 import { useEffect, useMemo, useState } from "react";
 import type RequestParameters from "../../types/requestParameters";
 import type Category from "../../types/category";
-import { faEdit, faPlusCircle, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useSearchParams } from "react-router-dom";
+import { faArrowLeft, faEdit, faPlusCircle, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import type PaginationHeader from "../../types/paginationHeader";
 import { useDebounce } from "../../hooks/useDebounce";
 import FormInput from "../../components/form/FormInput";
@@ -16,11 +16,13 @@ import PaginationComponent from "../../components/ui/PaginationComponent";
 import { useBreakpoint } from "../../hooks/useBreakpoint";
 import FormModal from "../../components/ui/FormModal";
 import DataTable from "../../components/ui/DataTable";
+import TitleButton from "../../components/ui/TitleButton";
 
 export default function CategoryManagement() {
     const queryClient = useQueryClient();
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+    const navigate = useNavigate();
     const debouncedSearch = useDebounce(searchParams.get("searchTerm") || "", 500);
     const { register, handleSubmit, reset, formState: { errors } } = useForm<{
         id: number | undefined;
@@ -127,10 +129,8 @@ export default function CategoryManagement() {
         <>
             <div className="flex flex-col gap-y-6">
                 <TitleCard title="Kategori Yönetimi">
-                    <button onClick={() => { setIsModalOpen(true) }} disabled={isLoading} className="bg-gradient-to-r from-green-400/90 to-green-500/90 hover:from-green-500 hover:to-green-600 shadow-lg flex group px-4 py-3 font-semibold rounded-xl shadow-green-300 backdrop-blur-md transition-all duration-500 hover:scale-[103%] disabled:opacity-50 disabled:cursor-not-allowed">
-                        <FontAwesomeIcon icon={faPlusCircle} className="mr-2 self-center group-hover:scale-110 duration-500 transition-all" />
-                        Yeni Kategori Ekle
-                    </button>
+                    <TitleButton isLoading={isLoading} onClick={() => navigate("/management")} label ="Geri" icon={faArrowLeft} color={"gray"}/>
+                    <TitleButton isLoading={isLoading} onClick={() => { setIsModalOpen(true) }} label ="Yeni Kategori Ekle" />
                 </TitleCard>
                 <DataTable colNames={
                     new Map<string, string>([["Id", "w-1/5"], ["Kategori Adı", "w-2/5"], ["Ürün Sayısı", "w-1/5"], ["İşlemler", "w-1/5"]])}

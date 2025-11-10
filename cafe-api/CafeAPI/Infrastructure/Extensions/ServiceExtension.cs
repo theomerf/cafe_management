@@ -40,6 +40,7 @@ namespace CafeAPI.Infrastructure.Extensions
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ITableRepository, TableRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
         }
 
         public static void ConfigureServiceRegistration(this IServiceCollection services)

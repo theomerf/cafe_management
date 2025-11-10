@@ -1,3 +1,5 @@
+import type Order from "./order";
+
 export interface TableItem {
   id: number;
   createdAt: Date;
@@ -23,20 +25,4 @@ export interface UpdateTableDTO {
   locationX?: number;
   locationZ?: number;
   status?: 'Available' | 'Occupied' | 'OutOfOrder';
-}
-
-export interface Order {
-  id: number;
-  tableId: number;
-  items: OrderItem[];
-  status: 'pending' | 'preparing' | 'ready' | 'served';
-  createdAt: Date;
-  totalPrice: number;
-}
-
-export interface OrderItem {
-  id: number;
-  name: string;
-  quantity: number;
-  price: number;
 }

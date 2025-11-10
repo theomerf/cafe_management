@@ -27,6 +27,14 @@ namespace Presentation.Controllers
             return Ok(pagedProduct.products);
         }
 
+        [HttpGet("list")]
+        public async Task<IActionResult> GetProductsForOrder([FromQuery] ProductFilterParameters p)
+        {
+            var products = await _manager.ProductService.GetProductsForOrderAsync(p, false);
+
+            return Ok(products);
+        }
+
         [HttpGet("count")]
         public async Task<IActionResult> GetAllProductsCount()
         {

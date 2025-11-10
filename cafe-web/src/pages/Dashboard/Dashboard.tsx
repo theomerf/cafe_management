@@ -78,7 +78,7 @@ export default function Dashboard() {
                 <DashboardButtonCard to="/management" label="Kafe Yönetimi" icon={faBuilding} color="bg-blue-400" shadowColor="shadow-blue-400" />
                 <DashboardButtonCard to="/statistics" label="İstatistikleri Görüntüle" icon={faChartSimple} color="bg-purple-400" shadowColor="shadow-purple-400" />
                 <DashboardButtonCard to="/analytics" label="Analizleri İncele" icon={faDollar} color="bg-yellow-400" shadowColor="shadow-yellow-400" />
-                <DashboardButtonCard to="/tables" label="Masaları Yönet" icon={faTable} color="bg-indigo-400" shadowColor="shadow-indigo-400" />
+                <DashboardButtonCard to="/management/tables" label="Masaları Yönet" icon={faTable} color="bg-indigo-400" shadowColor="shadow-indigo-400" />
                 <DashboardButtonCard to="/settings" label="Ayarları Değiştir" icon={faGears} color="bg-red-400" shadowColor="shadow-red-400" />
             </div>
             <div className="grid grid-cols-3 gap-x-4">

@@ -35,6 +35,14 @@ namespace Services
             return (pagedProducts, pagedProducts.MetaData);
         }
 
+        public async Task<IEnumerable<ProductDto>> GetProductsForOrderAsync(ProductFilterParameters p, bool trackChanges)
+        {
+            var products = await _manager.Product.GetProductsForOrderAsync(p, trackChanges);
+            var productsDto = _mapper.Map<IEnumerable<ProductDto>>(products);
+
+            return productsDto;
+        }
+
         public async Task<int> GetAllProductsCountAsync() => await _manager.Product.GetAllProductsCountAsync();
 
         public async Task<ProductDto> GetOneProductByIdAsync(int productId, bool trackChanges)
