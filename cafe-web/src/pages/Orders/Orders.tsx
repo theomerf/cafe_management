@@ -7,9 +7,9 @@ import OrdersScene from "../../components/table/OrdersScene";
 import requests from "../../services/api";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faCheckCircle, faPlusCircle, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faCheckCircle, faMinusCircle, faPlusCircle, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 import type Order from "../../types/order";
 import type Category from "../../types/category";
 import type Product from "../../types/product";
@@ -17,8 +17,10 @@ import { useSearchParams } from "react-router-dom";
 import { useDebounce } from "../../hooks/useDebounce";
 import type { ProductFilters } from "../../types/requestParameters";
 import useRandomColor from "../../hooks/useRandomColor";
+import type { OrderLine, OrderStatusUpdateDto } from "../../types/order";
 
 export default function Orders() {
+    const queryClient = useQueryClient();
     const [showOrderPanel, setShowOrderPanel] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchInput, setSearchInput] = useState(searchParams.get("searchTerm") || "");
@@ -71,6 +73,59 @@ export default function Orders() {
             return await requests.product.getProductsForOrder(params, signal);
         },
         enabled: finalQuery.categoryId !== undefined || debouncedSearch.length >= 2,
+    });
+    const { data: orders, isLoading: ordersLoading } = useQuery({
+        queryKey: ['orders', selectedTable?.id],
+        queryFn: async ({ signal, queryKey }): Promise<Order[]> => {
+            const [, tableId] = queryKey;
+            return await requests.order.getOrdersOfOneTable(tableId?.toString()!, signal);
+        },
+        enabled: selectedTable !== null,
+        staleTime: 1000 * 60 * 10,
+        gcTime: 1000 * 60 * 20,
+    })
+
+    const handleOrderCreate = useMutation({
+        mutationFn: async (order: Order) => {
+            const orderLinesDto: OrderLine[] = order.orderLines.map(ol => {
+                return {
+                    productId: ol.productId,
+                    quantity: ol.quantity,
+                };
+            });
+            const orderCreateDto: Order = {
+                tableId: order.tableId,
+                orderLines: orderLinesDto,
+            };
+
+            await requests.order.createOrder(orderCreateDto);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['orders', selectedTable?.id] });
+            queryClient.invalidateQueries({ queryKey: ['tables'] });
+            toast.success("Sipariş başarıyla oluşturuldu.");
+            setPendingOrder(null);
+            setShowOrderPanel(false);
+        },
+        onError: (error: any) => {
+            toast.error("Sipariş oluşturulurken bir hata oluştu.");
+            console.error("Error creating order:", error);
+        }
+    });
+
+    const handleOrderStatusUpdate = useMutation({
+        mutationFn: async (orderStatusDto: OrderStatusUpdateDto) => {
+            await requests.order.changeOrderStatus(orderStatusDto);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['orders', selectedTable?.id] });
+            queryClient.invalidateQueries({ queryKey: ['tables'] });
+            toast.success("Sipariş durumu başarıyla güncellendi.");
+        },
+        onError: (error: any) => {
+            toast.error("Sipariş durumu güncellenirken bir hata oluştu.");
+            console.error("Error updating order status:", error);
+        },  
     });
 
     useEffect(() => {
@@ -133,7 +188,7 @@ export default function Orders() {
             return {
                 ...prev,
                 orderLines: updatedLines,
-                totalAmount: updatedLines.reduce((sum, ol) => sum + ol.unitPrice * ol.quantity, 0),
+                totalAmount: updatedLines.reduce((sum, ol) => sum + ol.unitPrice! * ol.quantity, 0),
             };
         });
         setShowAddProductPanel(false);
@@ -201,35 +256,68 @@ export default function Orders() {
                         <div className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden shadow-2xl">
                             <div className="flex flex-col">
                                 <div className="px-20 py-4 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white">
-                                    <p className="font-bold text-2xl">
+                                    <p className="font-bold text-2xl text-center">
                                         {selectedTable?.name} - Yeni Sipariş Oluştur
                                     </p>
                                 </div>
-                                <div className="flex flex-col px-4 py-4">
-                                    <div className="flex justify-center flex-col gap-y-2 items-center mb-10">
-                                        {pendingOrder && pendingOrder.orderLines.length > 0 ? (
-                                            pendingOrder.orderLines.map((orderLine) => (
-                                                <div key={orderLine.id} className="grid grid-cols-4">
-                                                    <div className="col-span-1">
-                                                        <img src={orderLine.productImageUrl} alt={`img-${orderLine.productId}`} className="w-[72px] h-[72px] border-2 bg-white/50 backdrop-blur-lg rounded-lg border-gray-200 object-cover group-hover:scale-105 transition-all duration-500" />
+                                <div className="flex flex-col px-2 py-4">
+                                    <div className="flex justify-center flex-col gap-y-4 items-center mb-10">
+                                        <div className=" gap-y-1 flex flex-col max-h-48 p-1 w-full overflow-y-auto">
+                                            {pendingOrder && pendingOrder.orderLines.length > 0 ? (
+                                                pendingOrder.orderLines.map((orderLine) => (
+                                                    <div key={orderLine.id} className="grid grid-cols-6 items-center gap-x-3 bg-blue-200/50 backdrop-blur-md border border-gray-200 rounded-lg shadow-md w-full p-2 transition-all duration-300 group hover:bg-gray-200">
+                                                        <div className="col-span-1">
+                                                            <img src={orderLine.productImageUrl} alt={`img-${orderLine.productId}`} className="w-[72px] h-[72px] border-2 bg-white/50 backdrop-blur-lg rounded-lg border-gray-200 object-cover group-hover:scale-105 transition-all duration-500" />
+                                                        </div>
+                                                        <div className="col-span-2 text-center">
+                                                            <p className="font-semibold text-lg">{orderLine.productName}</p>
+                                                        </div>
+                                                        <div className="col-span-1">
+                                                            <p className="text-md text-center font-medium">Fiyat: <br />{(orderLine.unitPrice! * orderLine.quantity).toFixed(2)} ₺</p>
+                                                        </div>
+                                                        <div className="col-span-2">
+                                                            <div className="flex flex-row gap-x-2 justify-end">
+                                                                {orderLine.quantity > 1 && (
+                                                                    <button onClick={() => setPendingOrder(prev => {
+                                                                        if (!prev) return prev;
+                                                                        const updatedLines = prev.orderLines.map(ol =>
+                                                                            ol.productId === orderLine.productId
+                                                                                ? { ...ol, quantity: ol.quantity - 1 }
+                                                                                : ol
+                                                                        ).filter(ol => ol.quantity > 0);
+                                                                        return {
+                                                                            ...prev,
+                                                                            orderLines: updatedLines,
+                                                                            totalAmount: updatedLines.reduce((sum, ol) => sum + ol.unitPrice! * ol.quantity, 0),
+                                                                        };
+                                                                    })}>
+                                                                        <FontAwesomeIcon icon={faMinusCircle} className="text-2xl text-red-500 hover:text-red-600 hover:scale-105 transition-all duration-300" />
+                                                                    </button>
+                                                                )}
+                                                                <p className="text-md font-medium">Adet: {orderLine.quantity}</p>
+                                                                <button type="button" onClick={() => setPendingOrder(prev => {
+                                                                    if (!prev) return prev;
+                                                                    const updatedLines = prev.orderLines.map(ol =>
+                                                                        ol.productId === orderLine.productId
+                                                                            ? { ...ol, quantity: ol.quantity + 1 }
+                                                                            : ol
+                                                                    ).filter(ol => ol.quantity > 0);
+                                                                    return {
+                                                                        ...prev,
+                                                                        orderLines: updatedLines,
+                                                                        totalAmount: updatedLines.reduce((sum, ol) => sum + ol.unitPrice! * ol.quantity, 0),
+                                                                    };
+                                                                })}>
+                                                                    <FontAwesomeIcon icon={faPlusCircle} className="text-2xl text-green-500 hover:text-green-600 hover:scale-105 transition-all duration-300" />
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div className="col-span-1">
-                                                        <p className="font-semibold text-lg">{orderLine.productName}</p>
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <p className="text-md">Adet: {orderLine.quantity}</p>
-                                                    </div>
-                                                    <div className="col-span-1">
-                                                        <p className="text-md">Fiyat: {(orderLine.unitPrice * orderLine.quantity).toFixed(2)} ₺</p>
-                                                    </div>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <div className="justify-center flex flex-col gap-y-4 items-center ">
-                                                <p className="text-lg font-medium">Şu an sipariş boş. Lütfen ürün ekleyin</p>
-
-                                            </div>
-                                        )}
+                                                ))
+                                            ) : (
+                                                <p className="text-lg text-center font-medium">Şu an sipariş boş. Lütfen ürün ekleyin</p>
+                                            )}
+                                        </div>
                                         <div>
                                             <button
                                                 onClick={() => setShowAddProductPanel(true)}
@@ -245,6 +333,7 @@ export default function Orders() {
                                         <button
                                             type="submit"
                                             disabled={!pendingOrder}
+                                            onClick={() => handleOrderCreate.mutate(pendingOrder!)}
                                             className="bg-gradient-to-r from-green-500/90 to-green-600/90 hover:from-green-500 hover:to-green-600 shadow-lg flex items-center gap-2 px-6 py-3 font-semibold rounded-lg shadow-green-300 backdrop-blur-md transition-all duration-500 hover:scale-[103%] disabled:opacity-50 disabled:cursor-not-allowed text-white"
                                         >
                                             <FontAwesomeIcon icon={faCheckCircle} />
@@ -379,16 +468,24 @@ export default function Orders() {
                 )}
 
                 {showPanel && (
-                    <OrdersPanel
-                        table={selectedTable}
-                        setShowOrderPanel={() => setShowOrderPanel(true)}
-                        onClose={() => {
-                            setShowPanel(false);
-                            setSelectedTable(null);
-                        }}
-                    />
+                    ordersLoading && !orders ? (
+                        <div className="flex flex-col gap-y-2 self-center justify-center items-center pt-4">
+                            <ClipLoader size={40} color="#06b6d4" />
+                        </div>
+                    ) : (
+                        <OrdersPanel
+                            table={selectedTable}
+                            orders={orders!}
+                            handleOrderStatusUpdate={handleOrderStatusUpdate.mutate}
+                            setShowOrderPanel={() => setShowOrderPanel(true)}
+                            onClose={() => {
+                                setShowPanel(false);
+                                setSelectedTable(null);
+                            }}
+                        />
+                    )
                 )}
             </div>
-        </div >
+        </div>
     );
 };

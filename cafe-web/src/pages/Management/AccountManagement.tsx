@@ -143,7 +143,7 @@ export default function AccountManagement() {
         <>
             <div className="flex flex-col gap-y-6">
                 <TitleCard title="Kullanıcı Yönetimi">
-                    <TitleButton isLoading={isLoading} onClick={() => navigate("/management")} label ="Geri" icon={faArrowLeft} color={"gray"}/>
+                    <TitleButton isLoading={isLoading} onClick={() => navigate("/management")} label ="Geri" icon={faArrowLeft} fromColor="from-red-400" toColor="to-red-500" hoverFromColor="hover:from-red-500" hoverToColor="hover:to-red-600" shadowColor="red-400"/>
                     <TitleButton isLoading={isLoading} onClick={() => setIsModalOpen(true)} label="Yeni Kullanıcı Ekle" />
                 </TitleCard>
                 <DataTable colNames={

@@ -89,11 +89,11 @@ namespace Services
             return stat;
         }
 
-        public async Task<(int processingCount, int deliveredCount)> GetOrdersStatusStatsAsync()
+        public async Task<(int preparingCount, int deliveredCount)> GetOrdersStatusStatsAsync()
         {
             var cacheKey = "OrdersStatusStats";
             
-            if(_cache.TryGetValue(cacheKey, out (int processingCount, int deliveredCount) cachedStat))
+            if(_cache.TryGetValue(cacheKey, out (int preparingCount, int deliveredCount) cachedStat))
             {
                 return cachedStat;
             }
@@ -138,6 +138,17 @@ namespace Services
         public async Task CreateOrderAsync(OrderDtoForCreation orderDto)
         {
             var order = _mapper.Map<Order>(orderDto);
+            decimal totalAmount = 0;
+            foreach (var line in order.OrderLines)
+            {
+                var product = await _manager.Product.GetOneProductByIdAsync(line.ProductId, false);
+                if (product != null)
+                {
+                    totalAmount += product.Price * line.Quantity;
+                }
+            }
+            order.TotalAmount = totalAmount;
+
             _cache.Remove("AllOrdersCount");
             _cache.Remove("OrdersCountOfDay");
             _cache.Remove("TotalIncomeOfDay");

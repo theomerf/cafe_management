@@ -24,10 +24,12 @@ export default function Login() {
                 <div className="px-24 py-6 bg-gradient-to-r backdrop-blur-md from-blue-400/90 via-blue-500/90 to-blue-600/90 text-center">
                     <p className="text-white font-bold text-2xl">Lütfen giriş yapın!</p>
                 </div>
-                <div className="px-6 py-8">
+                <div >
                     <form method="POST" onSubmit={handleSubmit(async (data: any) => await dispatch(loginUser(data)))}>
-                        {error && <ErrorDisplay error={error} />}
-                        <div className="flex flex-col gap-y-2">
+                        <div className="mt-4 mx-2 flex justify-center ">
+                            {error && <ErrorDisplay error={error} />}
+                        </div>
+                        <div className="flex flex-col gap-y-2 px-6 py-4">
                             <FormInput
                                 label="Kullanıcı Adı"
                                 name="userName"

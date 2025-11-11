@@ -10,7 +10,7 @@ import requests from "../../services/api";
 import type PaginationHeader from "../../types/paginationHeader";
 import TitleCard from "../../components/ui/TitleCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faEdit, faPlusCircle, faTrash, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faEdit, faTrash, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import DataTable from "../../components/ui/DataTable";
 import { toast } from "react-toastify";
 import PaginationComponent from "../../components/ui/PaginationComponent";
@@ -174,7 +174,7 @@ export default function ProductManagement() {
         <>
             <div className="flex flex-col gap-y-6">
                 <TitleCard title="Ürün Yönetimi">
-                    <TitleButton isLoading={isLoading} onClick={() => navigate("/management")} label ="Geri" icon={faArrowLeft} color={"gray"}/>
+                    <TitleButton isLoading={isLoading} onClick={() => navigate("/management")} label ="Geri" icon={faArrowLeft} fromColor="from-red-400" toColor="to-red-500" hoverFromColor="hover:from-red-500" hoverToColor="hover:to-red-600" shadowColor="red-400"/>
                     <TitleButton isLoading={isLoading} onClick={() => { setIsModalOpen(true) }} label="Yeni Ürün Ekle" />
                 </TitleCard>
                 <DataTable colNames={new Map<string, string>([["Görsel", "w-1/6"], ["Ürün Adı", "w-2/6"], ["Kategori Adı", "w-1/6"], ["Fiyat", "w-1/6"], ["İşlemler", "w-1/6"]])}

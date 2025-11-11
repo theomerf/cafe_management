@@ -81,6 +81,7 @@ namespace Services
         public async Task CreateTableAsync(TableDtoForCreation tableDto)
         {
             var table = _mapper.Map<Table>(tableDto);
+            _cache.Remove("TableStatusStats");
 
             _manager.Table.CreateTable(table);
             await _manager.SaveAsync();
@@ -89,6 +90,7 @@ namespace Services
         public async Task DeleteTableAsync(int tableId)
         {
             var table = await GetOneTableByIdForServiceAsync(tableId, true);
+            _cache.Remove("TableStatusStats");
 
             _manager.Table.DeleteTable(table);
             await _manager.SaveAsync();
@@ -97,6 +99,7 @@ namespace Services
         public async Task ChangeTableStatusAsync(TableDtoForStatus tableDto)
         {
             var table = await GetOneTableByIdForServiceAsync(tableDto.Id, true);
+            _cache.Remove("TableStatusStats");
 
             table.Status = tableDto.Status;
             await _manager.SaveAsync();
@@ -105,6 +108,7 @@ namespace Services
         public async Task UpdateTableAsync(TableDtoForUpdate tableDto)
         {
             var table = await GetOneTableByIdForServiceAsync(tableDto.Id, true);
+            _cache.Remove("TableStatusStats");
             _mapper.Map(tableDto, table);
 
             await _manager.SaveAsync();

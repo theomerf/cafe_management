@@ -12,7 +12,7 @@ interface PieData {
 }
 
 interface OrderStats {
-    processingCount: number;
+    preparingCount: number;
     deliveredCount: number;
 }
 
@@ -34,7 +34,7 @@ export default function DashboardOrderGraph() {
     useEffect(() => {
         if (orderStats.data) {
             setOrderStatuses([
-                { id: "Hazırl..", label: "Hazırlanıyor", value: orderStats.data.processingCount, color: "#f6ad55" },
+                { id: "Hazırl..", label: "Hazırlanıyor", value: orderStats.data.preparingCount, color: "#f6ad55" },
                 { id: "T. Edildi", label: "Teslim Edildi", value: orderStats.data.deliveredCount, color: "#48bb78" },
             ])
         }

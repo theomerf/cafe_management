@@ -1,4 +1,5 @@
 ﻿using Entities.Dtos;
+using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.ActionFilters;
@@ -61,11 +62,11 @@ namespace Presentation.Controllers
         [HttpGet("statuses-stats")]
         public async Task<IActionResult> GetOrderStatusesStats()
         {
-            var (processingCount, deliveredCount) = await _manager.OrderService.GetOrdersStatusStatsAsync();
+            var (preparingCount, deliveredCount) = await _manager.OrderService.GetOrdersStatusStatsAsync();
 
             var stats = new
             {
-                ProcessingCount = processingCount,
+                PreparingCount = preparingCount,
                 DeliveredCount = deliveredCount
             };
 
@@ -85,6 +86,11 @@ namespace Presentation.Controllers
         public async Task<IActionResult> CreateOrder([FromBody] OrderDtoForCreation orderDto)
         {
             await _manager.OrderService.CreateOrderAsync(orderDto);
+            await _manager.TableService.ChangeTableStatusAsync(new TableDtoForStatus
+            {
+                Id = orderDto.TableId,
+                Status = TableStatus.Occupied
+            });
 
             return StatusCode(201);
         }
@@ -93,6 +99,15 @@ namespace Presentation.Controllers
         public async Task<IActionResult> ChangeOrderStatusAsync(OrderDtoForStatus orderDto)
         {
             await _manager.OrderService.ChangeOrderStatusAsync(orderDto);
+            if (orderDto.Status == OrderStatus.Old)
+            {
+                var order = await _manager.OrderService.GetOneOrderByIdAsync(orderDto.Id, false);
+                await _manager.TableService.ChangeTableStatusAsync(new TableDtoForStatus
+                {
+                    Id = order.TableId,
+                    Status = TableStatus.Available
+                });
+            }
 
             return Ok();
         }

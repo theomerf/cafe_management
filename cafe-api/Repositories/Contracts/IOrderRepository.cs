@@ -10,7 +10,7 @@ namespace Repositories.Contracts
         Task<decimal> GetTotalIncomeOfDayAsync();
         Task<int> GetOrdersCountOfDayAsync();
         Task<int> GetAllOrdersCountAsync();
-        Task<(int processingCount, int deliveredCount)> GetOrdersStatusStatsAsync();
+        Task<(int preparingCount, int deliveredCount)> GetOrdersStatusStatsAsync();
         Task<Order?> GetOneOrderByIdAsync(int orderId, bool trackChanges);
         void CreateOrder(Order order);
         void UpdateOrder(Order order);

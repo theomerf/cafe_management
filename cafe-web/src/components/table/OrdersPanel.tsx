@@ -1,25 +1,31 @@
 import React from 'react';
 import { Clock, Users, TrendingUp } from 'lucide-react';
-import { type TableItem, type Order } from '../../types/table'; 
+import { type TableItem } from '../../types/table';
+import type Order from '../../types/order';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle, faMoneyBill, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
+import type { OrderStatusUpdateDto } from '../../types/order';
 
 interface OrdersPanelProps {
   table: TableItem | null;
+  orders: Order[] | null;
+  handleOrderStatusUpdate: (update: OrderStatusUpdateDto) => void;
   setShowOrderPanel: () => void;
   onClose: () => void;
 }
 
-export const OrdersPanel: React.FC<OrdersPanelProps> = ({ table, setShowOrderPanel, onClose }) => {
+export const OrdersPanel: React.FC<OrdersPanelProps> = ({ table, orders, handleOrderStatusUpdate, setShowOrderPanel, onClose }) => {
   if (!table) return null;
 
   const getStatusBadgeColor = (status: Order['status']) => {
     switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'preparing':
+      case 'Preparing':
         return 'bg-blue-100 text-blue-800';
-      case 'ready':
+      case 'Delivered':
         return 'bg-green-100 text-green-800';
-      case 'served':
+      case 'Cancelled':
+        return 'bg-red-100 text-yellow-800';
+      case 'Old':
         return 'bg-gray-100 text-gray-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -51,7 +57,7 @@ export const OrdersPanel: React.FC<OrdersPanelProps> = ({ table, setShowOrderPan
               {table.status === 'Occupied'
                 ? 'Dolu'
                 : table.status === 'OutOfOrder'
-                  ? 'Rezerve'
+                  ? 'Servis Dışı'
                   : 'Boş'}
             </span>
           </div>
@@ -81,16 +87,16 @@ export const OrdersPanel: React.FC<OrdersPanelProps> = ({ table, setShowOrderPan
               <span>Siparişler</span>
             </div>
             <p className="text-2xl font-bold text-purple-600">
-              {table.orders?.length || 0}
+              {orders?.length || 0}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="p-6">
-        {table.orders && table.orders.length > 0 ? (
+      <div className="p-6 max-h-80 overflow-y-auto">
+        {orders && orders.length > 0 ? (
           <div className="space-y-4">
-            {table.orders.map((order) => (
+            {orders.map((order) => (
               <div
                 key={order.id}
                 className="border rounded-lg p-4 hover:shadow-md transition"
@@ -99,34 +105,55 @@ export const OrdersPanel: React.FC<OrdersPanelProps> = ({ table, setShowOrderPan
                   <div>
                     <p className="text-sm text-gray-500">Sipariş #{order.id}</p>
                     <p className="font-semibold text-gray-900">
-                      {order.items.reduce((acc, item) => acc + item.quantity, 0)}{' '}
+                      {order.orderLines.reduce((acc, item) => acc + item.quantity, 0)}{' '}
                       Ürün
                     </p>
+                  </div>
+                  <div className='flex ml-auto mr-2 flex-row gap-x-1'>
+                    {order.status != "Delivered" && order.status != "Cancelled" && (
+                    <button onClick={() => handleOrderStatusUpdate({ id: order.id!, status: "Delivered" })} title="Teslim Edildi Olarak İşaretle" className="w-8 h-8 rounded-lg text-white backdrop-blur-lg group shadow-md shadow-green-300 bg-gradient-to-br from-green-300 via-green-500 to-green-600 transition-all duration-500 hover:from-green-400/80 hover:via-green-600/80 hover:to-green-700/80 hover:shadow-lg hover:green-yellow-400 hover:scale-105">
+                      <FontAwesomeIcon icon={faCheckCircle} className=" group-hover:scale-110 transition-all duration-500 group-hover:rotate-6" />
+                    </button>
+                    )}
+
+                    {order.status != "Delivered" && (
+                      <button onClick={() => handleOrderStatusUpdate({ id: order.id!, status: "Cancelled" })} title="İptal Edildi Olarak İşaretle" className="w-8 h-8 rounded-lg text-white backdrop-blur-lg group shadow-md shadow-red-300 bg-gradient-to-br from-red-300 via-red-500 to-red-600 transition-all duration-500 hover:from-red-400/80 hover:via-red-600/80 hover:to-red-700/80 hover:shadow-lg hover:green-yellow-400 hover:scale-105">
+                        <FontAwesomeIcon icon={faXmarkCircle} className=" group-hover:scale-110 transition-all duration-500 group-hover:rotate-6" />
+                      </button>
+                    )}
+                    {order.status === "Delivered" && (
+                      <button onClick={() => handleOrderStatusUpdate({ id: order.id!, status: "Old" })} title="Ödemeyi Gerçekleştir" className="w-8 h-8 rounded-lg text-white backdrop-blur-lg group shadow-md shadow-blue-300 bg-gradient-to-br from-blue-300 via-blue-500 to-blue-600 transition-all duration-500 hover:from-blue-400/80 hover:via-blue-600/80 hover:to-blue-700/80 hover:shadow-lg hover:green-yellow-400 hover:scale-105">
+                        <FontAwesomeIcon icon={faMoneyBill} className=" group-hover:scale-110 transition-all duration-500 group-hover:rotate-6" />
+                      </button>
+                    )}
                   </div>
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusBadgeColor(order.status)}`}
                   >
-                    {order.status === 'pending'
-                      ? 'Beklemede'
-                      : order.status === 'preparing'
-                        ? 'Hazırlanıyor'
-                        : order.status === 'ready'
-                          ? 'Hazır'
-                          : 'Servis Edildi'}
+                    {order.status === 'Preparing'
+                      ? 'Hazırlanıyor'
+                      : order.status === 'Delivered'
+                        ? 'Servis Edildi'
+                        : order.status === 'Cancelled'
+                          ? 'İptal Edildi'
+                          : 'Eski'}
                   </span>
                 </div>
 
                 <div className="space-y-2 mb-3">
-                  {order.items.map((item) => (
+                  {order.orderLines.map((ol) => (
                     <div
-                      key={item.id}
+                      key={ol.id}
                       className="flex justify-between text-sm text-gray-700"
                     >
                       <span>
-                        {item.name} <span className="text-gray-500">x{item.quantity}</span>
+                        <img src={ol.productImageUrl} alt={`img-${ol.productId}`} className="w-8 h-8 border-2 bg-white/50 backdrop-blur-lg rounded-lg border-gray-200 object-cover hover:scale-105 transition-all duration-500" />
                       </span>
-                      <span className="font-medium">
-                        ₺{(item.price * item.quantity).toFixed(2)}
+                      <span className='self-center'>
+                        {ol.productName} <span className="text-gray-500 self-center">x{ol.quantity}</span>
+                      </span>
+                      <span className="font-medium self-center">
+                        ₺{(ol.unitPrice! * ol.quantity).toFixed(2)}
                       </span>
                     </div>
                   ))}
@@ -137,13 +164,13 @@ export const OrdersPanel: React.FC<OrdersPanelProps> = ({ table, setShowOrderPan
                     <div className="flex items-center gap-2 text-gray-600 text-xs">
                       <Clock size={14} />
                       <span>
-                        {new Date(order.createdAt).toLocaleTimeString('tr-TR')}
+                        {new Date(order.createdAt!).toLocaleTimeString('tr-TR')}
                       </span>
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-gray-500">Toplam</p>
                       <p className="text-lg font-bold text-blue-600">
-                        ₺{order.totalPrice.toFixed(2)}
+                        ₺{order.totalAmount?.toFixed(2)}
                       </p>
                     </div>
                   </div>

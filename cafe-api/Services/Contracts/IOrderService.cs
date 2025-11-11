@@ -10,7 +10,7 @@ namespace Services.Contracts
         Task<int> GetAllOrdersCountAsync();
         Task<decimal> GetTotalIncomeOfDayAsync();
         Task<int> GetOrdersCountOfDayAsync();
-        Task<(int processingCount, int deliveredCount)> GetOrdersStatusStatsAsync();
+        Task<(int preparingCount, int deliveredCount)> GetOrdersStatusStatsAsync();
         Task<OrderDto> GetOneOrderByIdAsync(int orderId, bool trackChanges);
         Task CreateOrderAsync(OrderDtoForCreation orderDto);
         Task ChangeOrderStatusAsync(OrderDtoForStatus orderDto);

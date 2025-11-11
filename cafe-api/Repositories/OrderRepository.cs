@@ -49,7 +49,7 @@ namespace Repositories
             return totalOrders;
         }
 
-        public async Task<(int processingCount, int deliveredCount)> GetOrdersStatusStatsAsync()
+        public async Task<(int preparingCount, int deliveredCount)> GetOrdersStatusStatsAsync()
         {
             var stats = await FindByCondition(o => o.Status != OrderStatus.Old && o.Status != OrderStatus.Cancelled, false)
                 .GroupBy(o => o.Status)
@@ -60,10 +60,10 @@ namespace Repositories
                 })
                 .ToListAsync();
 
-            int processingCount = stats.FirstOrDefault(s => s.Status == OrderStatus.Processing)?.Count ?? 0;
+            int preparingCount = stats.FirstOrDefault(s => s.Status == OrderStatus.Preparing)?.Count ?? 0;
             int deliveredCount = stats.FirstOrDefault(s => s.Status == OrderStatus.Delivered)?.Count ?? 0;
 
-            return (processingCount, deliveredCount);
+            return (preparingCount, deliveredCount);
         } 
 
         public async Task<Order?> GetOneOrderByIdAsync(int orderId, bool trackChanges)
@@ -79,6 +79,7 @@ namespace Repositories
         {
             var orders = await FindByCondition(o => o.TableId == tableId && o.Status != OrderStatus.Old, false)
                 .Include(o => o.OrderLines)
+                .ThenInclude(ol => ol.Product)
                 .OrderBy(o => o.Id)
                 .ToListAsync();
 

@@ -5,7 +5,7 @@ import requests from "../../services/api";
 import { useEffect, useMemo, useState } from "react";
 import type RequestParameters from "../../types/requestParameters";
 import type Category from "../../types/category";
-import { faArrowLeft, faEdit, faPlusCircle, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import type PaginationHeader from "../../types/paginationHeader";
 import { useDebounce } from "../../hooks/useDebounce";
@@ -129,7 +129,7 @@ export default function CategoryManagement() {
         <>
             <div className="flex flex-col gap-y-6">
                 <TitleCard title="Kategori Yönetimi">
-                    <TitleButton isLoading={isLoading} onClick={() => navigate("/management")} label ="Geri" icon={faArrowLeft} color={"gray"}/>
+                    <TitleButton isLoading={isLoading} onClick={() => navigate("/management")} label ="Geri" icon={faArrowLeft} fromColor="from-red-400" toColor="to-red-500" hoverFromColor="hover:from-red-500" hoverToColor="hover:to-red-600" shadowColor="red-400"/>
                     <TitleButton isLoading={isLoading} onClick={() => { setIsModalOpen(true) }} label ="Yeni Kategori Ekle" />
                 </TitleCard>
                 <DataTable colNames={

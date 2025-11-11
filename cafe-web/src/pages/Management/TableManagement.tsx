@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TitleCard from "../../components/ui/TitleCard";
-import { faPlus, faPlusCircle, faXmarkCircle, faSave, faTimes, faLightbulb, faEdit, faTrash, faCheckCircle, faArrowLeft, } from "@fortawesome/free-solid-svg-icons";
+import { faSave, faTimes, faLightbulb, faEdit, faTrash, faArrowLeft, } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import FormInput from "../../components/form/FormInput";
@@ -199,7 +199,7 @@ export default function TableManagement() {
         <>
             <div className="flex flex-col gap-y-6 h-screen">
                 <TitleCard title="Masa Yönetimi">
-                    <TitleButton isLoading={isLoading} onClick={() => navigate("/management")} label ="Geri" icon={faArrowLeft} color={"gray"}/>
+                    <TitleButton isLoading={isLoading} onClick={() => navigate("/management")} label ="Geri" icon={faArrowLeft} fromColor="from-red-400" toColor="to-red-500" hoverFromColor="hover:from-red-500" hoverToColor="hover:to-red-600" shadowColor="red-400"/>
                     <TitleButton isLoading={isLoading} onClick={() => {
                         setIsModalOpen(true);
                         reset();
