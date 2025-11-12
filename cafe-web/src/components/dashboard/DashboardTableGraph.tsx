@@ -1,8 +1,8 @@
 import { ResponsivePie } from "@nivo/pie";
 import { useBreakpoint } from "../../hooks/useBreakpoint";
-import { useEffect, useReducer, useState } from "react";
-import BackendDataObjectReducer from "../../types/backendDataObject";
-import requests from "../../services/api";
+import { useEffect, useState } from "react";
+import type { DashboardStats } from "../../pages/Dashboard/Dashboard";
+import type { BackendDataObject } from "../../types/backendDataObject";
 
 interface PieData {
     id: string;
@@ -11,17 +11,16 @@ interface PieData {
     color?: string;
 }
 
-interface TableStats {
+export interface TableStats {
     occupiedCount: number;
     availableCount: number;
 }
 
-export default function DashboardTableGraph() {
-    const [tableStats, dispatch] = useReducer(BackendDataObjectReducer<TableStats>, {
-        data: null,
-        isLoading: false,
-        error: null,
-    });
+type DashboardTableGraphProps = {
+    stats: BackendDataObject<DashboardStats>;
+}
+
+export default function DashboardTableGraph({ stats } : DashboardTableGraphProps) {
     const { up } = useBreakpoint();
     const isMobile = !up.md;
     const isTablet = up.md && !up.lg;
@@ -32,39 +31,13 @@ export default function DashboardTableGraph() {
     ]);
 
     useEffect(() => {
-        if (tableStats.data) {
+        if (stats.data) {
             setTableStatuses([
-                { id: "Dolu", label: "Dolu", value: tableStats.data.occupiedCount, color: "#f55742" },
-                { id: "Boş", label: "Boş", value: tableStats.data.availableCount, color: "#48bb78" },
+                { id: "Dolu", label: "Dolu", value: stats.data.tableStats.occupiedCount, color: "#f55742" },
+                { id: "Boş", label: "Boş", value: stats.data.tableStats.availableCount, color: "#48bb78" },
             ])
         }
-    }, [tableStats.data]);
-
-    async function fetchTableStatuses(signal?: AbortSignal) {
-        dispatch({ type: 'FETCH_START' });
-        try {
-            const response = await requests.table.statusesStats(signal);
-            dispatch({ type: 'FETCH_SUCCESS', payload: response });
-        }
-        catch (error: any) {
-            if (error.name === 'CanceledError' || error.name === "AbortError") {
-                return;
-            }
-            else {
-                dispatch({ type: "FETCH_ERROR", payload: error.message || "Masa istatistikleri çekilirken hata oluştu." });
-            }
-        }
-    };
-
-    useEffect(() => {
-        const controller = new AbortController();
-
-        fetchTableStatuses(controller.signal);
-
-        return () => {
-            controller.abort();
-        };
-    }, []);
+    }, [stats.data]);
 
     const getPieMargins = () => {
         if (isMobile) return { top: 20, right: 20, bottom: 60, left: 20 };

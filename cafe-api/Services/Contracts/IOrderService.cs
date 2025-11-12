@@ -7,6 +7,7 @@ namespace Services.Contracts
     {
         Task<(PagedList<OrderDto> orders, MetaData metaData)> GetAllOrdersAsync(RequestParameters p, bool trackChanges);
         Task<IEnumerable<OrderDto>> GetOrdersOfOneTableAsync(int tableId);
+        Task<IEnumerable<OrderDto>> GetActiveOrdersAsync();
         Task<int> GetAllOrdersCountAsync();
         Task<decimal> GetTotalIncomeOfDayAsync();
         Task<int> GetOrdersCountOfDayAsync();

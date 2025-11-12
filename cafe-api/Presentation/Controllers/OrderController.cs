@@ -27,6 +27,14 @@ namespace Presentation.Controllers
             return Ok(pagedOrders.orders);
         }
 
+        [HttpGet("active")]
+        public async Task<IActionResult> GetAllActiveOrders()
+        {
+            var activeOrders = await _manager.OrderService.GetActiveOrdersAsync();
+
+            return Ok(activeOrders);
+        }
+
         [HttpGet("table/{id}")]
         public async Task<IActionResult> GetOrdersOfOneTable([FromRoute] int id)
         {

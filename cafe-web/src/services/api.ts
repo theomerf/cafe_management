@@ -126,6 +126,7 @@ const category = {
 
 const order = {
     getAllOrders: (params: URLSearchParams, signal?: AbortSignal) => methods.get("order", { params }, signal),
+    activeOrders: (signal?: AbortSignal) => methods.getWithoutHeaders("order/active", {}, signal),
     getOrdersOfOneTable: (tableId: string, signal?: AbortSignal) => methods.getWithoutHeaders(`order/table/${tableId}`, {}, signal),
     ordersCount: (signal?: AbortSignal) => methods.getWithoutHeaders("order/count", {}, signal),
     dailyIncome: (signal?: AbortSignal) => methods.getWithoutHeaders("order/daily-income", {}, signal),

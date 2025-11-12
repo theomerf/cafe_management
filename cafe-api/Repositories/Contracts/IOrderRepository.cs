@@ -6,6 +6,7 @@ namespace Repositories.Contracts
     public interface IOrderRepository : IRepositoryBase<Order>
     {
         Task<(IEnumerable<Order> orders, int count)> GetAllOrdersAsync(RequestParameters p, bool trackChanges);
+        Task<IEnumerable<Order>> GetActiveOrdersAsync();
         Task<IEnumerable<Order>> GetOrdersOfOneTableAsync(int tableId);
         Task<decimal> GetTotalIncomeOfDayAsync();
         Task<int> GetOrdersCountOfDayAsync();

@@ -4,17 +4,21 @@ import DashboardButtonCard from "../../components/ui/DashboardButtonCard";
 import TitleCard from "../../components/ui/TitleCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DashboardOrderGraph from "../../components/dashboard/DashboardOrderGraph";
-import DashboardTableGraph from "../../components/dashboard/DashboardTableGraph";
+import DashboardTableGraph, { type TableStats } from "../../components/dashboard/DashboardTableGraph";
 import { useEffect, useReducer } from "react";
 import BackendDataObjectReducer from "../../types/backendDataObject";
 import requests from "../../services/api";
 import { toast } from "react-toastify";
+import type Order from "../../types/order";
+import { ClipLoader } from "react-spinners";
 
-interface DashboardStats {
+export interface DashboardStats {
     totalOrders: number;
     dailyIncome: number;
     activeTables: number;
     dailyOrders: number;
+    tableStats: TableStats;
+    activeOrders: Order[];
 }
 
 export default function Dashboard() {
@@ -27,19 +31,22 @@ export default function Dashboard() {
     async function fetchDashboardStats(signal?: AbortSignal) {
         dispatch({ type: 'FETCH_START' });
         try {
-            const [totalOrdersRes, dailyIncomeRes, activeTablesRes, dailyOrdersRes] = await Promise.all([
+            const [totalOrdersRes, dailyIncomeRes, activeTablesRes, dailyOrdersRes, activeOrdersRes] = await Promise.all([
                 requests.order.ordersCount(signal),
                 requests.order.dailyIncome(signal),
-                0,
-                requests.order.dailyOrdersCount(signal)
+                requests.table.statusesStats(signal),
+                requests.order.dailyOrdersCount(signal),
+                requests.order.activeOrders(signal)
             ]);
 
             dispatch({
                 type: 'FETCH_SUCCESS', payload: {
                     totalOrders: totalOrdersRes,
                     dailyIncome: dailyIncomeRes,
-                    activeTables: activeTablesRes,
+                    activeTables: activeTablesRes.occupiedCount,
                     dailyOrders: dailyOrdersRes,
+                    tableStats: activeTablesRes,
+                    activeOrders: activeOrdersRes,
                 }
             });
         }
@@ -82,30 +89,21 @@ export default function Dashboard() {
                 <DashboardButtonCard to="/settings" label="Ayarları Değiştir" icon={faGears} color="bg-red-400" shadowColor="shadow-red-400" />
             </div>
             <div className="grid grid-cols-3 gap-x-4">
-                <div className="flex flex-col items-center justify-center text-center text-gray-400 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg px-8 py-8 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:rounded-t-lg before:bg-gradient-to-r before:from-cyan-500 before:to-blue-500 relative transition-all duration-500 hover:scale-[102%]">
-                    <p className="text-2xl font-bold mb-auto">Bekleyen Siparişler</p>
+                <div className="flex flex-col items-center text-center text-gray-400 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg px-8 py-8 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:rounded-t-lg before:bg-gradient-to-r before:from-cyan-500 before:to-blue-500 relative transition-all duration-500 hover:scale-[102%]">
+                    <p className="text-2xl font-bold">Bekleyen Siparişler</p>
                     <div className="w-full overflow-y-auto max-h-64">
-                        <ul className="mt-4 space-y-2 w-full">
-                            <li className="bg-white/20 rounded-lg p-3 flex justify-between items-center">
-                                <span>Masa 5 - Cappuccino x2</span>
-                                <FontAwesomeIcon icon={faMugHot} className="text-cyan-500" />
-                            </li>
-                            <li className="bg-white/20 rounded-lg p-3 flex justify-between items-center">
-                                <span>Masa 3 - Latte x1</span>
-                                <FontAwesomeIcon icon={faMugHot} className="text-cyan-500" />
-                            </li>
-                            <li className="bg-white/20 rounded-lg p-3 flex justify-between items-center">
-                                <span>Masa 8 - Espresso x3</span>
-                                <FontAwesomeIcon icon={faMugHot} className="text-cyan-500" />
-                            </li>
-                            <li className="bg-white/20 rounded-lg p-3 flex justify-between items-center">
-                                <span>Masa 1 - Mocha x1</span>
-                                <FontAwesomeIcon icon={faMugHot} className="text-cyan-500" />
-                            </li>
-                            <li className="bg-white/20 rounded-lg p-3 flex justify-between items-center">
-                                <span>Masa 4 - Americano x2</span>
-                                <FontAwesomeIcon icon={faMugHot} className="text-cyan-500" />
-                            </li>
+                        {dashboardStats.isLoading && (
+                            <div className="flex justify-center items-center pt-4">
+                                <ClipLoader size={40} color="#06b6d4" />
+                            </div>
+                        )}
+                        <ul className="mt-4 space-y-1 w-full">
+                            {dashboardStats.data && !dashboardStats.isLoading && dashboardStats.data.activeOrders.map((order) => (
+                                <li key={order.id} className="bg-white/20 rounded-lg p-3 grid grid-cols-8 items-center">
+                                    <FontAwesomeIcon icon={faMugHot} className="text-cyan-500 col-span-1" />
+                                    <span className="col-span-7 text-left">Masa {order.tableId} - {order.orderLines.map(ol => `${ol.productName} x${ol.quantity}`).join(', ')}</span>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>
@@ -118,11 +116,11 @@ export default function Dashboard() {
                 <div className="flex flex-col items-center justify-center text-center text-gray-400 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg px-4 pt-8 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:rounded-t-lg before:bg-gradient-to-r before:from-cyan-500 before:to-blue-500 relative transition-all duration-500 hover:scale-[102%]">
                     <p className="text-2xl font-bold">Masa Durumları</p>
                     <div className="w-full">
-                        <DashboardTableGraph />
+                        <DashboardTableGraph stats={dashboardStats} />
                     </div>
                 </div>
             </div>
 
-        </div>
+        </div >
     );
 }

@@ -32,6 +32,14 @@ namespace Services
             return (orderProducts, orderProducts.MetaData);
         }
 
+        public async Task<IEnumerable<OrderDto>> GetActiveOrdersAsync()
+        {
+            var orders = await _manager.Order.GetActiveOrdersAsync();
+            var ordersDto = _mapper.Map<IEnumerable<OrderDto>>(orders);
+
+            return ordersDto;
+        }
+
         public async Task<int> GetAllOrdersCountAsync()
         {
             var cacheKey = "AllOrdersCount";
@@ -173,6 +181,7 @@ namespace Services
         public async Task ChangeOrderStatusAsync(OrderDtoForStatus orderDto) 
         { 
             var order = await GetOneOrderByIdForServiceAsync(orderDto.Id, true);
+            _cache.Remove("OrdersStatusStats");
 
             order.Status = orderDto.Status;
             await _manager.SaveAsync();

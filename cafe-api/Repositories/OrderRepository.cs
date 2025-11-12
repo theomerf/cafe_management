@@ -27,6 +27,17 @@ namespace Repositories
             return (orders, count);
         }
 
+        public async Task<IEnumerable<Order>> GetActiveOrdersAsync()
+        {
+            var orders = await FindByCondition(o => o.Status == OrderStatus.Preparing, false)
+                .Include(o => o.OrderLines)
+                .ThenInclude(ol => ol.Product)
+                .OrderBy(o => o.CreatedAt)
+                .ToListAsync();
+
+            return orders;
+        }
+
         public async Task<int> GetAllOrdersCountAsync() => await CountAsync(false);
 
         public async Task<decimal> GetTotalIncomeOfDayAsync()

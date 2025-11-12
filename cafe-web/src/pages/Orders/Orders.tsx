@@ -415,9 +415,10 @@ export default function Orders() {
                                                                     ? prev.filter(p => p.id !== product.id)
                                                                     : [...prev, product];
                                                             })
-                                                        } className={`w-28 h-28 text-center items-center flex flex-col gap-y-1 justify-center rounded-lg ${randomColor(product.id)[0]} text-white transition-all group duration-500 hover:scale-105 hover:${randomColor(product.id)[1]} cursor-pointer shadow-lg shadow-black/30 ${selectedProducts?.some(p => p.id === product.id) && "border-2 border-black scale-105"}`}>
+                                                        } title={product.name} 
+                                                        className={`w-28 h-28 text-center items-center flex flex-col gap-y-1 justify-center rounded-lg ${randomColor(product.id)[0]} text-white transition-all group duration-500 hover:scale-105 hover:${randomColor(product.id)[1]} cursor-pointer shadow-lg shadow-black/30 ${selectedProducts?.some(p => p.id === product.id) && "border-2 border-black scale-105"}`}>
                                                             <img src={product.imageUrl} alt={`img-${product.id}`} className="w-[72px] h-[72px] border-2 bg-white/50 backdrop-blur-lg rounded-lg border-gray-200 object-cover group-hover:scale-105 transition-all duration-500" />
-                                                            <p>{product.name}</p>
+                                                            <p className="truncate w-24">{product.name}</p>
                                                         </div>
                                                     ))}
                                                 </>
