@@ -35,7 +35,7 @@ export default function Navbar() {
     }
 
     return (
-        <nav className="sticky top-0 left-0 right-0 z-[101] rounded-b-md bg-gradient-to-r from-blue-400 to-cyan-500 shadow-blue-300 shadow-md border-b border-white/20 backdrop-blur-lg">
+        <nav className="sticky top-0 w-full z-[101] rounded-b-md bg-gradient-to-r from-blue-400 to-cyan-500 shadow-blue-300 shadow-md border-b border-white/20 backdrop-blur-lg">
             <div className="flex justify-between items-center w-full px-6 py-4">
                 <div className="flex flex-row gap-x-2 text-white text-2xl">
                     <FontAwesomeIcon icon={faMugHot} className="text-3xl text-amber-700 transition-all duration-300 hover:scale-110 hover:rotate-12" />

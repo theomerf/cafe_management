@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Dtos;
+using Entities.Models;
 using Entities.RequestFeatures;
 
 namespace Repositories.Contracts
@@ -12,6 +13,7 @@ namespace Repositories.Contracts
         Task<int> GetOrdersCountOfDayAsync();
         Task<int> GetAllOrdersCountAsync();
         Task<(int preparingCount, int deliveredCount)> GetOrdersStatusStatsAsync();
+        Task<Dictionary<OrderStatsType, OrderStatsDto>> GetOrdersStatsAsync();
         Task<Order?> GetOneOrderByIdAsync(int orderId, bool trackChanges);
         void CreateOrder(Order order);
         void UpdateOrder(Order order);

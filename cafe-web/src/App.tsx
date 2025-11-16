@@ -16,6 +16,7 @@ import { logout, setUser } from './pages/Account/accountSlice'
 import { type AppDispatch } from './store/store'
 import { jwtDecode } from 'jwt-decode'
 import ProtectedRoute from './utils/ProtectedRoute'
+import Statistics from './pages/Statistics/Statistics'
 
 function App() {
   const dispatch: AppDispatch = useDispatch();
@@ -59,6 +60,7 @@ function App() {
             <Route path="/management/accounts" element={<AccountManagement />} />
             <Route path="/management/products" element={<ProductManagement />} />
             <Route path="/management/categories" element={<CategoryManagement />} />
+            <Route path="/statistics" element={<Statistics />} />
           </Route>
         </Route>
       </Routes>

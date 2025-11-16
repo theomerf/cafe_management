@@ -21,3 +21,15 @@ export interface OrderStatusUpdateDto {
     id: number;
     status: "Preparing" | "Delivered" | "Cancelled" | "Old";
 }
+
+export interface OrderStatsResponse {
+    Daily: OrderStats;
+    Weekly: OrderStats;
+    Monthly: OrderStats;
+}
+
+export interface OrderStats {
+    labels: string[];
+    totalCounts: number[];
+    totalIncomes: number[];
+}

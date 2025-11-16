@@ -7,56 +7,20 @@
       "RelativeMoniker": "D:0:0:{2267E1E8-1DFC-4875-A357-ED064E3D7D4B}|Services\\Services.csproj|solutionrelative:services\\ordermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{B11D868E-01F9-435B-87B1-9C25DD5D309F}|Repositories\\Repositories.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\repositories\\orderrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B11D868E-01F9-435B-87B1-9C25DD5D309F}|Repositories\\Repositories.csproj|solutionrelative:repositories\\orderrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B11D868E-01F9-435B-87B1-9C25DD5D309F}|Repositories\\Repositories.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\repositories\\contracts\\iorderrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B11D868E-01F9-435B-87B1-9C25DD5D309F}|Repositories\\Repositories.csproj|solutionrelative:repositories\\contracts\\iorderrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2267E1E8-1DFC-4875-A357-ED064E3D7D4B}|Services\\Services.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\services\\contracts\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2267E1E8-1DFC-4875-A357-ED064E3D7D4B}|Services\\Services.csproj|solutionrelative:services\\contracts\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{21892E62-AB2E-4BDF-9BC0-B6A84221FD49}|Presentation\\Presentation.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\presentation\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{21892E62-AB2E-4BDF-9BC0-B6A84221FD49}|Presentation\\Presentation.csproj|solutionrelative:presentation\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2267E1E8-1DFC-4875-A357-ED064E3D7D4B}|Services\\Services.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\services\\contracts\\itableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2267E1E8-1DFC-4875-A357-ED064E3D7D4B}|Services\\Services.csproj|solutionrelative:services\\contracts\\itableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{72719E1B-9E16-47F3-A530-819B15FA0980}|Entities\\Entities.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\entities\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{72719E1B-9E16-47F3-A530-819B15FA0980}|Entities\\Entities.csproj|solutionrelative:entities\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{53CBB947-5F75-4A22-B616-695099397F1C}|CafeAPI\\CafeAPI.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\cafeapi\\infrastructure\\mapper\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{53CBB947-5F75-4A22-B616-695099397F1C}|CafeAPI\\CafeAPI.csproj|solutionrelative:cafeapi\\infrastructure\\mapper\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{72719E1B-9E16-47F3-A530-819B15FA0980}|Entities\\Entities.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\entities\\models\\orderline.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{72719E1B-9E16-47F3-A530-819B15FA0980}|Entities\\Entities.csproj|solutionrelative:entities\\models\\orderline.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{21892E62-AB2E-4BDF-9BC0-B6A84221FD49}|Presentation\\Presentation.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\presentation\\controllers\\tablecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21892E62-AB2E-4BDF-9BC0-B6A84221FD49}|Presentation\\Presentation.csproj|solutionrelative:presentation\\controllers\\tablecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{72719E1B-9E16-47F3-A530-819B15FA0980}|Entities\\Entities.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\entities\\models\\table.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{72719E1B-9E16-47F3-A530-819B15FA0980}|Entities\\Entities.csproj|solutionrelative:entities\\models\\table.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{21892E62-AB2E-4BDF-9BC0-B6A84221FD49}|Presentation\\Presentation.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\presentation\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21892E62-AB2E-4BDF-9BC0-B6A84221FD49}|Presentation\\Presentation.csproj|solutionrelative:presentation\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B11D868E-01F9-435B-87B1-9C25DD5D309F}|Repositories\\Repositories.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\repositories\\extensions\\repositoryextension.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B11D868E-01F9-435B-87B1-9C25DD5D309F}|Repositories\\Repositories.csproj|solutionrelative:repositories\\extensions\\repositoryextension.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{53CBB947-5F75-4A22-B616-695099397F1C}|CafeAPI\\CafeAPI.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\cafeapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{53CBB947-5F75-4A22-B616-695099397F1C}|CafeAPI\\CafeAPI.csproj|solutionrelative:cafeapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{21892E62-AB2E-4BDF-9BC0-B6A84221FD49}|Presentation\\Presentation.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\presentation\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21892E62-AB2E-4BDF-9BC0-B6A84221FD49}|Presentation\\Presentation.csproj|solutionrelative:presentation\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{53CBB947-5F75-4A22-B616-695099397F1C}|CafeAPI\\CafeAPI.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\cafeapi\\infrastructure\\extensions\\applicationextension.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{53CBB947-5F75-4A22-B616-695099397F1C}|CafeAPI\\CafeAPI.csproj|solutionrelative:cafeapi\\infrastructure\\extensions\\applicationextension.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{21892E62-AB2E-4BDF-9BC0-B6A84221FD49}|Presentation\\Presentation.csproj|c:\\users\\omerf\\onedrive\\masa\u00FCst\u00FC\\projeler\\.net\\cafe_management\\cafe-api\\presentation\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21892E62-AB2E-4BDF-9BC0-B6A84221FD49}|Presentation\\Presentation.csproj|solutionrelative:presentation\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -66,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -86,174 +50,68 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "OrderController.cs",
+              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Presentation\\Controllers\\OrderController.cs",
+              "RelativeDocumentMoniker": "Presentation\\Controllers\\OrderController.cs",
+              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Presentation\\Controllers\\OrderController.cs",
+              "RelativeToolTip": "Presentation\\Controllers\\OrderController.cs",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAYwFcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-16T12:33:34.288Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "IOrderRepository.cs",
+              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Repositories\\Contracts\\IOrderRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\Contracts\\IOrderRepository.cs",
+              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Repositories\\Contracts\\IOrderRepository.cs",
+              "RelativeToolTip": "Repositories\\Contracts\\IOrderRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-16T12:33:30.224Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "OrderRepository.cs",
+              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Repositories\\OrderRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\OrderRepository.cs",
+              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Repositories\\OrderRepository.cs",
+              "RelativeToolTip": "Repositories\\OrderRepository.cs",
+              "ViewState": "AgIAAIIAAAAAAAAAAAAkwJgAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-16T12:33:28.528Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IOrderService.cs",
+              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Services\\Contracts\\IOrderService.cs",
+              "RelativeDocumentMoniker": "Services\\Contracts\\IOrderService.cs",
+              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Services\\Contracts\\IOrderService.cs",
+              "RelativeToolTip": "Services\\Contracts\\IOrderService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-16T12:33:26.595Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "OrderManager.cs",
               "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Services\\OrderManager.cs",
               "RelativeDocumentMoniker": "Services\\OrderManager.cs",
               "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Services\\OrderManager.cs",
               "RelativeToolTip": "Services\\OrderManager.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAMwCQAAAA9AAAAAAAAAA==",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAwMQAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-12T10:05:27.403Z",
+              "WhenOpened": "2025-11-16T12:33:25.855Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "MappingProfile.cs",
-              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\CafeAPI\\Infrastructure\\Mapper\\MappingProfile.cs",
-              "RelativeDocumentMoniker": "CafeAPI\\Infrastructure\\Mapper\\MappingProfile.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\CafeAPI\\Infrastructure\\Mapper\\MappingProfile.cs",
-              "RelativeToolTip": "CafeAPI\\Infrastructure\\Mapper\\MappingProfile.cs",
-              "ViewState": "AgIAAAEAAAAAAAAAAAAowBcAAAAxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-11T10:33:00.012Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "OrderLine.cs",
-              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Entities\\Models\\OrderLine.cs",
-              "RelativeDocumentMoniker": "Entities\\Models\\OrderLine.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Entities\\Models\\OrderLine.cs",
-              "RelativeToolTip": "Entities\\Models\\OrderLine.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-11T10:32:48.067Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Order.cs",
-              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Entities\\Models\\Order.cs",
-              "RelativeDocumentMoniker": "Entities\\Models\\Order.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Entities\\Models\\Order.cs",
-              "RelativeToolTip": "Entities\\Models\\Order.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAYwBEAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-11T10:32:44.801Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ITableService.cs",
-              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Services\\Contracts\\ITableService.cs",
-              "RelativeDocumentMoniker": "Services\\Contracts\\ITableService.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Services\\Contracts\\ITableService.cs",
-              "RelativeToolTip": "Services\\Contracts\\ITableService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-11T10:29:04.549Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Table.cs",
-              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Entities\\Models\\Table.cs",
-              "RelativeDocumentMoniker": "Entities\\Models\\Table.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Entities\\Models\\Table.cs",
-              "RelativeToolTip": "Entities\\Models\\Table.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-11T10:28:38.462Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "RepositoryExtension.cs",
-              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Repositories\\Extensions\\RepositoryExtension.cs",
-              "RelativeDocumentMoniker": "Repositories\\Extensions\\RepositoryExtension.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Repositories\\Extensions\\RepositoryExtension.cs",
-              "RelativeToolTip": "Repositories\\Extensions\\RepositoryExtension.cs",
-              "ViewState": "AgIAADkAAAAAAAAAAAAYwDgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-10T12:04:34.259Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "ApplicationExtension.cs",
-              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\CafeAPI\\Infrastructure\\Extensions\\ApplicationExtension.cs",
-              "RelativeDocumentMoniker": "CafeAPI\\Infrastructure\\Extensions\\ApplicationExtension.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\CafeAPI\\Infrastructure\\Extensions\\ApplicationExtension.cs",
-              "RelativeToolTip": "CafeAPI\\Infrastructure\\Extensions\\ApplicationExtension.cs",
-              "ViewState": "AgIAACkAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-10T08:45:08.928Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "CategoryController.cs",
-              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Presentation\\Controllers\\CategoryController.cs",
-              "RelativeDocumentMoniker": "Presentation\\Controllers\\CategoryController.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Presentation\\Controllers\\CategoryController.cs",
-              "RelativeToolTip": "Presentation\\Controllers\\CategoryController.cs",
-              "ViewState": "AgIAACgAAAAAAAAAAAAqwCQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T13:51:22.539Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "ProductController.cs",
-              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Presentation\\Controllers\\ProductController.cs",
-              "RelativeDocumentMoniker": "Presentation\\Controllers\\ProductController.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Presentation\\Controllers\\ProductController.cs",
-              "RelativeToolTip": "Presentation\\Controllers\\ProductController.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAAwB8AAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T13:23:22.29Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "OrderController.cs",
-              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Presentation\\Controllers\\OrderController.cs",
-              "RelativeDocumentMoniker": "Presentation\\Controllers\\OrderController.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Presentation\\Controllers\\OrderController.cs",
-              "RelativeToolTip": "Presentation\\Controllers\\OrderController.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAiwCAAAABDAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-01T14:42:31.39Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Presentation\\Controllers\\AccountController.cs",
-              "RelativeDocumentMoniker": "Presentation\\Controllers\\AccountController.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Presentation\\Controllers\\AccountController.cs",
-              "RelativeToolTip": "Presentation\\Controllers\\AccountController.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAAEMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T14:34:03.459Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "TableController.cs",
-              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Presentation\\Controllers\\TableController.cs",
-              "RelativeDocumentMoniker": "Presentation\\Controllers\\TableController.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Presentation\\Controllers\\TableController.cs",
-              "RelativeToolTip": "Presentation\\Controllers\\TableController.cs",
-              "ViewState": "AgIAACcAAAAAAAAAAAAYwBUAAAA9AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-01T14:42:37.852Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\CafeAPI\\Program.cs",
-              "RelativeDocumentMoniker": "CafeAPI\\Program.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\CafeAPI\\Program.cs",
-              "RelativeToolTip": "CafeAPI\\Program.cs",
-              "ViewState": "AgIAAEcAAAAAAAAAAAAewFMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-21T12:50:56.072Z"
             }
           ]
         }

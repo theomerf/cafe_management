@@ -132,6 +132,7 @@ const order = {
     dailyIncome: (signal?: AbortSignal) => methods.getWithoutHeaders("order/daily-income", {}, signal),
     dailyOrdersCount: (signal?: AbortSignal) => methods.getWithoutHeaders("order/daily-count", {}, signal),
     statusesStats: (signal?: AbortSignal) => methods.getWithoutHeaders("order/statuses-stats", {}, signal),
+    stats: (signal?: AbortSignal) => methods.getWithoutHeaders("order/stats", {}, signal),
     getOneOrder: (id: string, signal?: AbortSignal) => methods.getWithoutHeaders(`order/${id}`, {}, signal),
     createOrder: (formData: any) => methods.post("order/create", formData),
     changeOrderStatus: (formData: any) => methods.patch("order/change-status", formData),

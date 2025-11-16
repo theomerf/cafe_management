@@ -8,7 +8,7 @@ export default function MainLayout() {
 
     return (
         <div className="flex flex-col h-screen overflow-hidden">
-            <header className="h-16 flex-shrink-0">
+            <header className="flex-shrink-0">
                 <Navbar />
             </header>
             <div className="flex flex-1 overflow-hidden">

@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Dtos;
+using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Contracts;
@@ -75,7 +76,94 @@ namespace Repositories
             int deliveredCount = stats.FirstOrDefault(s => s.Status == OrderStatus.Delivered)?.Count ?? 0;
 
             return (preparingCount, deliveredCount);
-        } 
+        }
+
+        public async Task<Dictionary<OrderStatsType, OrderStatsDto>> GetOrdersStatsAsync()
+        {
+            var today = DateTime.UtcNow;
+            var startOfMonth = new DateTime(today.Year, today.Month, 1);
+            var startOfYear = new DateTime(today.Year, 1, 1);
+
+            var dailyStatsQuery = await FindByCondition(o => o.CreatedAt >= startOfMonth, false)
+                .GroupBy(o => o.CreatedAt.Day)
+                .Select(g => new
+                {
+                    Day = g.Key,
+                    TotalCount = g.Count(),
+                    TotalIncome = g.Sum(o => o.TotalAmount),
+                })
+                .ToListAsync();
+
+            var weeklyStatsQuery = await FindByCondition(o => o.CreatedAt >= startOfMonth, false)
+                .GroupBy(o => o.CreatedAt.Day / 7)
+                .Select(g => new
+                {
+                    Week = g.Key,
+                    TotalCount = g.Count(),
+                    TotalIncome = g.Sum(o => o.TotalAmount),
+                })
+                .ToListAsync();
+
+            var monthlyStatsQuery = await FindByCondition(o => o.CreatedAt >= startOfYear, false)
+                .GroupBy(o => o.CreatedAt.Month)
+                .Select(g => new
+                {
+                    Month = g.Key,
+                    TotalCount = g.Count(),
+                    TotalIncome = g.Sum(o => o.TotalAmount),
+                })
+                .ToListAsync();
+
+            var dailyStats = new OrderStatsDto
+            {
+                Labels = Enumerable.Range(1, today.Day)
+                    .Select(day => day.ToString())
+                    .ToList(),
+                TotalCounts = Enumerable.Range(1, today.Day)
+                    .Select(day => dailyStatsQuery.FirstOrDefault(ds => ds.Day == day)?.TotalCount ?? 0)
+                    .ToList(),
+                TotalIncomes = Enumerable.Range(1, today.Day)
+                    .Select(day => dailyStatsQuery.FirstOrDefault(ds => ds.Day == day)?.TotalIncome ?? 0)
+                    .ToList(),
+            };
+
+            var weekCount = (today.Day - 1) / 7 + 1;
+
+            var weeklyStats = new OrderStatsDto
+            {
+                Labels = Enumerable.Range(1, weekCount)
+                    .Select(week => $"Hafta {week}")
+                    .ToList(),
+                TotalCounts = Enumerable.Range(0, weekCount)
+                    .Select(week => weeklyStatsQuery.FirstOrDefault(ms => ms.Week == week)?.TotalCount ?? 0)
+                    .ToList(),
+                TotalIncomes = Enumerable.Range(0, weekCount)
+                    .Select(week => weeklyStatsQuery.FirstOrDefault(ms => ms.Week == week)?.TotalIncome ?? 0)
+                    .ToList(),
+            };
+
+            var monthlyStats = new OrderStatsDto
+            {
+                Labels = Enumerable.Range(1, today.Month)
+                    .Select(month => $"Ay {month}")
+                    .ToList(),
+                TotalCounts = Enumerable.Range(1, today.Month)
+                    .Select(month => monthlyStatsQuery.FirstOrDefault(ms => ms.Month == month)?.TotalCount ?? 0)
+                    .ToList(),
+                TotalIncomes = Enumerable.Range(1, today.Month)
+                    .Select(month => monthlyStatsQuery.FirstOrDefault(ms => ms.Month == month)?.TotalIncome ?? 0)
+                    .ToList(),
+            };
+
+            var stats = new Dictionary<OrderStatsType, OrderStatsDto>
+            {
+                { OrderStatsType.Daily, dailyStats },
+                { OrderStatsType.Weekly, weeklyStats },
+                { OrderStatsType.Monthly, monthlyStats }
+            };
+
+            return stats;
+        }
 
         public async Task<Order?> GetOneOrderByIdAsync(int orderId, bool trackChanges)
         {

@@ -116,6 +116,26 @@ namespace Services
             return stat;
         }
 
+        public async Task<Dictionary<OrderStatsType, OrderStatsDto>> GetOrdersStatsAsync()
+        {
+            var cacheKey = "OrdersStats";
+
+            if(_cache.TryGetValue(cacheKey, out Dictionary<OrderStatsType, OrderStatsDto>? cachedStats))
+            {
+                if (cachedStats != null)
+                    return cachedStats;
+            }
+
+            var stats = await _manager.Order.GetOrdersStatsAsync();
+            var cacheOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)
+            };
+            _cache.Set(cacheKey, stats, cacheOptions);
+
+            return stats;
+        }
+
         public async Task<OrderDto> GetOneOrderByIdAsync(int orderId, bool trackChanges)
         {
             var order = await GetOneOrderByIdForServiceAsync(orderId, trackChanges);
@@ -161,6 +181,7 @@ namespace Services
             _cache.Remove("OrdersCountOfDay");
             _cache.Remove("TotalIncomeOfDay");
             _cache.Remove("OrdersStatusStats");
+            _cache.Remove("OrdersStats");
 
             _manager.Order.CreateOrder(order);
             await _manager.SaveAsync();
@@ -173,6 +194,7 @@ namespace Services
             _cache.Remove("OrdersCountOfDay");
             _cache.Remove("TotalIncomeOfDay");
             _cache.Remove("OrdersStatusStats");
+            _cache.Remove("OrdersStats");
 
             _manager.Order.DeleteOrder(order);
             await _manager.SaveAsync();

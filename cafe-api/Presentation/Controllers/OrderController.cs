@@ -81,6 +81,14 @@ namespace Presentation.Controllers
             return Ok(stats);
         }
 
+        [HttpGet("stats")]
+        public async Task<IActionResult> GetOrdersStats()
+        {
+            var stats = await _manager.OrderService.GetOrdersStatsAsync();
+
+            return Ok(stats);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOneOrder([FromRoute] int id)
         {
