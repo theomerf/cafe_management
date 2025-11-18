@@ -182,6 +182,8 @@ namespace Services
             _cache.Remove("TotalIncomeOfDay");
             _cache.Remove("OrdersStatusStats");
             _cache.Remove("OrdersStats");
+            _cache.Remove("TopSoldProducts");
+            _cache.Remove("TopSoldCategories");
 
             _manager.Order.CreateOrder(order);
             await _manager.SaveAsync();
@@ -195,6 +197,8 @@ namespace Services
             _cache.Remove("TotalIncomeOfDay");
             _cache.Remove("OrdersStatusStats");
             _cache.Remove("OrdersStats");
+            _cache.Remove("TopSoldProducts");
+            _cache.Remove("TopSoldCategories");
 
             _manager.Order.DeleteOrder(order);
             await _manager.SaveAsync();

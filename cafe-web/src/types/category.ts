@@ -3,3 +3,9 @@ export default interface Category {
     name: string;
     productCount: number;
 }
+
+export interface CategoryStats {
+    id: number;
+    name: string;
+    count: number;
+}

@@ -10,6 +10,7 @@ namespace Services.Contracts
         Task<IEnumerable<CategoryDto>> GetAllCategoriesListAsync();
         Task<int> GetCategoriesCountAsync();
         Task<CategoryDto> GetOneCategoryByIdAsync(int id, bool trackChanges);
+        Task<IEnumerable<CategoryStatsDto>> GetTopSoldCategoriesAsync();
         Task CreateCategoryAsync(CategoryDtoForCreation categoryDto);
         Task UpdateCategoryAsync(CategoryDtoForUpdate categoryDto);
         Task DeleteCategoryAsync(int categoryId);

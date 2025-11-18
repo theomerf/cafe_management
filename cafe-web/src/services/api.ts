@@ -104,6 +104,7 @@ const product = {
     getAllProducts: (params: any, signal?: AbortSignal) => methods.get("product", { params }, signal),
     getProductsForOrder: (params: any, signal?: AbortSignal) => methods.getWithoutHeaders("product/list", { params }, signal),
     productsCount: (signal?: AbortSignal) => methods.getWithoutHeaders("product/count", {}, signal),
+    topSold: (signal?: AbortSignal) => methods.getWithoutHeaders("product/top-sold", {}, signal),
     getOneProduct: (id: string, signal?: AbortSignal) => methods.getWithoutHeaders(`product/${id}`, {}, signal),
     createProduct: (formData: FormData) => methods.post("product/create", formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -118,6 +119,7 @@ const category = {
     getAllCategories: (params: any, signal?: AbortSignal) => methods.get("category", { params }, signal),
     getCategoriesList: (signal?: AbortSignal) => methods.getWithoutHeaders("category/list", {}, signal),
     categoriesCount: (signal?: AbortSignal) => methods.getWithoutHeaders("category/count", {}, signal),
+    topSold: (signal?: AbortSignal) => methods.getWithoutHeaders("category/top-sold", {}, signal),
     getOneCategory: (id: string, signal?: AbortSignal) => methods.getWithoutHeaders(`category/${id}`, {}, signal),
     createCategory: (formData: any) => methods.post("category/create", formData),
     updateCategory: (formData: any) => methods.put(`category/update`, formData),

@@ -4,6 +4,7 @@ using Entities.Exceptions;
 using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Repositories.Contracts;
 using Services.Contracts;
@@ -16,12 +17,14 @@ namespace Services
     {
         private readonly IRepositoryManager _manager;
         private readonly IMapper _mapper;
+        private readonly IMemoryCache _cache;
         private readonly string _imgbbApiKey;
 
-        public ProductManager(IRepositoryManager manager, IMapper mapper, IConfiguration configuration)
+        public ProductManager(IRepositoryManager manager, IMapper mapper, IMemoryCache cache, IConfiguration configuration)
         {
             _manager = manager;
             _mapper = mapper;
+            _cache = cache;
             _imgbbApiKey = configuration["ApiSettings:ImgBB:ApiKey"] ?? throw new ArgumentNullException("ImgBB API anahtarı ayarlanmadı.");
         }
 
@@ -63,6 +66,26 @@ namespace Services
             }
 
             return product;
+        }
+
+        public async Task<IEnumerable<ProductStatsDto>> GetTopSoldProductsAsync()
+        {
+            string cacheKey = "TopSoldProducts";
+            if (_cache.TryGetValue(cacheKey, out IEnumerable<ProductStatsDto>? cachedProducts))
+            {
+                if (cachedProducts != null)
+                    return cachedProducts;
+            }
+
+            var products = await _manager.Product.GetTopSoldProductsAsync();
+
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
+            };
+            _cache.Set(cacheKey, products, cacheEntryOptions);
+
+            return products;
         }
 
         public async Task CreateProductAsync(ProductDtoForCreation productDto)
@@ -125,7 +148,7 @@ namespace Services
 
             if (productDto.Image != null)
             {
-                var imageUrl =  await UploadImageAsync(productDto.Image);
+                var imageUrl = await UploadImageAsync(productDto.Image);
                 product.ImageUrl = imageUrl;
             }
 

@@ -27,6 +27,14 @@ namespace Presentation.Controllers
             return Ok(pagedProduct.products);
         }
 
+        [HttpGet("top-sold")]
+        public async Task<IActionResult> GetTopSoldProducts()
+        {
+            var products = await _manager.ProductService.GetTopSoldProductsAsync();
+
+            return Ok(products);
+        }
+
         [HttpGet("list")]
         public async Task<IActionResult> GetProductsForOrder([FromQuery] ProductFilterParameters p)
         {

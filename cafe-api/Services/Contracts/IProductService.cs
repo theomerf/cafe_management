@@ -9,6 +9,7 @@ namespace Services.Contracts
         Task<IEnumerable<ProductDto>> GetProductsForOrderAsync(ProductFilterParameters p, bool trackChanges);
         Task<int> GetAllProductsCountAsync();
         Task<ProductDto> GetOneProductByIdAsync(int productId, bool trackChanges);
+        Task<IEnumerable<ProductStatsDto>> GetTopSoldProductsAsync();
         Task CreateProductAsync(ProductDtoForCreation productDto);
         Task UpdateProductAsync(ProductDtoForUpdate productDto);
         Task DeleteProductAsync(int productId);

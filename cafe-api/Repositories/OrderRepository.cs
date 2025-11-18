@@ -4,6 +4,7 @@ using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Contracts;
 using Repositories.Extensions;
+using System.Globalization;
 
 namespace Repositories
 {
@@ -84,7 +85,17 @@ namespace Repositories
             var startOfMonth = new DateTime(today.Year, today.Month, 1);
             var startOfYear = new DateTime(today.Year, 1, 1);
 
-            var dailyStatsQuery = await FindByCondition(o => o.CreatedAt >= startOfMonth, false)
+            var hourlyStatsQuery = await FindByCondition(o => o.Status != OrderStatus.Cancelled, false)
+                .GroupBy(o => o.CreatedAt.Hour)
+                .Select(g => new
+                {
+                    Hour = g.Key,
+                    TotalCount = g.Count(),
+                    TotalIncome = g.Sum(o => o.TotalAmount)
+                })
+                .ToListAsync();
+
+            var dailyStatsQuery = await FindByCondition(o => o.CreatedAt >= startOfMonth && o.Status != OrderStatus.Cancelled, false)
                 .GroupBy(o => o.CreatedAt.Day)
                 .Select(g => new
                 {
@@ -94,7 +105,7 @@ namespace Repositories
                 })
                 .ToListAsync();
 
-            var weeklyStatsQuery = await FindByCondition(o => o.CreatedAt >= startOfMonth, false)
+            var weeklyStatsQuery = await FindByCondition(o => o.CreatedAt >= startOfMonth && o.Status != OrderStatus.Cancelled, false)
                 .GroupBy(o => o.CreatedAt.Day / 7)
                 .Select(g => new
                 {
@@ -104,7 +115,7 @@ namespace Repositories
                 })
                 .ToListAsync();
 
-            var monthlyStatsQuery = await FindByCondition(o => o.CreatedAt >= startOfYear, false)
+            var monthlyStatsQuery = await FindByCondition(o => o.CreatedAt >= startOfYear && o.Status != OrderStatus.Cancelled, false)
                 .GroupBy(o => o.CreatedAt.Month)
                 .Select(g => new
                 {
@@ -113,6 +124,19 @@ namespace Repositories
                     TotalIncome = g.Sum(o => o.TotalAmount),
                 })
                 .ToListAsync();
+
+            var hourlyStats = new OrderStatsDto
+            {
+                Labels = Enumerable.Range(8, 16)
+                    .Select(hour => $"{hour}:00-{hour+1}:00")
+                    .ToList(),
+                TotalCounts = Enumerable.Range(8, 16)
+                    .Select(hour => hourlyStatsQuery.FirstOrDefault(hs => hs.Hour == hour)?.TotalCount ?? 0)
+                    .ToList(),
+                TotalIncomes = Enumerable.Range(8, 16)
+                    .Select(hour => hourlyStatsQuery.FirstOrDefault(hs => hs.Hour == hour)?.TotalIncome ?? 0)
+                    .ToList()
+            };
 
             var dailyStats = new OrderStatsDto
             {
@@ -132,7 +156,7 @@ namespace Repositories
             var weeklyStats = new OrderStatsDto
             {
                 Labels = Enumerable.Range(1, weekCount)
-                    .Select(week => $"Hafta {week}")
+                    .Select(week => $"{week}. Hafta")
                     .ToList(),
                 TotalCounts = Enumerable.Range(0, weekCount)
                     .Select(week => weeklyStatsQuery.FirstOrDefault(ms => ms.Week == week)?.TotalCount ?? 0)
@@ -142,10 +166,12 @@ namespace Repositories
                     .ToList(),
             };
 
+            var monthNames = CultureInfo.CurrentCulture.DateTimeFormat.MonthNames;
+
             var monthlyStats = new OrderStatsDto
             {
-                Labels = Enumerable.Range(1, today.Month)
-                    .Select(month => $"Ay {month}")
+                Labels = Enumerable.Range(0, today.Month)
+                    .Select(month => $"{monthNames[month]}")
                     .ToList(),
                 TotalCounts = Enumerable.Range(1, today.Month)
                     .Select(month => monthlyStatsQuery.FirstOrDefault(ms => ms.Month == month)?.TotalCount ?? 0)
@@ -157,6 +183,7 @@ namespace Repositories
 
             var stats = new Dictionary<OrderStatsType, OrderStatsDto>
             {
+                { OrderStatsType.Hourly, hourlyStats },
                 { OrderStatsType.Daily, dailyStats },
                 { OrderStatsType.Weekly, weeklyStats },
                 { OrderStatsType.Monthly, monthlyStats }

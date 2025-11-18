@@ -9,6 +9,7 @@
 
     public enum OrderStatsType
     {
+        Hourly,
         Daily,
         Weekly,
         Monthly

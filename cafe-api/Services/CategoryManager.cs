@@ -3,6 +3,7 @@ using Entities.Dtos;
 using Entities.Exceptions;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.Extensions.Caching.Memory;
 using Repositories.Contracts;
 using Services.Contracts;
 
@@ -12,11 +13,13 @@ namespace Services
     {
         private readonly IRepositoryManager _manager;
         private readonly IMapper _mapper;
+        private readonly IMemoryCache _cache;
 
-        public CategoryManager(IRepositoryManager manager, IMapper mapper)
+        public CategoryManager(IRepositoryManager manager, IMemoryCache cache, IMapper mapper)
         {
             _manager = manager;
             _mapper = mapper;
+            _cache = cache;
         }
 
         public async Task<(PagedList<CategoryDto> categories, MetaData metaData)> GetAllCategoriesAsync(RequestParameters p, bool trackChanges)
@@ -57,6 +60,26 @@ namespace Services
             }
 
             return category;
+        }
+
+        public async Task<IEnumerable<CategoryStatsDto>> GetTopSoldCategoriesAsync()
+        {
+            string cacheKey = "TopSoldCategories";
+            if (_cache.TryGetValue(cacheKey, out IEnumerable<CategoryStatsDto>? cachedCategories))
+            {
+                if (cachedCategories != null)
+                    return cachedCategories;
+            }
+
+            var categories = await _manager.Category.GetTopSoldCategoriesAsync();
+
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
+            };
+            _cache.Set(cacheKey, categories, cacheEntryOptions);
+
+            return categories;
         }
 
         public async Task CreateCategoryAsync(CategoryDtoForCreation categoryDto)

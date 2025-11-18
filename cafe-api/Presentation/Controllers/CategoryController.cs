@@ -27,6 +27,14 @@ namespace Presentation.Controllers
             return Ok(pagedCategories.categories);
         }
 
+        [HttpGet("top-sold")]
+        public async Task<IActionResult> GetTopSoldCategories()
+        {
+            var categories = await _manager.CategoryService.GetTopSoldCategoriesAsync();
+
+            return Ok(categories);
+        }
+
         [HttpGet("list")]
         public async Task<IActionResult> GetCategoriesList()
         {

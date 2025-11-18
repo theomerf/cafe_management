@@ -23,6 +23,7 @@ export interface OrderStatusUpdateDto {
 }
 
 export interface OrderStatsResponse {
+    Hourly: OrderStats;
     Daily: OrderStats;
     Weekly: OrderStats;
     Monthly: OrderStats;

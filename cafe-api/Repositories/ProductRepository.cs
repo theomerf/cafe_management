@@ -50,6 +50,24 @@ namespace Repositories
             return product;
         }
 
+        public async Task<IEnumerable<ProductStatsDto>> GetTopSoldProductsAsync()
+        {
+            var products = await _context.OrderLines
+                .GroupBy(ol => ol.ProductId)
+                .Select(g => new ProductStatsDto
+                {
+                    Id = g.Key,
+                    Name = g.FirstOrDefault()!.Product!.Name,
+                    Count = g.Sum(ol => ol.Quantity)
+                })
+                .OrderByDescending(ol => ol.Count)
+                .Take(5)
+                .ToListAsync();
+
+            return products;
+        }
+
+
         public void CreateProduct(Product product)
         {
             Create(product);

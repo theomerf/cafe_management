@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Dtos;
+using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Contracts;
@@ -30,6 +31,24 @@ namespace Repositories
         {
             var categories = await FindAll(false)
                 .OrderBy(c => c.Id)
+                .ToListAsync();
+
+            return categories;
+        }
+
+        public async Task<IEnumerable<CategoryStatsDto>> GetTopSoldCategoriesAsync()
+        {
+            var categories = await _context.OrderLines
+                .Include(ol => ol.Product)
+                .ThenInclude(p => p!.Category)
+                .GroupBy(ol => ol.Product!.CategoryId)
+                .Select(g => new CategoryStatsDto
+                {
+                    Id = g.Key,
+                    Name = g.FirstOrDefault()!.Product!.Category!.Name,
+                    Count = g.Count()
+                })
+                .Take(5)
                 .ToListAsync();
 
             return categories;

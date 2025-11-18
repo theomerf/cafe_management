@@ -11,13 +11,13 @@ interface HistogramData extends BarDatum {
     [key: string]: any;
 }
 
-type DailyOrdersCountGraphProps = {
-    dailyOrdersStats: OrderStats | undefined;
+type MonthlyOrdersCountGraphProps = {
+    monthlyOrdersStats: OrderStats | undefined;
     isLoading: boolean;
     error: Error | null;
 }
 
-export default function DailyOrdersCountGraph({ dailyOrdersStats, isLoading, error }: DailyOrdersCountGraphProps) {
+export default function MonthlyOrdersCountGraph({ monthlyOrdersStats, isLoading, error }: MonthlyOrdersCountGraphProps) {
     const [graphData, setGraphData] = useState<HistogramData[] | undefined>();
     const { up } = useBreakpoint();
     const isMobile = !up.md;
@@ -37,17 +37,17 @@ export default function DailyOrdersCountGraph({ dailyOrdersStats, isLoading, err
     };
 
     useEffect(() => {
-        if (dailyOrdersStats) {
-            const formattedData: HistogramData[] = dailyOrdersStats.labels.map((label, index) => ({
+        if (monthlyOrdersStats) {
+            const formattedData: HistogramData[] = monthlyOrdersStats.labels.map((label, index) => ({
                 day: label,
-                count: dailyOrdersStats.totalCounts[index],
-                color: getColorByCount(dailyOrdersStats.totalCounts[index]),
+                count: monthlyOrdersStats.totalCounts[index],
+                color: getColorByCount(monthlyOrdersStats.totalCounts[index]),
             }));
             setGraphData(formattedData);
         }
-    }, [dailyOrdersStats]);
+    }, [monthlyOrdersStats]);
 
-    const currentMonth = new Date().toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' });
+    const currentYear = new Date().toLocaleDateString('tr-TR', { year: 'numeric' });
 
     return (
         <div className="border-gray-200 border shadow-lg rounded-lg w-full bg-white">
@@ -69,7 +69,7 @@ export default function DailyOrdersCountGraph({ dailyOrdersStats, isLoading, err
                         }`}>
                         <h2 className={`font-semibold text-violet-400 ${isMobile ? 'text-lg text-center' : 'text-2xl'
                             }`}>
-                            {isMobile ? currentMonth.split(' ')[0] : currentMonth} - Günlük Sipariş Grafiği
+                            {isMobile ? currentYear.split(' ')[0] : currentYear} - Aylık Sipariş Grafiği
                         </h2>
                         <div className="flex gap-2 md:gap-4 text-xs md:text-sm">
                             <div className="flex items-center gap-1 md:gap-2">
@@ -104,7 +104,7 @@ export default function DailyOrdersCountGraph({ dailyOrdersStats, isLoading, err
                                 tickSize: 5,
                                 tickPadding: 5,
                                 tickRotation: isMobile ? -45 : 0,
-                                legend: isMobile ? '' : 'Gün',
+                                legend: isMobile ? '' : 'Ay',
                                 legendPosition: 'middle',
                                 legendOffset: isMobile ? 45 : 50,
                                 format: (value) => isMobile ? `${value}` : `${value}.`,
@@ -146,7 +146,7 @@ export default function DailyOrdersCountGraph({ dailyOrdersStats, isLoading, err
                                                 />
                                                 <strong className={`text-gray-800 font-bold ${isMobile ? 'text-base' : 'text-xl'
                                                     }`}>
-                                                    {indexValue}. Gün
+                                                    {indexValue}
                                                 </strong>
                                             </div>
                                             {isPeakDay && (
@@ -213,7 +213,7 @@ export default function DailyOrdersCountGraph({ dailyOrdersStats, isLoading, err
                                                 <div className="flex justify-center mt-3 pt-3 border-t border-gray-200">
                                                     {value === 0 ? (
                                                         <span className="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1.5 rounded-full">
-                                                            ⚪ Boş Gün
+                                                            ⚪ Boş Ay
                                                         </span>
                                                     ) : isAboveAverage ? (
                                                         <span className="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-full">
@@ -251,7 +251,7 @@ export default function DailyOrdersCountGraph({ dailyOrdersStats, isLoading, err
                         </div>
                         <div className="bg-green-50 rounded-lg p-2 md:p-3">
                             <p className={`text-gray-600 ${isMobile ? 'text-xs' : 'text-sm'}`}>
-                                Ortalama{isMobile ? '' : '/Gün'}
+                                Ortalama{isMobile ? '' : '/Ay'}
                             </p>
                             <p className={`font-bold text-green-600 ${isMobile ? 'text-lg' : 'text-2xl'}`}>
                                 {(graphData.reduce((sum, item) => sum + item.count, 0) / graphData.length).toFixed(1)}
@@ -259,7 +259,7 @@ export default function DailyOrdersCountGraph({ dailyOrdersStats, isLoading, err
                         </div>
                         {!isMobile && (
                             <div className="bg-purple-50 rounded-lg p-3">
-                                <p className="text-sm text-gray-600">En Yoğun Gün</p>
+                                <p className="text-sm text-gray-600">En Yoğun Ay</p>
                                 <p className="text-2xl font-bold text-purple-600">
                                     {Math.max(...graphData.map((d) => d.count))}
                                 </p>

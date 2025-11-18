@@ -8,3 +8,9 @@ export default interface Product {
     categoryName: string;
     image?: File;
 }
+
+export interface ProductStats {
+    id: number,
+    name: string,
+    count: number
+}
