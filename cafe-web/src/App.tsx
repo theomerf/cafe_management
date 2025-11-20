@@ -12,40 +12,26 @@ import CategoryManagement from './pages/Management/CategoryManagement'
 import Login from './pages/Account/Login'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { logout, setUser } from './pages/Account/accountSlice'
 import { type AppDispatch } from './store/store'
-import { jwtDecode } from 'jwt-decode'
 import ProtectedRoute from './utils/ProtectedRoute'
 import Statistics from './pages/Statistics/Statistics'
+import { checkAuth, setUser } from './pages/Account/accountSlice'
 
 function App() {
   const dispatch: AppDispatch = useDispatch();
 
-  function isTokenExpired(token: string) {
-    if (!token) return true;
-
-    try {
-      const decoded: any = jwtDecode(token);
-      if (!decoded.exp) return true;
-      return decoded.exp * 1000 < Date.now();
-    }
-    catch (err) {
-      return true;
-    }
-  }
-
   useEffect(() => {
-    const localUser = localStorage.getItem("user");
-    if (localUser) {
-      if (isTokenExpired(JSON.parse(localUser).accessToken)) {
-        dispatch(logout());
-      }
-      else {
-        dispatch(setUser(JSON.parse(localUser)));
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        dispatch(setUser(parsedUser));
+        dispatch(checkAuth());
+      } catch (error) {
+        console.error("Kullanıcı verisi çözümlenirken hata oluştu:", error);
       }
     }
-  }, []);
-
+  }, [dispatch]);
 
   return (
     <HistoryRouter history={history}>

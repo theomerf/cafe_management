@@ -3,7 +3,6 @@ import { toast } from 'react-toastify'
 import requests from '../../services/api';
 import { history } from '../../utils/history';
 import type { FormError, ApiErrorResponse } from '../../types/apiError';
-import { jwtDecode } from 'jwt-decode';
 import type { LoginResponse } from '../../types/loginResponse';
 
 type userState = {
@@ -22,11 +21,12 @@ export const loginUser = createAsyncThunk(
     "account/login",
     async (data, thunkAPI) => {
         try {
-            const result = await requests.account.login(data);
-            history.push("/");
-            await new Promise(resolve => setTimeout(resolve, 100));
+            const response = await requests.account.login(data);
+            localStorage.setItem("user", JSON.stringify(response));
             toast.success("Başarıyla giriş yaptınız.");
-            return result;
+            history.push("/");
+
+            return response as LoginResponse;
         }
         catch (error: any) {
             if (error.response?.status === 401) {
@@ -44,10 +44,10 @@ export const registerUser = createAsyncThunk(
     "account/register",
     async (data, thunkAPI) => {
         try {
-            var result = await requests.account.register(data);
+            await requests.account.register(data);
             toast.success("Başarıyla kayıt oldunuz, lütfen giriş yapın.");
             history.push("/account/login");
-            return result;
+            return null;
         }
         catch (error: any) {
             if (error.response?.data) {
@@ -62,39 +62,38 @@ export const registerUser = createAsyncThunk(
     }
 )
 
-export const logout = createAsyncThunk(
-    "account/logout",
-    async (_) => {
-        localStorage.removeItem("user");
-        toast.success("Başarıyla çıkış yaptınız.");
-        history.push("/login");
-    }
-);
-
-export const refresh = createAsyncThunk(
-    "account/refresh",
-    async (data: LoginResponse, thunkAPI) => {
-        const storedUser = localStorage.getItem("user");
-
-        const user: LoginResponse | null = storedUser ? JSON.parse(storedUser) as LoginResponse : null;
-        if (user) thunkAPI.dispatch(setUser(user));
+export const checkAuth = createAsyncThunk(
+    "account/checkAuth",
+    async (_, thunkAPI) => {
         try {
-            var result = await requests.account.refresh(data);
-            const newUser = result.data;
-
-            const updatedUser = newUser;
-            localStorage.setItem("user", JSON.stringify(updatedUser));
-
-            return result;
+            const response = await requests.account.checkAuth(thunkAPI.signal);
+            localStorage.setItem("user", JSON.stringify(response));
+            return response as LoginResponse;
         }
         catch (error: any) {
-            if (error.response?.data) {
-                const errorData = error.response.data as ApiErrorResponse;
-                return thunkAPI.rejectWithValue(errorData);
-            }
+            toast.error("Kimlik doğrulama kontrolü sırasında bir hata oluştu.");
+            history.push("/login");
+            return thunkAPI.rejectWithValue(null);
         }
     }
 )
+
+export const logout = createAsyncThunk(
+    "account/logout",
+    async (_) => {
+        try {
+            await requests.account.logout();
+            localStorage.removeItem("user");
+            toast.success("Başarıyla çıkış yaptınız.");
+        } catch (error: any) {
+            console.error("Logout hatası:", error);
+            toast.warning("Çıkış işlemi tamamlandı.");
+        } finally {
+            history.push("/login");
+        }
+        return null;
+    }
+);
 
 export const accountSlice = createSlice({
     name: "account",
@@ -110,20 +109,14 @@ export const accountSlice = createSlice({
             state.status = "pending";
         });
         builder.addCase(loginUser.fulfilled, (state, action) => {
-            const decoded: any = jwtDecode(action.payload.accessToken);
-
-            state.user = {
-                ...action.payload,
-                userName: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
-                avatarUrl: decoded["picture"]
-            };
-
-            localStorage.setItem("user", JSON.stringify(state.user));
+            state.user = action.payload;
             state.status = "idle";
+            state.error = null;
         });
         builder.addCase(loginUser.rejected, (state, action) => {
             state.status = "idle";
             state.error = action.payload as FormError;
+            state.user = null;
         });
 
         builder.addCase(registerUser.pending, (state) => {
@@ -132,31 +125,37 @@ export const accountSlice = createSlice({
         });
         builder.addCase(registerUser.fulfilled, (state) => {
             state.status = "idle";
+            state.error = null;
         });
         builder.addCase(registerUser.rejected, (state, action) => {
             state.status = "idle";
             state.error = action.payload as FormError;
         });
 
+        builder.addCase(checkAuth.pending, (state) => {
+            state.status = "pending";
+        });
+        builder.addCase(checkAuth.fulfilled, (state, action) => {
+            state.user = action.payload;
+            state.status = "idle";
+            state.error = null;
+        });
+        builder.addCase(checkAuth.rejected, (state) => {
+            state.user = null;
+            state.status = "idle";
+        });
+
         builder.addCase(logout.pending, (state) => {
             state.status = "pending";
-        })
-
+        });
         builder.addCase(logout.fulfilled, (state) => {
-            state.status = "idle";
             state.user = null;
+            state.status = 'idle';
+            state.error = null;
         });
-
-        builder.addCase(refresh.pending, (state) => {
-            state.status = "pending";
-        });
-        builder.addCase(refresh.fulfilled, (state, action) => {
-            state.user = action.payload;
-        });
-        builder.addCase(refresh.rejected, (state) => {
+        builder.addCase(logout.rejected, (state) => {
             state.user = null;
-            localStorage.removeItem("user");
-            history.push("/login");
+            state.status = 'idle';
         });
     }
 });

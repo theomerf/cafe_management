@@ -1,26 +1,40 @@
-import axios from 'axios';
+import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
-import { history } from '../utils/history';
 import { store } from '../store/store';
 import { logout, setUser } from '../pages/Account/accountSlice';
 import type { LoginResponse } from '../types/loginResponse';
+import type { ApiErrorResponse } from '../types/apiError';
 
 const apiBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/+$/, '') || 'https://localhost:7214';
 
+axios.defaults.withCredentials = true;
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.baseURL = `${apiBase}/api/`;
-axios.interceptors.request.use((request) => {
-    const token = store.getState().account.user?.accessToken;
-    if (token) request.headers["Authorization"] = `Bearer ${token}`;
-    return request;
-})
+
+let isRefreshing = false;
+let failedQueue: Array<{
+    resolve: () => void;
+    reject: (error: any) => void;
+}> = [];
+
+const processQueue = (error: any = null) => {
+    failedQueue.forEach((prom) => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve();
+        }
+    });
+
+    isRefreshing = false;
+    failedQueue = [];
+};
 
 axios.interceptors.response.use(
-    (response) => {
-        return response;
-    },
-    async (error) => {
-        if (error.name === "AbortError" || error.name === "CanceledError" ||
-            error.code === "ERR_CANCELED" || error.message?.includes("canceled")) {
+    (response) => response,
+    async (error: AxiosError<ApiErrorResponse>) => {
+        // İptal edilen istekleri göz ardı et
+        if (error.code === "ERR_CANCELED" || error.message?.includes("canceled")) {
             return Promise.reject(error);
         }
 
@@ -29,53 +43,77 @@ axios.interceptors.response.use(
             return Promise.reject(error);
         }
 
-        const { data, status } = error.response;
+        const { data, status, config } = error.response;
+        const originalRequest = config as InternalAxiosRequestConfig & { _retry?: boolean };
+
+        if (status === 401) {
+            // Login isteği başarısız - direkt reject
+            if (originalRequest.url?.includes('account/login')) {
+                return Promise.reject(error);
+            }
+
+            // Refresh isteği başarısız - logout yap
+            if (originalRequest.url?.includes('account/refresh')) {
+                processQueue(error);
+                store.dispatch(logout());
+                return Promise.reject(error);
+            }
+
+            // CheckAuth başarısız - sadece reject et, logout yapma
+            if (originalRequest.url?.includes('account/check-auth')) {
+                // İlk yüklemede cookie yoksa normal, logout yapma
+                return Promise.reject(error);
+            }
+
+            // Diğer 401 hatalarında token refresh dene
+            if (originalRequest._retry) {
+                return Promise.reject(error);
+            }
+
+            if (isRefreshing) {
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ 
+                        resolve: () => resolve(axios(originalRequest)), 
+                        reject 
+                    });
+                });
+            }
+
+            originalRequest._retry = true;
+            isRefreshing = true;
+
+            try {
+                localStorage.removeItem("user");
+                const response = await account.checkAuth() as LoginResponse;
+                localStorage.setItem("user", JSON.stringify(response));
+                store.dispatch(setUser(response));
+                processQueue();
+                return axios(originalRequest);
+            } catch (refreshError) {
+                processQueue(refreshError);
+                store.dispatch(logout());
+                return Promise.reject(refreshError);
+            }
+        }
 
         switch (status) {
-            case 401:
-                if (!error.config._retry) {
-                    error.config._retry = true;
-                }
-                const user = store.getState().account.user;
-                if (user) {
-                    try {
-                        const res = await requests.account.refresh({
-                            accessToken: user.accessToken,
-                            refreshToken: user.refreshToken,
-                            userName: user.userName,
-                        });
-                        const newUser = res.data;
-
-                        const updatedUser = newUser;
-
-                        localStorage.setItem("user", JSON.stringify(updatedUser));
-                        store.dispatch(setUser(updatedUser));
-
-                        error.config.headers["Authorization"] = `Bearer ${updatedUser.accessToken}`;
-                        return axios(error.config);
-                    }
-                    catch (refreshError) {
-                        store.dispatch(logout());
-                        return Promise.reject(refreshError);
-                    }
-
-                }
-                return Promise.reject(error);
-            case 422:
             case 400:
+            case 422:
+                if (data?.message) {
+                    toast.error(data.message);
+                }
+                break;
             case 403:
+                toast.error("Bu işlem için yetkiniz yok");
                 break;
             case 404:
+                toast.error(data?.message ?? "Kaynak bulunamadı");
+                break;
             case 500:
-                history.push("/Error", {
-                    state: { error: data, status: status },
-                });
                 toast.error(data?.message ?? "Sunucu hatası");
                 break;
-            default:
-                toast.error("Bilinmeyen hata");
-                break;
         }
+
         return Promise.reject(error);
     }
 );
@@ -92,7 +130,9 @@ const methods = {
 const account = {
     login: (formData: any) => methods.post("account/login", formData),
     register: (formData: any) => methods.post("account/register", formData),
-    refresh: (user: LoginResponse) => methods.post("account/refresh", user),
+    refresh: () => methods.post("account/refresh", null, { headers: { "X-No-Retry": "true" } }),
+    logout: () => methods.post("account/logout", null),
+    checkAuth: (signal?: AbortSignal) => methods.getWithoutHeaders("account/check-auth", {}, signal),
     getAllAccounts: (params: any, signal?: AbortSignal) => methods.get("account", { params }, signal),
     accountsCount: (signal?: AbortSignal) => methods.getWithoutHeaders("account/count", {}, signal),
     createAccount: (formData: any) => methods.post("account/create", formData),

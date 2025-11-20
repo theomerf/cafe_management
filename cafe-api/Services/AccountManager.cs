@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
+using Azure.Core;
+using Entities;
 using Entities.Dtos;
 using Entities.Exceptions;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Repositories.Contracts;
 using Services.Contracts;
@@ -21,15 +25,17 @@ namespace Services
         private readonly UserManager<Account> _userManager;
         private readonly IRepositoryManager _manager;
         private readonly IConfiguration _configuration;
+        private readonly AppSettings _appSettings;
 
         private Account? _account;
 
-        public AccountManager(IMapper mapper, UserManager<Account> userManager, IConfiguration configuration, IRepositoryManager manager)
+        public AccountManager(IMapper mapper, UserManager<Account> userManager, IConfiguration configuration, IRepositoryManager manager, IOptions<AppSettings> appSettings)
         {
             _mapper = mapper;
             _userManager = userManager;
             _configuration = configuration;
             _manager = manager;
+            _appSettings = appSettings.Value;
         }
 
         public async Task<IdentityResult> RegisterUserAsync(AccountDtoForRegistration accountDto)
@@ -68,6 +74,38 @@ namespace Services
                 return result;
             }
             return false;
+        }
+
+        public async Task<LoginResponseDto> GetCurrentUserInfoAsync(string userId)
+        {
+            Account? account;
+            if (_account == null)
+            {
+                account = await _userManager.FindByIdAsync(userId);
+
+                if (account == null || account.UserName == null)
+                    throw new AccessViolationException("Kullanıcı bulunamadı");
+
+                var loginResponse = new LoginResponseDto
+                {
+                    UserName = account.UserName,
+                    FirstName = account.FirstName,
+                    LastName = account.LastName
+                };
+
+                return loginResponse;
+            }
+            else
+            {
+                account = _account;
+                var loginResponse = new LoginResponseDto
+                {
+                    UserName = account.UserName!,
+                    FirstName = account.FirstName,
+                    LastName = account.LastName
+                };
+                return loginResponse;
+            }
         }
 
         public async Task<TokenDto> CreateTokenAsync(bool populateExp, bool rememberMe)
@@ -201,6 +239,41 @@ namespace Services
 
             _account = account;
             return await CreateTokenAsync(populateExp: false, rememberMe: false);
+        }
+
+        public void SetTokensInsideCookie(TokenDto tokenDto, HttpContext context)
+        {
+            context.Response.Cookies.Append("accessToken", tokenDto.AccessToken,
+                new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(15),
+                    HttpOnly = true,
+                    IsEssential = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None
+                });
+
+            context.Response.Cookies.Append("refreshToken", tokenDto.RefreshToken,
+                new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddDays(7),
+                    HttpOnly = true,
+                    IsEssential = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None
+                });
+        }
+
+        public async Task InvalidateRefreshTokenAsync(string userId)
+        {
+            var account = await _userManager.FindByIdAsync(userId);
+
+            if (account != null)
+            {
+                account.RefreshToken = null;
+                account.RefreshTokenExpiryTime = null;
+                await _userManager.UpdateAsync(account);
+            }
         }
 
         public async Task<(PagedList<AccountDto> accounts, MetaData metaData)> GetAllAccountsAsync(RequestParameters p, bool trackChanges)

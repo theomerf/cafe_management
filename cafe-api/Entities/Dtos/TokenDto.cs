@@ -2,7 +2,8 @@
 {
     public record TokenDto
     {
-        public String? AccessToken { get; init; }
-        public String? RefreshToken { get; init; }
+        public String AccessToken { get; init; } = null!;
+        public String RefreshToken { get; init; } = null!;
+
     }
 }

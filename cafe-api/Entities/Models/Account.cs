@@ -8,6 +8,6 @@ namespace Entities.Models
         public String LastName { get; set; } = null!;
         public DateTime? LastLoginDate { get; set; }
         public String? RefreshToken { get; set; }
-        public DateTime RefreshTokenExpiryTime { get; set; }
+        public DateTime? RefreshTokenExpiryTime { get; set; }
     }
 }

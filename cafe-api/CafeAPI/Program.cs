@@ -1,10 +1,14 @@
 using CafeAPI.Infrastructure.Extensions;
+using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<AppSettings>(
+    builder.Configuration.GetSection("AppSettings"));
 
 builder.Services.AddControllers(config =>
 {
@@ -18,8 +22,6 @@ builder.Services.AddControllers(config =>
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
-
-
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -40,13 +42,14 @@ builder.Services.AddMemoryCache();
 builder.Services.ConfigureLocalization();
 
 builder.Services.AddAutoMapper(typeof(Program));
-
 builder.Services.ConfigureJwt(builder.Configuration);
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
 app.UseCors("AllowFrontend");
+
+app.UseCookiePolicy();
 
 var logger = app.Services.GetRequiredService<ILoggerService>();
 app.ConfigureExceptionHandler(logger);

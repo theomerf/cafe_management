@@ -1,8 +1,14 @@
-﻿using Entities.Dtos;
+﻿using Entities;
+using Entities.Dtos;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Presentation.ActionFilters;
 using Services.Contracts;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace Presentation.Controllers
@@ -22,14 +28,19 @@ namespace Presentation.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> Login([FromBody] AccountDtoForLogin accountDto)
         {
-            var result = await _manager.AccountService.LoginUserAsync(accountDto);
-
-            if (result)
+            if (!await _manager.AccountService.LoginUserAsync(accountDto))
             {
-                var tokenDto = await _manager.AccountService.CreateTokenAsync(true, accountDto.RememberMe);
-                return Ok(tokenDto);
+                return Unauthorized();
             }
-            return Unauthorized();
+
+            var tokenDto = await _manager.AccountService.CreateTokenAsync(populateExp: true, rememberMe: accountDto.RememberMe);
+
+            _manager.AccountService.SetTokensInsideCookie(tokenDto, HttpContext);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var userInfo = await _manager.AccountService.GetCurrentUserInfoAsync(userId!);
+
+            return Ok(userInfo);
         }
 
         [HttpPost("register")]
@@ -46,10 +57,55 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> RefreshToken([FromBody] TokenDto tokenDto)
+        [Authorize]
+        public async Task<IActionResult> Refresh()
         {
-            var newTokenDto = await _manager.AccountService.RefreshTokenAsync(tokenDto);
-            return Ok(newTokenDto);
+            HttpContext.Request.Cookies.TryGetValue("accessToken", out var accessToken);
+            HttpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
+
+            var tokenDto = new TokenDto
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
+
+            var tokenDtoToReturn = await _manager.AccountService.RefreshTokenAsync(tokenDto);
+
+            _manager.AccountService.SetTokensInsideCookie(tokenDto, HttpContext);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var userInfo = await _manager.AccountService.GetCurrentUserInfoAsync(userId!);
+
+            return Ok(userInfo);
+        }
+
+        [HttpGet("check-auth")]
+        [Authorize]
+        public async Task<IActionResult> CheckAuth()
+        {
+            if (!User.Identity?.IsAuthenticated ?? true)
+            {
+                return Unauthorized();
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var userInfo = await _manager.AccountService.GetCurrentUserInfoAsync(userId!);
+
+            return Ok(userInfo);
+        }
+
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            Response.Cookies.Delete("refreshToken");
+            Response.Cookies.Delete("accessToken");
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await _manager.AccountService.InvalidateRefreshTokenAsync(userId!);
+
+            return Ok();
         }
 
         [HttpGet]
