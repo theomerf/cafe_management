@@ -15,7 +15,7 @@ export default function Sidebar() {
                         <SidebarButton label="Masalar" icon={faTable} to="/management/tables" />
                     </SidebarButton>
                     <SidebarButton label="İstatistikler" icon={faChartSimple} to="/statistics" />
-                    <SidebarButton label="Analizler" icon={faMagnifyingGlassChart} to="/analytics" />
+                    <SidebarButton label="Analizler" icon={faMagnifyingGlassChart} to="/analysis" />
                     <SidebarButton label="Ayarlar" icon={faGears} to="/settings" />
                 </div>
                 <div className="mt-auto bg-gray-100 text-gray-600 flex flex-col gap-y-2 text-center py-6">

@@ -7,6 +7,7 @@ using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -226,13 +227,11 @@ namespace Services
             return principal;
         }
 
-        public async Task<TokenDto> RefreshTokenAsync(TokenDto tokenDto)
+        public async Task<TokenDto> RefreshTokenAsync(String refreshToken)
         {
-            var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken!);
+            var account = await _userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
 
-            var account = await _userManager.FindByNameAsync(principal.Identity?.Name!);
-
-            if (account is null || account.RefreshToken != tokenDto.RefreshToken || account.RefreshTokenExpiryTime <= DateTime.Now)
+            if (account is null || account.RefreshToken != refreshToken || account.RefreshTokenExpiryTime <= DateTime.Now)
             {
                 throw new RefreshTokenBadRequestException();
             }

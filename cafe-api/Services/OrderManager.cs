@@ -136,6 +136,75 @@ namespace Services
             return stats;
         }
 
+        public async Task<OrderAnalysisDto> GetOrdersAnalysisAsync()
+        {
+            var analysis = await _manager.Order.GetOrdersAnalysisAsync();
+            
+            if (analysis.CurrentMonthOrderCount == 0 && analysis.LastMonthOrderCount == 0)
+            {
+                analysis.Suggestions = new List<string>
+                {
+                    "Henüz bir sipariş verilmedi. Analizler için ilk siparişler bekleniyor."
+                };
+            }
+            else
+            {
+                analysis.Suggestions = new List<string>();
+
+                if (analysis.CurrentMonthOrderCount < analysis.LastMonthOrderCount)
+                {
+                    if (analysis.LastMonthIncome < analysis.CurrentMonthIncome)
+                    {
+                        analysis.Suggestions.Add("Sipariş sayısı azaldı ancak gelir arttı. Daha karlı ürünlere odaklanmayı düşünün.");
+                    }
+                    else
+                    {
+                        analysis.Suggestions.Add("Sipariş sayısı geçen aya göre azaldı. Daha fazla müşteri çekmek için promosyonlar veya özel teklifler düzenlemeyi düşünün.");
+                    }
+                }
+                else
+                {
+                    analysis.Suggestions.Add("Sipariş sayısı arttı. Müşteri memnuniyetini sürdürmek için hizmet kalitesine odaklanın.");
+                }
+
+                if (analysis.CurrentMonthIncome < analysis.LastMonthIncome)
+                {
+                    if (analysis.LastMonthOrderCount < analysis.CurrentMonthOrderCount)
+                    {
+                        analysis.Suggestions.Add("Gelir düştü ancak sipariş sayısı arttı. Maliyetleri gözden geçirin ve fiyatlandırma stratejinizi değerlendirin.");
+                    }
+                    else
+                    {
+                        analysis.Suggestions.Add("Gelir, geçen aya göre azaldı. Menü fiyatlandırmanızı gözden geçirin ve ek satış tekniklerini düşünün.");
+                    }
+                }
+                else
+                {
+                    analysis.Suggestions.Add("Gelir arttı. Başarıyı sürdürmek için popüler ürünleri ve promosyonları analiz edin.");
+                }
+
+                if (analysis.CurrentMonthAvgCount < analysis.LastMonthAvgCount)
+                {
+                    analysis.Suggestions.Add("Ortalama günlük sipariş sayısı düştü. Müşteri deneyimini iyileştirmeye odaklanın ve tekrar ziyaretleri teşvik edin.");
+                }
+                else
+                {
+                    analysis.Suggestions.Add("Ortalama günlük sipariş sayısı arttı. Bu olumlu trendi sürdürmek için pazarlama stratejilerinizi güçlendirin.");
+                }
+
+                if (analysis.CurrentMonthAvgIncome < analysis.LastMonthAvgIncome)
+                {
+                    analysis.Suggestions.Add("Ortalama günlük gelir düştü. Popüler yemekleri analiz edin ve satışları artırmak için yeni ürünler tanıtmayı düşünün.");
+                }
+                else
+                {
+                    analysis.Suggestions.Add("Ortalama günlük gelir arttı. Bu olumlu trendi sürdürmek için müşteri sadakat programları uygulamayı düşünün.");
+                }
+            }
+
+            return analysis;
+        }
+
         public async Task<OrderDto> GetOneOrderByIdAsync(int orderId, bool trackChanges)
         {
             var order = await GetOneOrderByIdForServiceAsync(orderId, trackChanges);

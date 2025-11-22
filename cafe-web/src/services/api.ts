@@ -2,7 +2,6 @@ import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
 import { store } from '../store/store';
 import { logout, setUser } from '../pages/Account/accountSlice';
-import type { LoginResponse } from '../types/loginResponse';
 import type { ApiErrorResponse } from '../types/apiError';
 
 const apiBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/+$/, '') || 'https://localhost:7214';
@@ -11,112 +10,93 @@ axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.baseURL = `${apiBase}/api/`;
 
-let isRefreshing = false;
-let failedQueue: Array<{
-    resolve: () => void;
-    reject: (error: any) => void;
-}> = [];
+interface QueueItem {
+    resolve: (value?: any) => void;
+    reject: (reason?: any) => void;
+}
 
-const processQueue = (error: any = null) => {
-    failedQueue.forEach((prom) => {
-        if (error) {
-            prom.reject(error);
-        } else {
-            prom.resolve();
+class TokenRefreshManager {
+    private isRefreshing = false;
+    private failedQueue: QueueItem[] = [];
+
+    private processQueue(error: any = null, token: any = null) {
+        this.failedQueue.forEach((promise) => {
+            error ? promise.reject(error) : promise.resolve(token);
+        });
+        
+        this.failedQueue = [];
+        this.isRefreshing = false;
+    }
+
+    async handleTokenRefresh(originalRequest: InternalAxiosRequestConfig): Promise<any> {
+        if (this.isRefreshing) {
+            return new Promise((resolve, reject) => {
+                this.failedQueue.push({ resolve, reject });
+            }).then(() => axios(originalRequest));
         }
-    });
 
-    isRefreshing = false;
-    failedQueue = [];
+        this.isRefreshing = true;
+
+        try {
+            const response = await account.refresh();
+            store.dispatch(setUser(response));
+            this.processQueue(null, response);
+            return axios(originalRequest);
+        } catch (error) {
+            this.processQueue(error);
+            store.dispatch(logout());
+            throw error;
+        }
+    }
+}
+
+const tokenManager = new TokenRefreshManager();
+
+const AUTH_ENDPOINTS = ['/account/login', '/account/refresh', '/account/check-auth'];
+
+const shouldSkipRetry = (url?: string): boolean => {
+    return AUTH_ENDPOINTS.some(endpoint => url?.includes(endpoint));
 };
 
 axios.interceptors.response.use(
     (response) => response,
     async (error: AxiosError<ApiErrorResponse>) => {
-        // İptal edilen istekleri göz ardı et
-        if (error.code === "ERR_CANCELED" || error.message?.includes("canceled")) {
+        if (!error.response || error.code === "ERR_CANCELED") {
+            if (!error.code?.includes("CANCELED")) {
+                toast.error("Sunucuya ulaşılamıyor");
+            }
             return Promise.reject(error);
         }
 
-        if (!error.response) {
-            toast.error("Sunucuya ulaşılamıyor");
-            return Promise.reject(error);
-        }
-
-        const { data, status, config } = error.response;
+        const { status, config } = error.response;
         const originalRequest = config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-        if (status === 401) {
-            // Login isteği başarısız - direkt reject
-            if (originalRequest.url?.includes('account/login')) {
-                return Promise.reject(error);
-            }
-
-            // Refresh isteği başarısız - logout yap
-            if (originalRequest.url?.includes('account/refresh')) {
-                processQueue(error);
-                store.dispatch(logout());
-                return Promise.reject(error);
-            }
-
-            // CheckAuth başarısız - sadece reject et, logout yapma
-            if (originalRequest.url?.includes('account/check-auth')) {
-                // İlk yüklemede cookie yoksa normal, logout yapma
-                return Promise.reject(error);
-            }
-
-            // Diğer 401 hatalarında token refresh dene
-            if (originalRequest._retry) {
-                return Promise.reject(error);
-            }
-
-            if (isRefreshing) {
-                return new Promise((resolve, reject) => {
-                    failedQueue.push({ 
-                        resolve: () => resolve(axios(originalRequest)), 
-                        reject 
-                    });
-                });
-            }
-
+        if (status === 401 && !shouldSkipRetry(originalRequest.url) && !originalRequest._retry) {
             originalRequest._retry = true;
-            isRefreshing = true;
-
-            try {
-                localStorage.removeItem("user");
-                const response = await account.checkAuth() as LoginResponse;
-                localStorage.setItem("user", JSON.stringify(response));
-                store.dispatch(setUser(response));
-                processQueue();
-                return axios(originalRequest);
-            } catch (refreshError) {
-                processQueue(refreshError);
-                store.dispatch(logout());
-                return Promise.reject(refreshError);
-            }
+            return tokenManager.handleTokenRefresh(originalRequest);
         }
 
-        switch (status) {
-            case 400:
-            case 422:
-                if (data?.message) {
-                    toast.error(data.message);
-                }
-                break;
-            case 403:
-                toast.error("Bu işlem için yetkiniz yok");
-                break;
-            case 404:
-                toast.error(data?.message ?? "Kaynak bulunamadı");
-                break;
-            case 500:
-                toast.error(data?.message ?? "Sunucu hatası");
-                break;
-        }
+        handleErrorByStatus(status, error.response.data);
 
         return Promise.reject(error);
     }
 );
+
+function handleErrorByStatus(status: number, data?: ApiErrorResponse) {
+    const errorMessages: Record<number, string> = {
+        403: "Bu işlem için yetkiniz yok",
+        404: data?.message ?? "Kaynak bulunamadı",
+        500: data?.message ?? "Sunucu hatası"
+    };
+
+    if (status === 400 || status === 422) {
+        if (data?.message) toast.error(data.message);
+        return;
+    }
+
+    const message = errorMessages[status];
+    if (message) toast.error(message);
+}
 
 const methods = {
     get: (url: string, params?: any, signal?: AbortSignal) => axios.get(url, { ...params, signal }).then((response) => ({ data: response.data, headers: response.headers })),
@@ -175,6 +155,7 @@ const order = {
     dailyOrdersCount: (signal?: AbortSignal) => methods.getWithoutHeaders("order/daily-count", {}, signal),
     statusesStats: (signal?: AbortSignal) => methods.getWithoutHeaders("order/statuses-stats", {}, signal),
     stats: (signal?: AbortSignal) => methods.getWithoutHeaders("order/stats", {}, signal),
+    analysis: (signal?: AbortSignal) => methods.getWithoutHeaders("order/analysis", {}, signal),
     getOneOrder: (id: string, signal?: AbortSignal) => methods.getWithoutHeaders(`order/${id}`, {}, signal),
     createOrder: (formData: any) => methods.post("order/create", formData),
     changeOrderStatus: (formData: any) => methods.patch("order/change-status", formData),

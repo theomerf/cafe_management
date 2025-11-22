@@ -1,5 +1,6 @@
 ﻿using Entities;
 using Entities.Dtos;
+using Entities.Exceptions;
 using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -57,26 +58,30 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("refresh")]
-        [Authorize]
         public async Task<IActionResult> Refresh()
         {
-            HttpContext.Request.Cookies.TryGetValue("accessToken", out var accessToken);
             HttpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
 
-            var tokenDto = new TokenDto
+            if (string.IsNullOrEmpty(refreshToken))
+                return Unauthorized();
+
+            try
             {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken
-            };
+                var tokenDto = await _manager.AccountService.RefreshTokenAsync(refreshToken);
 
-            var tokenDtoToReturn = await _manager.AccountService.RefreshTokenAsync(tokenDto);
+                _manager.AccountService.SetTokensInsideCookie(tokenDto, HttpContext);
 
-            _manager.AccountService.SetTokensInsideCookie(tokenDto, HttpContext);
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userInfo = await _manager.AccountService.GetCurrentUserInfoAsync(userId!);
 
-            var userInfo = await _manager.AccountService.GetCurrentUserInfoAsync(userId!);
-
-            return Ok(userInfo);
+                return Ok(userInfo);
+            }
+            catch (RefreshTokenBadRequestException)
+            {
+                HttpContext.Response.Cookies.Delete("accessToken");
+                HttpContext.Response.Cookies.Delete("refreshToken");
+                return Unauthorized();
+            }
         }
 
         [HttpGet("check-auth")]

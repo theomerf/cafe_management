@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 import requests from '../../services/api';
 import { history } from '../../utils/history';
@@ -72,6 +72,7 @@ export const checkAuth = createAsyncThunk(
         }
         catch (error: any) {
             toast.error("Kimlik doğrulama kontrolü sırasında bir hata oluştu.");
+            localStorage.removeItem("user");
             history.push("/login");
             return thunkAPI.rejectWithValue(null);
         }
@@ -99,8 +100,9 @@ export const accountSlice = createSlice({
     name: "account",
     initialState,
     reducers: {
-        setUser: (state, action) => {
+        setUser: (state, action: PayloadAction<LoginResponse>) => {
             state.user = action.payload;
+            localStorage.setItem("user", JSON.stringify(action.payload));
         },
     },
     extraReducers: (builder) => {

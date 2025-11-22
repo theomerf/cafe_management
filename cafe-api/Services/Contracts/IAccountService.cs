@@ -12,7 +12,7 @@ namespace Services.Contracts
         Task<bool> LoginUserAsync(AccountDtoForLogin accountDto);
         Task<LoginResponseDto> GetCurrentUserInfoAsync(string userId);
         Task<TokenDto> CreateTokenAsync(bool populateExp, bool rememberMe);
-        Task<TokenDto> RefreshTokenAsync(TokenDto tokenDto);
+        Task<TokenDto> RefreshTokenAsync(String refreshToken);
         void SetTokensInsideCookie(TokenDto tokenDto, HttpContext context);
         Task InvalidateRefreshTokenAsync(string userId);
         Task<(PagedList<AccountDto> accounts, MetaData metaData)> GetAllAccountsAsync(RequestParameters p, bool trackChanges);

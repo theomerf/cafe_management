@@ -14,6 +14,7 @@ namespace Repositories.Contracts
         Task<int> GetAllOrdersCountAsync();
         Task<(int preparingCount, int deliveredCount)> GetOrdersStatusStatsAsync();
         Task<Dictionary<OrderStatsType, OrderStatsDto>> GetOrdersStatsAsync();
+        Task<OrderAnalysisDto> GetOrdersAnalysisAsync();
         Task<Order?> GetOneOrderByIdAsync(int orderId, bool trackChanges);
         void CreateOrder(Order order);
         void UpdateOrder(Order order);

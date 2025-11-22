@@ -50,3 +50,9 @@ build/
 .env.development
 .env.production
 .env.test
+
+localhost.key
+localhost.crt
+localhost.pfx
+localhost.conf
+*.pem

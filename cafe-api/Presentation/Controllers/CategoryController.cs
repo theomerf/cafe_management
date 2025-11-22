@@ -1,5 +1,6 @@
 ﻿using Entities.Dtos;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.ActionFilters;
 using Services.Contracts;
@@ -7,6 +8,7 @@ using System.Text.Json;
 
 namespace Presentation.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")] 
     public class CategoryController : ControllerBase

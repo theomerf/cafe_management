@@ -1,4 +1,4 @@
-export default interface Order{
+export default interface Order {
     id?: number;
     createdAt?: Date;
     status?: "Preparing" | "Delivered" | "Cancelled" | "Old";
@@ -7,7 +7,7 @@ export default interface Order{
     tableId: number;
 }
 
-export interface OrderLine{
+export interface OrderLine {
     id?: number;
     orderId?: number;
     productId: number;
@@ -33,4 +33,16 @@ export interface OrderStats {
     labels: string[];
     totalCounts: number[];
     totalIncomes: number[];
+}
+
+export interface OrderAnalysis {
+    currentMonthOrderCount: number;
+    currentMonthIncome: number;
+    currentMonthAvgCount: number;
+    currentMonthAvgIncome: number;
+    lastMonthOrderCount: number;
+    lastMonthIncome: number,
+    lastMonthAvgCount: number;
+    lastMonthAvgIncome: number;
+    suggestions: string[];
 }

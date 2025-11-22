@@ -132,7 +132,7 @@ namespace CafeAPI.Infrastructure.Extensions
             var origins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
             if (env.IsDevelopment() && origins.Length == 0)
             {
-                origins = new[] { "http://localhost:5173", "https://localhost:5173" };
+                origins = new[] { "http://localhost:3000", "https://localhost:3000" };
             }
 
             services.AddCors(options =>

@@ -16,6 +16,7 @@ import { type AppDispatch } from './store/store'
 import ProtectedRoute from './utils/ProtectedRoute'
 import Statistics from './pages/Statistics/Statistics'
 import { checkAuth, setUser } from './pages/Account/accountSlice'
+import Analysis from './pages/Analyses/Analysis'
 
 function App() {
   const dispatch: AppDispatch = useDispatch();
@@ -47,6 +48,7 @@ function App() {
             <Route path="/management/products" element={<ProductManagement />} />
             <Route path="/management/categories" element={<CategoryManagement />} />
             <Route path="/statistics" element={<Statistics />} />
+            <Route path="/analysis" element={<Analysis />} />
           </Route>
         </Route>
       </Routes>

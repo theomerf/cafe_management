@@ -192,6 +192,42 @@ namespace Repositories
             return stats;
         }
 
+        public async Task<OrderAnalysisDto> GetOrdersAnalysisAsync()
+        {
+            var today = DateTime.UtcNow;
+            var startOfCurrentMonth = new DateTime(today.Year, today.Month, 1);
+            var startOfLastMonth = startOfCurrentMonth.AddMonths(-1);
+
+            var analysisQuery = await FindByCondition(o => o.Status != OrderStatus.Cancelled && o.CreatedAt >= startOfLastMonth && o.CreatedAt <= today, false)
+                .GroupBy(o => o.CreatedAt.Month)
+                .Select(g => new
+                {
+                    Month = g.Key,
+                    TotalCount = g.Count(),
+                    TotalIncome = g.Sum(o => o.TotalAmount),
+                    AvgCount = g.Average(o => 1),
+                    AvgIncome = g.Average(o => o.TotalAmount)
+                })
+                .ToListAsync();
+
+            var currentMonthData = analysisQuery.FirstOrDefault(a => a.Month == startOfCurrentMonth.Month);
+            var lastMonthData = analysisQuery.FirstOrDefault(a => a.Month == startOfLastMonth.Month);
+
+            var analysis = new OrderAnalysisDto
+            {
+                CurrentMonthOrderCount = currentMonthData?.TotalCount ?? 0,
+                CurrentMonthIncome = currentMonthData?.TotalIncome ?? 0,
+                CurrentMonthAvgCount = currentMonthData?.AvgCount ?? 0,
+                CurrentMonthAvgIncome = currentMonthData?.AvgIncome ?? 0,
+                LastMonthOrderCount = lastMonthData?.TotalCount ?? 0,
+                LastMonthIncome = lastMonthData?.TotalIncome ?? 0,
+                LastMonthAvgCount = lastMonthData?.AvgCount ?? 0,
+                LastMonthAvgIncome = lastMonthData?.AvgIncome ?? 0,
+            };
+
+            return analysis;
+        }
+
         public async Task<Order?> GetOneOrderByIdAsync(int orderId, bool trackChanges)
         {
             var order = await FindByCondition(o => o.Id == orderId, trackChanges)
