@@ -68,10 +68,10 @@ namespace Services
             return product;
         }
 
-        public async Task<IEnumerable<ProductStatsDto>> GetTopSoldProductsAsync()
+        public async Task<IEnumerable<StatsDto>> GetTopSoldProductsAsync()
         {
             string cacheKey = "TopSoldProducts";
-            if (_cache.TryGetValue(cacheKey, out IEnumerable<ProductStatsDto>? cachedProducts))
+            if (_cache.TryGetValue(cacheKey, out IEnumerable<StatsDto>? cachedProducts))
             {
                 if (cachedProducts != null)
                     return cachedProducts;
@@ -86,6 +86,59 @@ namespace Services
             _cache.Set(cacheKey, products, cacheEntryOptions);
 
             return products;
+        }
+        public async Task<ProductAnalysisDto> GetProductsAnalysisAsync()
+        {
+            var analysis = await _manager.Product.GetProductsAnalysisAsync();
+
+            if (analysis.CurrentMonthTopSoldProduct.Count == 0 && analysis.LastMonthTopSoldProduct.Count == 0)
+            {
+                analysis.Suggestions = new List<string>
+                {
+                    "Henüz bir sipariş verilmedi. Analizler için ilk siparişler bekleniyor."
+                };
+            }
+            else
+            {
+                analysis.Suggestions = new List<string>();
+
+                if (analysis.CurrentMonthTopSoldProduct.Count > analysis.LastMonthTopSoldProduct.Count)
+                {
+                    analysis.Suggestions.Add("Bu ayın en çok satılan ürünü geçen aya göre daha fazla satış yaptı. Pazarlama stratejilerinizi bu ürüne odaklayabilirsiniz.");
+                }
+                else if (analysis.CurrentMonthTopSoldProduct.Count < analysis.LastMonthTopSoldProduct.Count)
+                {
+                    analysis.Suggestions.Add("Bu ayın en çok satılan ürünü geçen aya göre daha az satış yaptı. Satışları artırmak için promosyonlar düşünebilirsiniz.");
+                }
+                else
+                {
+                    analysis.Suggestions.Add("Bu ayın en çok satılan ürünü geçen ayla aynı satış sayısına sahip. İstikrarı korumak için mevcut stratejileri sürdürün.");
+                }
+
+                if (analysis.CurrentMonthTopEarningProduct.Id != analysis.CurrentMonthTopSoldProduct.Id)
+                {
+                    analysis.Suggestions.Add("En çok satılan ürün ile en çok kazandıran ürün farklı. Karlılığı artırmak için fiyatlandırma stratejilerinizi gözden geçirin.");
+                }
+                else
+                {
+                    analysis.Suggestions.Add("Geçen ay ve bu ay en çok kazandıran ürün aynı. Bu ürünün performansını artırmak için ek pazarlama kampanyaları düşünebilirsiniz.");
+                }
+
+                if (analysis.CurrentMonthTopEarningProduct.Value > analysis.LastMonthTopEarningProduct.Value)
+                {
+                    analysis.Suggestions.Add("Bu ayın en çok kazandıran ürünü geçen aya göre daha fazla gelir sağladı. Bu ürüne yönelik reklam harcamalarını artırmayı düşünebilirsiniz.");
+                }
+                else if (analysis.CurrentMonthTopEarningProduct.Value < analysis.LastMonthTopEarningProduct.Value)
+                {
+                    analysis.Suggestions.Add("Bu ayın en çok kazandıran ürünü geçen aya göre daha az gelir sağladı. Fiyatlandırma ve promosyon stratejilerinizi gözden geçirin.");
+                }
+                else
+                {
+                    analysis.Suggestions.Add("Bu ayın en çok kazandıran ürünü geçen ayla aynı gelire sahip. Mevcut stratejileri sürdürerek istikrarı koruyun.");
+                }
+            }
+
+            return analysis;
         }
 
         public async Task CreateProductAsync(ProductDtoForCreation productDto)

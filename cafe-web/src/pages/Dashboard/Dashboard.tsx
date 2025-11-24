@@ -76,7 +76,7 @@ export default function Dashboard() {
             <TitleCard title="Dashboard" />
             <div className="grid grid-cols-4 gap-x-6">
                 <DashboardStatCard title="Toplam Sipariş" isLoading={dashboardStats.isLoading} value={dashboardStats.data?.totalOrders!} icon={faMugHot} />
-                <DashboardStatCard title="Günlük Gelir" isLoading={dashboardStats.isLoading} value={dashboardStats.data?.dailyIncome!} icon={faDollar} />
+                <DashboardStatCard title="Günlük Gelir" isLoading={dashboardStats.isLoading} value={dashboardStats.data?.dailyIncome!} icon={faDollar} isValuePrice={true}/>
                 <DashboardStatCard title="Aktif Masalar" isLoading={dashboardStats.isLoading} value={dashboardStats.data?.activeTables!} icon={faTable} />
                 <DashboardStatCard title="Günlük Sipariş" isLoading={dashboardStats.isLoading} value={dashboardStats.data?.dailyOrders!} icon={faCalendarDay} />
             </div>

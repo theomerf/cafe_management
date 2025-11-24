@@ -7,14 +7,16 @@ import { ClipLoader } from "react-spinners";
 
 type DashboardCardProps = {
     title: string;
+    textValue?: string;
     value: string | number;
     lastValue?: string | number;
+    isValuePrice?: boolean;
     isLoading: boolean;
     icon?: IconProp;
     lucideIcon?: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
 };
 
-export default function DashboardStatCard({ title, value, lastValue, isLoading, icon, lucideIcon }: DashboardCardProps) {
+export default function DashboardStatCard({ title, value, textValue, lastValue, isValuePrice, isLoading, icon, lucideIcon }: DashboardCardProps) {
     const [percentageChange, setPercentageChange] = React.useState<number | null>(null);
     useEffect(() => {
         if (!isLoading && lastValue !== undefined) {
@@ -38,16 +40,19 @@ export default function DashboardStatCard({ title, value, lastValue, isLoading, 
                     <ClipLoader size={40} color="#06b6d4" />
                 </div>
             ) : (
-                <div className="flex flex-row gap-x-1 items-center justify-center">
-                    <p className="text-2xl mt-2 font-semibold">{value}</p>
-                    {lastValue && percentageChange && (
-                        percentageChange > 0 ? (
-                            <TrendingUp size={24} className=" text-green-500 ml-2" />
-                        ) : (
-                            <TrendingDown size={24} className="text-red-500 ml-2" />
-                        )
-                    )}
-                    <p>{lastValue && percentageChange && (<p className={`${percentageChange > 0 ? 'text-green-500' : 'text-red-500'} font-semibold`}>{percentageChange}%</p>)}</p>
+                <div className="flex flex-col">
+                    {textValue && <p className="text-2xl mt-2 font-semibold">{textValue}</p>}
+                    <div className="flex flex-row gap-x-1 items-center justify-center">
+                        <p className="text-2xl mt-2 font-semibold">{isValuePrice ? `₺${value}` : value}</p>
+                        {lastValue && percentageChange && (
+                            percentageChange > 0 ? (
+                                <TrendingUp size={24} className=" text-green-500 ml-2" />
+                            ) : (
+                                <TrendingDown size={24} className="text-red-500 ml-2" />
+                            )
+                        )}
+                        <p>{lastValue && percentageChange && (<p className={`${percentageChange > 0 ? 'text-green-500' : 'text-red-500'} font-semibold`}>{percentageChange}%</p>)}</p>
+                    </div>
                 </div>
             )}
         </div>

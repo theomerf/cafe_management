@@ -10,7 +10,8 @@ namespace Repositories.Contracts
         Task<IEnumerable<Product>> GetProductsForOrderAsync(ProductFilterParameters p, bool trackChanges);
         Task<int> GetAllProductsCountAsync();
         Task<Product?> GetOneProductByIdAsync(int productId, bool trackChanges);
-        Task<IEnumerable<ProductStatsDto>> GetTopSoldProductsAsync();
+        Task<IEnumerable<StatsDto>> GetTopSoldProductsAsync();
+        Task<ProductAnalysisDto> GetProductsAnalysisAsync();
         void CreateProduct(Product product);
         void UpdateProduct(Product product);
         void DeleteProduct(Product product);

@@ -99,6 +99,14 @@ namespace Presentation.Controllers
             return Ok(analysis);
         }
 
+        [HttpGet("hourly-analysis")]
+        public async Task<IActionResult> GetHourlyOrdersAnalysis()
+        {
+            var analysis = await _manager.OrderService.GetHourlyAnalysisAsync();
+
+            return Ok(analysis);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOneOrder([FromRoute] int id)
         {

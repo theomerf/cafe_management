@@ -37,6 +37,14 @@ namespace Presentation.Controllers
             return Ok(products);
         }
 
+        [HttpGet("analysis")]
+        public async Task<IActionResult> GetProductsAnalysis()
+        {
+            var analysis = await _manager.ProductService.GetProductsAnalysisAsync();
+
+            return Ok(analysis);
+        }
+
         [HttpGet("list")]
         public async Task<IActionResult> GetProductsForOrder([FromQuery] ProductFilterParameters p)
         {

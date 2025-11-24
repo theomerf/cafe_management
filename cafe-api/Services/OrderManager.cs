@@ -205,6 +205,55 @@ namespace Services
             return analysis;
         }
 
+        public async Task<TimeslotAnalysisDto> GetHourlyAnalysisAsync()
+        {
+            var analysis = await _manager.Order.GetHourlyAnalysisAsync();
+
+            if (analysis.CurrentMonthTopSellerSlot.Count == 0 && analysis.LastMonthTopSellerSlot.Count == 0)
+            {
+                analysis.Suggestions = new List<string>
+                {
+                    "Henüz bir sipariş verilmedi. Analizler için ilk siparişler bekleniyor."
+                };
+            }
+            else
+            {
+                analysis.Suggestions = new List<string>();
+                if (analysis.CurrentMonthTopSellerSlot.Count < analysis.LastMonthTopSellerSlot.Count)
+                {
+                    analysis.Suggestions.Add("En çok satan zaman dilimindeki sipariş sayısı azaldı. Bu zaman diliminde özel promosyonlar düzenlemeyi düşünün.");
+                }
+                else
+                {
+                    analysis.Suggestions.Add("En çok satan zaman dilimindeki sipariş sayısı arttı. Bu olumlu trendi sürdürmek için pazarlama stratejilerinizi güçlendirin.");
+                }
+                if (analysis.CurrentMonthTopEarningSlot.Count < analysis.LastMonthTopEarningSlot.Count)
+                {
+                    analysis.Suggestions.Add("En yüksek gelir elde edilen zaman dilimindeki gelir düştü. Menü fiyatlandırmanızı gözden geçirin ve ek satış tekniklerini düşünün.");
+                }
+                else
+                {
+                    analysis.Suggestions.Add("En yüksek gelir elde edilen zaman dilimindeki gelir arttı. Bu olumlu trendi sürdürmek için müşteri sadakat programları uygulamayı düşünün.");
+                }
+
+                if (analysis.CurrentMonthTopSellerSlot.Name != analysis.LastMonthTopSellerSlot.Name)
+                {
+                    analysis.Suggestions.Add("En çok satan zaman dilimi değişti. Yeni trendleri analiz edin ve bu zaman diliminde pazarlama stratejilerinizi uyarlayın.");
+                }
+                if (analysis.CurrentMonthTopEarningSlot.Name != analysis.LastMonthTopEarningSlot.Name)
+                {
+                    analysis.Suggestions.Add("En yüksek gelir elde edilen zaman dilimi değişti. Menü ve promosyon stratejilerinizi bu zaman dilimine göre optimize edin.");
+                }
+
+                if (analysis.CurrentMonthTopEarningSlot.Name != analysis.CurrentMonthTopSellerSlot.Name)
+                {
+                    analysis.Suggestions.Add("En çok satan ve en yüksek gelir elde edilen zaman dilimleri farklı. Her iki zaman diliminde de özel kampanyalar düzenlemeyi düşünün.");
+                }
+            }
+
+            return analysis;
+        }
+
         public async Task<OrderDto> GetOneOrderByIdAsync(int orderId, bool trackChanges)
         {
             var order = await GetOneOrderByIdForServiceAsync(orderId, trackChanges);

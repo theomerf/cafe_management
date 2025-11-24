@@ -12,5 +12,14 @@ export default interface Product {
 export interface ProductStats {
     id: number,
     name: string,
-    count: number
+    count: number,
+    value?: number,
+}
+
+export interface ProductAnalysis {
+    lastMonthTopSoldProduct: ProductStats;
+    currentMonthTopSoldProduct: ProductStats;
+    lastMonthTopEarningProduct: ProductStats;
+    currentMonthTopEarningProduct: ProductStats;
+    suggestions: string[];
 }

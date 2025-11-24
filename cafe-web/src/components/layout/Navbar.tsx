@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useBreakpoint } from "../../hooks/useBreakpoint";
-import { faBell, faChevronDown, faGears, faMugHot, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faGears, faMugHot, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -42,9 +42,6 @@ export default function Navbar() {
                     <h1 className="font-bold">Kafe Yönetimi</h1>
                 </div>
                 <div className="flex flex-row gap-x-2 ml-auto">
-                    <Link to="/notifications" title="Bildirimler" aria-label="Bildirimler" className="flex justify-center text-white text-xl rounded-full border border-cyan-400 bg-cyan-400 w-10 h-10 text-center shadow-md shadow-cyan-200 transition-all duration-500 hover:scale-110 hover:bg-cyan-500 hover:shadow-cyan-400 hover:text-xl">
-                        <FontAwesomeIcon icon={faBell} className="self-center" />
-                    </Link>
                     <div ref={dropdownRef}>
                         <button onClick={toggleDropdown} className="flex flex-row gap-x-3" id="dropdownButton">
                             <img src="https://icons.veryicon.com/png/o/miscellaneous/standard/avatar-15.png" className="w-10 h-10 rounded-full self-center border border-cyan-400 bg-cyan-400 shadow-md shadow-cyan-200 transition-all duration-500 hover:scale-110 hover:bg-cyan-500 hover:shadow-cyan-400" />

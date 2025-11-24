@@ -1,3 +1,5 @@
+import type { ProductStats } from "./product";
+
 export default interface Order {
     id?: number;
     createdAt?: Date;
@@ -44,5 +46,13 @@ export interface OrderAnalysis {
     lastMonthIncome: number,
     lastMonthAvgCount: number;
     lastMonthAvgIncome: number;
+    suggestions: string[];
+}
+
+export interface TimeslotAnalysis {
+    lastMonthTopSellerSlot: ProductStats;
+    currentMonthTopSellerSlot: ProductStats;
+    lastMonthTopEarningSlot: ProductStats;
+    currentMonthTopEarningSlot: ProductStats;
     suggestions: string[];
 }

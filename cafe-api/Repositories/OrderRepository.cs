@@ -4,6 +4,7 @@ using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Contracts;
 using Repositories.Extensions;
+using System.ComponentModel;
 using System.Globalization;
 
 namespace Repositories
@@ -223,6 +224,102 @@ namespace Repositories
                 LastMonthIncome = lastMonthData?.TotalIncome ?? 0,
                 LastMonthAvgCount = lastMonthData?.AvgCount ?? 0,
                 LastMonthAvgIncome = lastMonthData?.AvgIncome ?? 0,
+            };
+
+            return analysis;
+        }
+
+        public async Task<TimeslotAnalysisDto> GetHourlyAnalysisAsync()
+        {
+            var today = DateTime.UtcNow;
+            var lastMonth = today.AddMonths(-1).Month;
+
+            var lastTopSeller = await FindByCondition(o => o.CreatedAt.Month == lastMonth, false)
+                .GroupBy(o => o.CreatedAt.Hour)
+                .OrderByDescending(o => o.Count())
+                .Select(g => new
+                {
+                    Key = g.Key,
+                    Value = g.Count()
+                })
+                .FirstOrDefaultAsync();
+
+            lastTopSeller = lastTopSeller ?? new
+            {
+                Key = 0,
+                Value = 0,
+            };
+
+            var lastTopEarner = await FindByCondition(o => o.CreatedAt.Month == lastMonth, false)
+                .GroupBy(o => o.CreatedAt.Hour)
+                .OrderByDescending(g => g.Sum(o => o.TotalAmount))
+                .Select(g => new
+                {
+                    Key = g.Key,
+                    Value = g.Sum(o => o.TotalAmount)
+                })
+                .FirstOrDefaultAsync();
+
+            lastTopEarner = lastTopEarner ?? new
+            {
+                Key = 0,
+                Value = 0m,
+            };
+
+            var currentTopSeller = await FindByCondition(o => o.CreatedAt.Month == today.Month, false)
+                .GroupBy(o => o.CreatedAt.Hour)
+                .OrderByDescending(o => o.Count())
+                .Select(g => new
+                {
+                    Key = g.Key,
+                    Value = g.Count()
+                })
+                .FirstOrDefaultAsync();
+
+            currentTopSeller = currentTopSeller ?? new
+            {
+                Key = 0,
+                Value = 0,
+            };
+
+            var currentTopEarner = await FindByCondition(o => o.CreatedAt.Month == today.Month, false)
+                .GroupBy(o => o.CreatedAt.Hour)
+                .OrderByDescending(g => g.Sum(o => o.TotalAmount))
+                .Select(g => new
+                {
+                    Key = g.Key,
+                    Value = g.Sum(o => o.TotalAmount)
+                })
+                .FirstOrDefaultAsync();
+
+            currentTopEarner = currentTopEarner ?? new
+            {
+                Key = 0,
+                Value = 0m,
+            };
+
+            var analysis = new TimeslotAnalysisDto
+            {
+                LastMonthTopSellerSlot = new StatsDto
+                {
+                    Name =  $"{lastTopSeller.Key}:00",
+                    Count = lastTopSeller!.Value
+                },
+                LastMonthTopEarningSlot = new StatsDto
+                {
+                    Name = $"{lastTopEarner.Key}:00",
+                    Value = lastTopEarner!.Value
+                },
+                CurrentMonthTopSellerSlot = new StatsDto
+                {
+                    Name = $"{currentTopSeller.Key}:00",
+                    Count = currentTopSeller!.Value
+                },
+                CurrentMonthTopEarningSlot = new StatsDto
+                {
+                    Name = $"{currentTopEarner.Key}:00",
+                    Value = currentTopEarner!.Value
+                },
             };
 
             return analysis;

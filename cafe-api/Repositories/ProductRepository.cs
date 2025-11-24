@@ -50,11 +50,11 @@ namespace Repositories
             return product;
         }
 
-        public async Task<IEnumerable<ProductStatsDto>> GetTopSoldProductsAsync()
+        public async Task<IEnumerable<StatsDto>> GetTopSoldProductsAsync()
         {
             var products = await _context.OrderLines
                 .GroupBy(ol => ol.ProductId)
-                .Select(g => new ProductStatsDto
+                .Select(g => new StatsDto
                 {
                     Id = g.Key,
                     Name = g.FirstOrDefault()!.Product!.Name,
@@ -67,6 +67,70 @@ namespace Repositories
             return products;
         }
 
+        public async Task<ProductAnalysisDto> GetProductsAnalysisAsync()
+        {
+            var today = DateTime.UtcNow;
+            var lastMonth = today.AddMonths(-1).Month;
+
+            var lastTopSeller = await _context.OrderLines
+                .Where(ol => ol.Order!.CreatedAt.Month == lastMonth)
+                .GroupBy(ol => ol.ProductId)
+                .OrderByDescending(g => g.Sum(x => x.Quantity))
+                .Select(g => new StatsDto
+                {
+                    Id = g.Key,
+                    Name = g.Select(x => x.Product!.Name).First(),
+                    Count = g.Sum(x => x.Quantity)
+                })
+                .FirstOrDefaultAsync();
+
+            var lastTopEarner = await _context.OrderLines
+                .Where(ol => ol.Order!.CreatedAt.Month == lastMonth)
+                .GroupBy(ol => ol.ProductId)
+                .OrderByDescending(g => g.Sum(x => x.Quantity * x.Product!.Price))
+                .Select(g => new StatsDto
+                {
+                    Id = g.Key,
+                    Name = g.Select(x => x.Product!.Name).First(),
+                    Value = g.Sum(x => x.Quantity * x.Product!.Price)
+                })
+                .FirstOrDefaultAsync();
+
+            var currentTopSeller = await _context.OrderLines
+                .Where(ol => ol.Order!.CreatedAt.Month == today.Month)
+                .GroupBy(ol => ol.ProductId)
+                .OrderByDescending(g => g.Sum(x => x.Quantity))
+                .Select(g => new StatsDto
+                {
+                    Id = g.Key,
+                    Name = g.Select(x => x.Product!.Name).First(),
+                    Count = g.Sum(x => x.Quantity)
+                })
+                .FirstOrDefaultAsync();
+
+            var currentTopEarner = await _context.OrderLines
+                .Where(ol => ol.Order!.CreatedAt.Month == today.Month)
+                .GroupBy(ol => ol.ProductId)
+                .OrderByDescending(g => g.Sum(x => x.Quantity * x.Product!.Price))
+                .Select(g => new StatsDto
+                {
+                    Id = g.Key,
+                    Name = g.Select(x => x.Product!.Name).First(),
+                    Value = g.Sum(x => x.Quantity * x.Product!.Price)
+                })
+                .FirstOrDefaultAsync();
+
+            var analysis = new ProductAnalysisDto
+            {
+                LastMonthTopSoldProduct = lastTopSeller ?? new StatsDto(),
+                CurrentMonthTopSoldProduct = currentTopSeller ?? new StatsDto(),
+                LastMonthTopEarningProduct = lastTopEarner ?? new StatsDto(),
+                CurrentMonthTopEarningProduct = currentTopEarner ?? new StatsDto(),
+                Suggestions = new List<string>()
+            };
+
+            return analysis;
+        }
 
         public void CreateProduct(Product product)
         {
