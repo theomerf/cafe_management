@@ -2,8 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --main-color: #F7FAFC;
+}
+
 body{
-  @apply bg-[#F7FAFC] text-[#495057]
+  @apply bg-[rgb(var(--main-color))] text-[#495057]
 }
 
 @layer base {

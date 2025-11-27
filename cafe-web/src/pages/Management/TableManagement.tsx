@@ -206,7 +206,7 @@ export default function TableManagement() {
                     }} label="Yeni Masa Ekle" />
                 </TitleCard>
 
-                <div className="flex-1 w-full bg-gray-800 rounded-lg overflow-hidden border justify-center flex border-gray-300 shadow-lg" style={{ minHeight: '600px' }}>
+                <div className="flex-1 w-full bg-gray-800 rounded-lg overflow-hidden border justify-center flex border-gray-200 shadow-lg" style={{ minHeight: '600px' }}>
                     {isLoading && !tables ? (
                         <div className="flex flex-col gap-y-2 self-center justify-center items-center pt-4">
                             <ClipLoader size={40} color="#06b6d4" />

@@ -12,17 +12,36 @@ import CategoryManagement from './pages/Management/CategoryManagement'
 import Login from './pages/Account/Login'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { type AppDispatch } from './store/store'
+import { useAppSelector, type AppDispatch } from './store/store'
 import ProtectedRoute from './utils/ProtectedRoute'
 import Statistics from './pages/Statistics/Statistics'
-import { checkAuth, setUser } from './pages/Account/accountSlice'
+import { checkAuth, setPreferences, setUser } from './pages/Account/accountSlice'
 import Analysis from './pages/Analyses/Analysis'
+import Settings from './pages/Settings/Settings'
 
 function App() {
   const dispatch: AppDispatch = useDispatch();
+  const { preferences } = useAppSelector((state) => state.account);
+
+  useEffect(() => {
+    if (preferences.darkMode) {
+      document.documentElement.style.setProperty('--main-color', '22, 27, 34');
+    } else {
+      document.documentElement.style.setProperty('--main-color', '247, 250, 252');
+    }
+  }, [preferences]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+    const storedPreferences = localStorage.getItem("preferences");
+    if (storedPreferences) {
+      try {
+        const parsedPreferences = JSON.parse(storedPreferences);
+        dispatch(setPreferences(parsedPreferences));
+      } catch (error) {
+        console.error("Tercih verisi çözümlenirken hata oluştu:", error);
+      }
+    }
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
@@ -49,6 +68,7 @@ function App() {
             <Route path="/management/categories" element={<CategoryManagement />} />
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/analysis" element={<Analysis />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
         </Route>
       </Routes>

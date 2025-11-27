@@ -7,3 +7,7 @@ export default interface Account {
     phoneNumber?: string;
     password?: string;
 }
+
+export type UserPreferences = {
+    darkMode: boolean;
+}

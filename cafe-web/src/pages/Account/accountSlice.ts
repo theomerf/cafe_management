@@ -4,15 +4,20 @@ import requests from '../../services/api';
 import { history } from '../../utils/history';
 import type { FormError, ApiErrorResponse } from '../../types/apiError';
 import type { LoginResponse } from '../../types/loginResponse';
+import type { UserPreferences } from '../../types/account';
 
 type userState = {
     user: LoginResponse | null;
+    preferences: UserPreferences;
     status: string;
     error?: FormError | null;
 }
 
 const initialState: userState = {
     user: null,
+    preferences: {
+        darkMode: false,
+    },
     status: "idle",
     error: null,
 };
@@ -104,6 +109,10 @@ export const accountSlice = createSlice({
             state.user = action.payload;
             localStorage.setItem("user", JSON.stringify(action.payload));
         },
+        setPreferences: (state, action: PayloadAction<UserPreferences>) => {
+            state.preferences = action.payload;
+            localStorage.setItem("preferences", JSON.stringify(action.payload));
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(loginUser.pending, (state) => {
@@ -162,5 +171,5 @@ export const accountSlice = createSlice({
     }
 });
 
-export const { setUser } = accountSlice.actions;
+export const { setUser, setPreferences } = accountSlice.actions;
 

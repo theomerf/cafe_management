@@ -1,14 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useBreakpoint } from "../../hooks/useBreakpoint";
-import { faChevronDown, faGears, faMugHot, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faGears, faMoon, faMugHot, faRightFromBracket, faSun } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { logout } from "../../pages/Account/accountSlice";
+import { logout, setPreferences } from "../../pages/Account/accountSlice";
 
 export default function Navbar() {
-    const { user } = useAppSelector((state) => state.account);
+    const { user, preferences } = useAppSelector((state) => state.account);
     const dispatch = useAppDispatch();
     const { up } = useBreakpoint();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -42,6 +42,13 @@ export default function Navbar() {
                     <h1 className="font-bold">Kafe Yönetimi</h1>
                 </div>
                 <div className="flex flex-row gap-x-2 ml-auto">
+                    <div className="flex items-center justify-start rounded-2xl w-24 bg-white/90 border border-gray-200 h-9 self-center mr-1">
+                        <button onClick={() => dispatch(setPreferences(
+                            {...preferences, darkMode: !preferences.darkMode}
+                        ))} title={preferences.darkMode ? "Gündüz Modu" : "Gece Modu"}  className={`w-8 h-8 mx-[3px] rounded-full ${preferences.darkMode ? "bg-blue-500 translate-x-[58px] hover:bg-blue-600" : "bg-yellow-500 hover:bg-yellow-600"} text-white transition-all duration-500 focus:outline-none`}>                            
+                            <FontAwesomeIcon icon={preferences.darkMode ? faMoon : faSun} />
+                        </button>
+                    </div>
                     <div ref={dropdownRef}>
                         <button onClick={toggleDropdown} className="flex flex-row gap-x-3" id="dropdownButton">
                             <img src="https://icons.veryicon.com/png/o/miscellaneous/standard/avatar-15.png" className="w-10 h-10 rounded-full self-center border border-cyan-400 bg-cyan-400 shadow-md shadow-cyan-200 transition-all duration-500 hover:scale-110 hover:bg-cyan-500 hover:shadow-cyan-400" />

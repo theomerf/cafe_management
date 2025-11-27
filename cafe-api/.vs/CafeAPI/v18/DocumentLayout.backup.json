@@ -54,8 +54,7 @@
               "RelativeToolTip": "Presentation\\Controllers\\OrderController.cs",
               "ViewState": "AgIAAEkAAAAAAAAAAADwv2kAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-24T13:49:21.682Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-24T13:49:21.682Z"
             },
             {
               "$type": "Document",
@@ -67,8 +66,7 @@
               "RelativeToolTip": "Services\\Contracts\\IOrderService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-24T13:49:16.472Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-24T13:49:16.472Z"
             },
             {
               "$type": "Document",
@@ -80,8 +78,7 @@
               "RelativeToolTip": "Repositories\\OrderRepository.cs",
               "ViewState": "AgIAACcBAAAAAAAAAAAcwD8BAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-24T13:23:35.913Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-24T13:23:35.913Z"
             },
             {
               "$type": "Document",
@@ -93,8 +90,7 @@
               "RelativeToolTip": "Repositories\\ProductRepository.cs",
               "ViewState": "AgIAAEQAAAAAAAAAAAAUwHwAAABKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-24T12:33:00.795Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-24T12:33:00.795Z"
             },
             {
               "$type": "Document",
@@ -106,8 +102,7 @@
               "RelativeToolTip": "Services\\ProductManager.cs",
               "ViewState": "AgIAAE4AAAAAAAAAAAAUwF0AAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-24T12:23:10.36Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-24T12:23:10.36Z"
             },
             {
               "$type": "Document",
@@ -115,8 +110,8 @@
               "Title": "OrderManager.cs",
               "DocumentMoniker": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Services\\OrderManager.cs",
               "RelativeDocumentMoniker": "Services\\OrderManager.cs",
-              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Services\\OrderManager.cs*",
-              "RelativeToolTip": "Services\\OrderManager.cs*",
+              "ToolTip": "C:\\Users\\omerf\\OneDrive\\Masa\u00FCst\u00FC\\Projeler\\.net\\Cafe_Management\\cafe-api\\Services\\OrderManager.cs",
+              "RelativeToolTip": "Services\\OrderManager.cs",
               "ViewState": "AgIAAM4AAAAAAAAAAAAcwNMAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-22T12:04:01.055Z",
@@ -132,8 +127,7 @@
               "RelativeToolTip": "Presentation\\Controllers\\ProductController.cs",
               "ViewState": "AgIAABcAAAAAAAAAAAAzwC0AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-22T09:54:02.732Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-22T09:54:02.732Z"
             },
             {
               "$type": "Document",
